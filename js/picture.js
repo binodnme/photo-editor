@@ -40,8 +40,14 @@ function Picture(){
         return {'posX':posX, 'posY':posY};
     }
     
-    this.draw = function(ctx){
-        console.log('img',img,' x:',posX,' y',posY,' widht:',width,' height',height);
+    this.draw = function(ctx, x, y){
+//        console.log('img',img,' x:',posX,' y',posY,' widht:',width,' height',height);
+        if(x && y){
+            posX = x;
+            posY = y;    
+        }
+        
+        
         ctx.drawImage(img, posX, posY, width, height);
     }
 }
