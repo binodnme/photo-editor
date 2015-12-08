@@ -1,0 +1,14 @@
+.main-container{
+    width: 900px;
+    height: 600px;
+    border: 1px solid red;
+    margin: 0px auto;
+}
+
+#playground{
+    width: 800px;
+    height: 600px;
+    border: 1px solid green;
+    display: block;
+    margin: 0px auto;
+}
