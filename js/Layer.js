@@ -1,7 +1,7 @@
 function Layer(){
     var id;
     var zIndex;
-    var pictures = [];
+    var picture;
     var width;
     var height;
     
@@ -9,11 +9,18 @@ function Layer(){
     
     this.getId = function(){ return id; }
     
-    this.getPictures = function(){ return pictures; }
+    this.getPicture = function(){ return picture; }
     
-    this.addPicture = function(picture){ pictures.push(picture); }
+    this.setPicture = function(pic){
+        picture = pic;
+        var dimen = picture.getDimension();
+        width = dimen.width;
+        height = dimen.height;
+    }
     
-    this.removePicture = function(index){ pictures.splice(index,1);}
+//    this.addPicture = function(picture){ pictures.push(picture); }
+//    
+//    this.removePicture = function(index){ pictures.splice(index,1);}
     
     this.setDimension = function(w,h){
         width = w;
