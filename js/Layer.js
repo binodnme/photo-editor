@@ -1,5 +1,6 @@
 function Layer(){
     var id;
+    var name;
     var zIndex;
     var picture;
     var width;
@@ -8,6 +9,10 @@ function Layer(){
     this.setId = function(i){   id = i; }
     
     this.getId = function(){ return id; }
+    
+    this.setName= function(n){ name =n; }
+    
+    this.getName = function(){ return name; }
     
     this.getPicture = function(){ return picture; }
     

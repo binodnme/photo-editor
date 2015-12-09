@@ -45,12 +45,18 @@ function Picture(){
     
     this.getZIndex = function(){ return zIndex; }
     
-    this.draw = function(ctx, x, y){
-//        console.log('img',img,' x:',posX,' y',posY,' widht:',width,' height',height);
+    this.draw = function(ctx, zoomlevel, x, y){
+        console.log('img',img,' x:',posX,' y',posY,' width:',width,' height',height, 'zoomlevel:',zoomlevel);
         if(x && y){
             posX = x;
             posY = y;    
         }
-        ctx.drawImage(img, posX, posY, width, height);
+        
+        if(zoomlevel){
+            ctx.drawImage(img, posX, posY, width*zoomlevel, height*zoomlevel);
+        }else{
+            ctx.drawImage(img, posX, posY, width, height);
+        }
+        
     }
 }

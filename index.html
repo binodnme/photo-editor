@@ -9,7 +9,12 @@
         <div class="main-container">
             
             <div class="nav">
-            
+                <div class="local-file">
+                    <label>Load Image: </label> <input id="choose-file" type="file" value="choose file">
+                </div>
+                <div class="load-url">
+                    <label>URL:</label> <input id="url" type="url" placeholder="enter image url"> <input id="getButton" type="submit" value="get">
+                </div>
             </div>
             
             <div class="work-area clr">
@@ -20,7 +25,13 @@
                             Unsupported Browser
                         </canvas>
                     </div>
-                    <div class="layer-bar">layer goes here</div>
+                    <div class="layer-bar">
+                        <div class="layer-title">layers</div>
+                        <div class="layer-list-wrapper">
+                            <ul id="layer-list">
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
             

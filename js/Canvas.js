@@ -50,14 +50,22 @@ function Canvas(){
         return layers;
     }
     
-    this.renderLayers = function(){
-//        console.log('rendering');
+    this.renderLayers = function(zoomlevel){
+        console.log('rendering');
         layers.sort(function(a,b){
             return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
         });
         
-        for(var layer in layers){
-            layers[layer].getPicture().draw(context);
+        if(zoomlevel){
+            for(var layer in layers){
+                layers[layer].getPicture().draw(context, zoomlevel);
+            }
+        }else{
+            for(var layer in layers){
+                layers[layer].getPicture().draw(context);
+            }
         }
+        
+        
     }
 }
