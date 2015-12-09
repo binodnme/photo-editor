@@ -1,14 +1,62 @@
 .main-container{
-    width: 900px;
-    height: 600px;
+    max-width: 85.375em;
+/*    height: 650px;*/
     border: 1px solid red;
     margin: 0px auto;
 }
 
+.nav{
+    width: 100%;
+    height: 60px;
+    border: 2px solid red;
+}
+
+.work-area{
+    width: 100%;
+    border: 1px solid blue;
+}
+
+.toolbar {
+    width: 5%;
+    float: left;
+    border: 1px solid green;
+    
+}
+
+.content-wrapper{
+    width: 94%;
+    float: right;
+    border: 1px solid purple;
+}
+
+.canvas-wrapper {
+    width: 85%;
+    float: left;
+    border: 2px solid pink;
+}
+
+.layer-bar{
+    width: 14%;
+    float: right;
+    border: 1px solid black;
+}
+
 #playground{
-    width: 800px;
-    height: 600px;
+    width: 1000px;
+    height: 550px;
     border: 1px solid green;
     display: block;
     margin: 0px auto;
 }
+
+
+.clr:before, .clr:after{
+    content: "";
+    display: table;
+}
+
+.clr:after{
+    clear: both;
+}
+
+.clr{zoom:1; /*IE6&7*/}
