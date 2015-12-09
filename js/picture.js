@@ -4,6 +4,7 @@ function Picture(){
     var height;
     var posX=0;
     var posY=0;
+    var zIndex;
     
     
     this.setImage = function(image){
@@ -40,14 +41,16 @@ function Picture(){
         return {'posX':posX, 'posY':posY};
     }
     
+    this.setZIndex = function(index){ zIndex = index; }
+    
+    this.getZIndex = function(){ return zIndex; }
+    
     this.draw = function(ctx, x, y){
 //        console.log('img',img,' x:',posX,' y',posY,' widht:',width,' height',height);
         if(x && y){
             posX = x;
             posY = y;    
         }
-        
-        
         ctx.drawImage(img, posX, posY, width, height);
     }
 }
