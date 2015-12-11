@@ -46,7 +46,7 @@ function Picture(){
     this.getZIndex = function(){ return zIndex; }
     
     this.draw = function(ctx, zoomlevel, x, y){
-        console.log('img',img,' x:',posX,' y',posY,' width:',width,' height',height, 'zoomlevel:',zoomlevel);
+        // console.log('img',img,' x:',posX,' y',posY,' width:',width,' height',height, 'zoomlevel:',zoomlevel);
         if(x && y){
             posX = x;
             posY = y;    

@@ -4,6 +4,7 @@ function Canvas(){
     var width;
     var height;
     var layers = [];
+    var activeLayerIndex;   //z-index value of active layer
     var layerCounter =0;
     var zIndexValue = 0;
     
@@ -19,7 +20,6 @@ function Canvas(){
         if(context){
             return context;
         }
-        
         return undefined;
     }
     
@@ -35,26 +35,39 @@ function Canvas(){
     this.addLayer = function(layer){
         layer.setZIndex(zIndexValue);
         layers.push(layer);
+        activeLayerIndex = zIndexValue;
         zIndexValue++;
         layerCounter++;
-        console.log('total layers: ',layerCounter);
+        
+        // console.log('total layers: ',layerCounter);
     }
     
     this.removeLayer = function(index){
         layers.splice(index,1);
         layerCounter--;
-        console.log('total layers: ',layerCounter);
+        // console.log('total layers: ',layerCounter);
+    }
+
+    this.setActiveLayerIndex = function(index){
+        activeLayerIndex = index;
     }
     
+    this.getActiveLayerIndex = function(){
+        return activeLayerIndex;
+    }
+
     this.getLayers = function(){
         return layers;
     }
     
     this.renderLayers = function(zoomlevel){
-        console.log('rendering');
+        // console.log('rendering');
+
         layers.sort(function(a,b){
             return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
         });
+        
+        context.clearRect(0,0,canvas.width,canvas.height);
         
         if(zoomlevel){
             for(var layer in layers){

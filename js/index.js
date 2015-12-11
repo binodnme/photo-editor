@@ -62,8 +62,8 @@ var imageSelected = false;
 myCanvas.getCanvas().onmousedown = function(e1){
     mousedown = true;
     
-    var x = event.pageX - myCanvas.getCanvas().offsetLeft;
-    var y = event.pageY - myCanvas.getCanvas().offsetTop;
+    var x = e1.pageX - myCanvas.getCanvas().offsetLeft;
+    var y = e1.pageY - myCanvas.getCanvas().offsetTop;
     
     var index;
     
@@ -74,43 +74,69 @@ myCanvas.getCanvas().onmousedown = function(e1){
         if(x>=pos.posX && x<=(pos.posX+dimen.width) && y>=pos.posY && y<=(pos.posY+dimen.height)){
             imageSelected = true;
             index = i;
+
+            var xCor = pos.posX;
+            var yCor = pos.posY;
+            myCanvas.renderLayers();
+            drawOutline({'x':xCor, 'y':yCor}, dimen);
+
             break;
         }    
     }
     
+    // console.log('index',index);
+
+    var actualPos, xCorrection, yCorrection;
+    if(index){
+        actualPos = layers[index].getPicture().getPosition();
     
-    var actualPos = layers[index].getPicture().getPosition();
-    
-    var xCorrection = x-actualPos.posX;
-    var yCorrection = y-actualPos.posY;
+        xCorrection = x-actualPos.posX;
+        yCorrection = y-actualPos.posY;
+        
+    }
     
     myCanvas.getCanvas().onmousemove = function(e2){
         if(mousedown && imageSelected){
-            var x1 = event.pageX - myCanvas.getCanvas().offsetLeft;
-            var y1 = event.pageY - myCanvas.getCanvas().offsetTop;
+            var x1 = e2.pageX - myCanvas.getCanvas().offsetLeft;
+            var y1 = e2.pageY - myCanvas.getCanvas().offsetTop;
             layers[index].getPicture().setPosition(x1-xCorrection,y1-yCorrection);
             ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
             
-            console.log('zindex: ',layers[index].getZIndex());
+            // console.log('zindex: ',layers[index].getZIndex());
 
             myCanvas.renderLayers(); 
             
             var dimen = layers[index].getPicture().getDimension();
             
-            var x = x1-xCorrection;
-            var y = y1-yCorrection;
+            // console.log('dimen:',dimen);
+            var finalX = x1-xCorrection;
+            var finalY = y1-yCorrection;
             
-            ctx.setLineDash([2,6]);
-            ctx.beginPath();
-            ctx.moveTo(x,y);
-            ctx.lineTo(x+dimen.width, y);
-            ctx.lineTo(x+dimen.width,y+dimen.height);
-            ctx.lineTo(x, y+dimen.height);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle='red';
-            ctx.stroke();
+            drawOutline({'x':finalX, 'y':finalY},dimen);
+            // ctx.setLineDash([2,6]);
+            // ctx.beginPath();
+            // ctx.moveTo(x,y);
+            // ctx.lineTo(x+dimen.width, y);
+            // ctx.lineTo(x+dimen.width,y+dimen.height);
+            // ctx.lineTo(x, y+dimen.height);
+            // ctx.lineTo(x, y);
+            // ctx.strokeStyle='red';
+            // ctx.stroke();
         }
     }
+}
+
+function drawOutline(pos, dimen){
+    // console.log('pos',pos);
+    ctx.setLineDash([2,6]);
+    ctx.beginPath();
+    ctx.moveTo(pos.x, pos.y);
+    ctx.lineTo(pos.x+dimen.width, pos.y);
+    ctx.lineTo(pos.x+dimen.width,pos.y+dimen.height);
+    ctx.lineTo(pos.x, pos.y+dimen.height);
+    ctx.lineTo(pos.x, pos.y);
+    ctx.strokeStyle='red';
+    ctx.stroke();
 }
 
 myCanvas.getCanvas().onmouseup = function(){
@@ -120,13 +146,30 @@ myCanvas.getCanvas().onmouseup = function(){
 
 function updateLayerUI(layer){
     var layers = document.getElementById('layer-list');
+
+    if(layer){
+        var li = document.createElement('li');
+        li.innerHTML = layer.getZIndex();
+        li.setAttribute('id', layer.getZIndex());
+
+        console.log('zindex: ', layer.getZIndex(),', active:',myCanvas.getActiveLayerIndex());
+        layers.appendChild(li);
+    }
     
-    var li = document.createElement('li');
-    li.innerHTML = layer.getZIndex();
     
-    layers.appendChild(li);
+    var activeLayerIndex = myCanvas.getActiveLayerIndex(); 
+    var children = layers.children;
     
+    for(var i=0; i<children.length; i++){
+        if(parseInt(children[i].getAttribute('id'))== activeLayerIndex){
+            children[i].style.background = 'grey';
+        }else{
+            children[i].style.background = 'white';
+        }
+    }
 }
+
+
 //
 //myCanvas.getCanvas().onkeydown = function(event){
 //    var key = event.keyCode;
@@ -161,20 +204,13 @@ function updateLayerUI(layer){
 //}
 //
 //
+
 var zoomLevel = 1;
-myCanvas.getCanvas().onmousewheel = function(event){
+myCanvas.getCanvas().onwheel = function(event){
     
     var deltaYVlaue = event.deltaY;
     console.log(deltaYVlaue)
     
-//    var picture = myCanvas.getLayers()[0].getPicture();
-//    var image = picture.getImage();
-//    var dimen = picture.getDimension();
-//    var width = dimen.width;
-//    var height = dimen.height;
-//    var position = picture.getPosition();
-//    var posX = position.posX;
-//    var posY = position.posY;
     ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
     
     
@@ -184,6 +220,51 @@ myCanvas.getCanvas().onmousewheel = function(event){
         zoomLevel*=1.1;
         
     }
-//    ctx.drawImage(image, posX, posY, width*zoomLevel, height*zoomLevel); 
     myCanvas.renderLayers(zoomLevel);
+}
+
+
+var propWidth = document.getElementById('prop-width');
+var propHeight = document.getElementById('prop-height');
+
+// console.log(propWidth);
+propWidth.onchange = function(eChange){
+    var layer = myCanvas.getLayers()[0];
+    resize(eChange, layer);
+}
+
+propHeight.onchange = function(event){
+    var layer = myCanvas.getLayers()[0];
+    resize(event, layer);
+}
+
+function resize(event, lyr){
+    var layer = lyr;
+    var pic = layer.getPicture();
+
+    var w = parseInt(propWidth.value);
+    var h = parseInt(propHeight.value);
+
+    var dimen = pic.getDimension();
+
+    var width;
+    var height;
+    if(w){
+        width = w;
+    }else{
+        width = dimen.width;
+    }
+
+    if(h){
+        height = h;
+    }else{
+        height = dimen.height;
+    }
+    
+    console.log('width', width);
+    console.log('height', height);
+    pic.setDimension(width, height);
+
+    ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
+    myCanvas.renderLayers();
 }
