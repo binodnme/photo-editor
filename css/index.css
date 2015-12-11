@@ -1,3 +1,8 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
 .main-container{
     max-width: 85.375em;
     border: 1px solid red;
@@ -61,13 +66,13 @@ ul#layer-list, ul#property-list{
     border: 1px solid blue;
 }
 
-.layer-list-wrapper ul li, property-list-wrapper ul li{
-    /*padding: 5px 0px;*/
+.layer-list-wrapper ul li, .property-list-wrapper ul li{
+    padding: 5px 0px;
 }
 
 #playground{
-    width: 1000px;
-    height: 550px;
+    /*width: 1000px;
+    height: 550px;*/
     border: 1px solid green;
     display: block;
     margin: 0px auto;

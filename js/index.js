@@ -78,14 +78,19 @@ myCanvas.getCanvas().onmousedown = function(e1){
             var xCor = pos.posX;
             var yCor = pos.posY;
             myCanvas.renderLayers();
-            drawOutline({'x':xCor, 'y':yCor}, dimen);
+            drawOutline({'posX':xCor, 'posY':yCor}, dimen);
+
+            var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layers[i].getZIndex()});
+            var ulist = document.getElementsByTagName('ul');
+
+            for(var i=0; i<ulist.length; i++){
+                ulist[i].dispatchEvent(ev1);
+            }
 
             break;
         }    
     }
     
-    // console.log('index',index);
-
     var actualPos, xCorrection, yCorrection;
     if(index){
         actualPos = layers[index].getPicture().getPosition();
@@ -102,39 +107,25 @@ myCanvas.getCanvas().onmousedown = function(e1){
             layers[index].getPicture().setPosition(x1-xCorrection,y1-yCorrection);
             ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
             
-            // console.log('zindex: ',layers[index].getZIndex());
-
             myCanvas.renderLayers(); 
             
             var dimen = layers[index].getPicture().getDimension();
-            
-            // console.log('dimen:',dimen);
             var finalX = x1-xCorrection;
             var finalY = y1-yCorrection;
             
-            drawOutline({'x':finalX, 'y':finalY},dimen);
-            // ctx.setLineDash([2,6]);
-            // ctx.beginPath();
-            // ctx.moveTo(x,y);
-            // ctx.lineTo(x+dimen.width, y);
-            // ctx.lineTo(x+dimen.width,y+dimen.height);
-            // ctx.lineTo(x, y+dimen.height);
-            // ctx.lineTo(x, y);
-            // ctx.strokeStyle='red';
-            // ctx.stroke();
+            drawOutline({'posX':finalX, 'posY':finalY},dimen);   
         }
     }
 }
 
 function drawOutline(pos, dimen){
-    // console.log('pos',pos);
     ctx.setLineDash([2,6]);
     ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-    ctx.lineTo(pos.x+dimen.width, pos.y);
-    ctx.lineTo(pos.x+dimen.width,pos.y+dimen.height);
-    ctx.lineTo(pos.x, pos.y+dimen.height);
-    ctx.lineTo(pos.x, pos.y);
+    ctx.moveTo(pos.posX, pos.posY);
+    ctx.lineTo(pos.posX+dimen.width, pos.posY);
+    ctx.lineTo(pos.posX+dimen.width,pos.posY+dimen.height);
+    ctx.lineTo(pos.posX, pos.posY+dimen.height);
+    ctx.lineTo(pos.posX, pos.posY);
     ctx.strokeStyle='red';
     ctx.stroke();
 }
@@ -144,21 +135,22 @@ myCanvas.getCanvas().onmouseup = function(){
     imageSelected = false;
 }
 
-function updateLayerUI(layer){
-    var layers = document.getElementById('layer-list');
 
+var layerList = document.getElementById('layer-list');
+function updateLayerUI(layer){
     if(layer){
         var li = document.createElement('li');
         li.innerHTML = layer.getZIndex();
         li.setAttribute('id', layer.getZIndex());
+        li.setAttribute('onclick', 'layerSelection('+layer.getZIndex()+')');
 
         console.log('zindex: ', layer.getZIndex(),', active:',myCanvas.getActiveLayerIndex());
-        layers.appendChild(li);
+        layerList.appendChild(li);
     }
     
     
     var activeLayerIndex = myCanvas.getActiveLayerIndex(); 
-    var children = layers.children;
+    var children = layerList.children;
     
     for(var i=0; i<children.length; i++){
         if(parseInt(children[i].getAttribute('id'))== activeLayerIndex){
@@ -169,6 +161,165 @@ function updateLayerUI(layer){
     }
 }
 
+
+function layerSelection(index){
+    var ev1 = new CustomEvent('layerSelectInList',{'detail':index});
+
+    myCanvas.setActiveLayerIndex(index);
+    updateLayerUI();
+    
+    var ulist = document.getElementsByTagName('ul');
+
+    for(var i=0; i<ulist.length; i++){
+        ulist[i].dispatchEvent(ev1);
+    }
+
+    var c = document.getElementsByTagName('canvas')[0];
+    c.dispatchEvent(ev1);
+
+}
+
+
+myCanvas.getCanvas().addEventListener('layerSelectInList', function(ev){
+    myCanvas.renderLayers();
+    var index = parseInt(ev.detail);
+    var layers = myCanvas.getLayers();
+    for(var i=0; i<layers.length; i++){
+        console.log('i:',i);
+        if(layers[i].getZIndex() == index){
+            var pic = layers[i].getPicture();
+            drawOutline(pic.getPosition(), pic.getDimension());
+        }
+    }
+});
+
+
+layerList.addEventListener('layerSelectInCanvas', function(ev1){
+    console.log('hello from layer list');
+    var index = parseInt(ev1.detail);
+    var layers = myCanvas.getLayers();
+    myCanvas.setActiveLayerIndex(index);
+
+    var children = layerList.children;
+
+    for(var i=0; i<children.length; i++){
+        if(parseInt(children[i].getAttribute('id'))== index){
+            children[i].style.background = 'grey';
+        }else{
+            children[i].style.background = 'white';
+        }
+    }
+});
+
+
+var propertyList = document.getElementById('property-list');
+
+propertyList.addEventListener('layerSelectInCanvas', function(ev1){
+    console.log('hello from property list');
+    var index = parseInt(ev1.detail);
+    var layers = myCanvas.getLayers();
+    // var tempLayer;
+    var widthBox = document.getElementById('prop-width');
+    var heightBox = document.getElementById('prop-height');
+
+    for(var i in layers){
+        if(layers[i].getZIndex()==index){
+            // tempLayer = layers[i];
+            var dimen = layers[i].getPicture().getDimension();
+            widthBox.value = dimen.width;
+            heightBox.value = dimen.height;
+            break;
+        }
+    }
+});
+
+
+
+propertyList.addEventListener('layerSelectInList', function(ev2){
+    updatePropertyList(ev2);
+});
+
+function updatePropertyList(evnt){
+    var ev1 = evnt;
+    console.log('hello from property list');
+    var index = parseInt(ev1.detail);
+    var layers = myCanvas.getLayers();
+    // var tempLayer;
+    var widthBox = document.getElementById('prop-width');
+    var heightBox = document.getElementById('prop-height');
+
+    for(var i in layers){
+        if(layers[i].getZIndex()==index){
+            // tempLayer = layers[i];
+            var dimen = layers[i].getPicture().getDimension();
+            widthBox.value = dimen.width;
+            heightBox.value = dimen.height;
+            break;
+        }
+    }
+}
+
+var propWidth = document.getElementById('prop-width');
+var propHeight = document.getElementById('prop-height');
+
+propWidth.onchange = function(eChange){
+    var layer = myCanvas.getLayers()[myCanvas.getActiveLayerIndex()];
+    resize(eChange, layer);
+}
+
+propHeight.onchange = function(event){
+    var layer = myCanvas.getLayers()[myCanvas.getActiveLayerIndex()];
+    resize(event, layer);
+}
+
+function resize(event, lyr){
+    var layer = lyr;
+    var pic = layer.getPicture();
+
+    var w = parseInt(propWidth.value);
+    var h = parseInt(propHeight.value);
+
+    var dimen = pic.getDimension();
+
+    var width;
+    var height;
+    if(w){
+        width = w;
+    }else{
+        width = dimen.width;
+    }
+
+    if(h){
+        height = h;
+    }else{
+        height = dimen.height;
+    }
+    
+    console.log('width', width);
+    console.log('height', height);
+    pic.setDimension(width, height);
+
+    ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
+    myCanvas.renderLayers();
+}
+
+
+var zoomLevel = 1;
+myCanvas.getCanvas().onwheel = function(event){
+    var deltaYVlaue = event.deltaY;
+    console.log(deltaYVlaue)
+    
+    ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
+    
+    
+    if(deltaYVlaue>0){
+        zoomLevel/=1.1;
+    }else{
+        zoomLevel*=1.1;
+        
+    }
+    myCanvas.renderLayers(zoomLevel);
+}
 
 //
 //myCanvas.getCanvas().onkeydown = function(event){
@@ -205,66 +356,3 @@ function updateLayerUI(layer){
 //
 //
 
-var zoomLevel = 1;
-myCanvas.getCanvas().onwheel = function(event){
-    
-    var deltaYVlaue = event.deltaY;
-    console.log(deltaYVlaue)
-    
-    ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
-    
-    
-    if(deltaYVlaue>0){
-        zoomLevel/=1.1;
-    }else{
-        zoomLevel*=1.1;
-        
-    }
-    myCanvas.renderLayers(zoomLevel);
-}
-
-
-var propWidth = document.getElementById('prop-width');
-var propHeight = document.getElementById('prop-height');
-
-// console.log(propWidth);
-propWidth.onchange = function(eChange){
-    var layer = myCanvas.getLayers()[0];
-    resize(eChange, layer);
-}
-
-propHeight.onchange = function(event){
-    var layer = myCanvas.getLayers()[0];
-    resize(event, layer);
-}
-
-function resize(event, lyr){
-    var layer = lyr;
-    var pic = layer.getPicture();
-
-    var w = parseInt(propWidth.value);
-    var h = parseInt(propHeight.value);
-
-    var dimen = pic.getDimension();
-
-    var width;
-    var height;
-    if(w){
-        width = w;
-    }else{
-        width = dimen.width;
-    }
-
-    if(h){
-        height = h;
-    }else{
-        height = dimen.height;
-    }
-    
-    console.log('width', width);
-    console.log('height', height);
-    pic.setDimension(width, height);
-
-    ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
-    myCanvas.renderLayers();
-}
