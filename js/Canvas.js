@@ -34,6 +34,7 @@ function Canvas(){
     
     this.addLayer = function(layer){
         layer.setZIndex(zIndexValue);
+        layer.setName('layer '+layerCounter);
         layers.push(layer);
         activeLayerIndex = zIndexValue;
         zIndexValue++;
@@ -78,7 +79,16 @@ function Canvas(){
                 layers[layer].getPicture().draw(context);
             }
         }
-        
-        
+       
+    }
+
+    this.hasZIndex = function(index){
+        for (var i = layers.length - 1; i >= 0; i--) {
+            if(layers[i].getZIndex()==index){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

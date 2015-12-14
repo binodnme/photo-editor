@@ -9,12 +9,12 @@ myCanvas.setCanvas(cnvs);
 var ctx = myCanvas.getContext();
 
 inputFileElmnt.onchange = function(event){
-    console.log(event);
+    // console.log(event);
     var file = event.target.files[0];
     var fileReader = new FileReader();
     
     fileReader.onload = function(event1){
-        console.log(event1);
+        // console.log(event1);
         
         loadImage(event1.target.result);
         
@@ -36,7 +36,7 @@ getButton.onclick = function(){
 
 function loadImage(src){
     
-    console.log('source:',src);
+    // console.log('source:',src);
     var img = new Image();
     img.src = src;
 
@@ -49,7 +49,7 @@ function loadImage(src){
     myCanvas.addLayer(layer);
    
     picture.getImage().onload = function(){
-        console.log('width: ',picture.getImage().width, ' height:',picture.getImage().height);
+        // console.log('width: ',picture.getImage().width, ' height:',picture.getImage().height);
         picture.setDimension(picture.getImage().width, picture.getImage().height);
         myCanvas.renderLayers();
         updateLayerUI(layer);
@@ -68,52 +68,75 @@ myCanvas.getCanvas().onmousedown = function(e1){
     var index;
     
     var layers = myCanvas.getLayers();
+
+    // layers.sort(function(a,b){
+    //     return parseInt(b.getZIndex()) - parseInt(a.getZIndex());
+    // });
+
+
+    var indices = [];
     for(var i in layers){
+        // console.info('index:', layers[i].getName(), 'i:',i);
         var dimen = layers[i].getPicture().getDimension();
         var pos = layers[i].getPicture().getPosition();
         if(x>=pos.posX && x<=(pos.posX+dimen.width) && y>=pos.posY && y<=(pos.posY+dimen.height)){
+            // console.info('hello');
             imageSelected = true;
-            index = i;
+            // index = i;
+            indices.push(i);
 
-            var xCor = pos.posX;
-            var yCor = pos.posY;
-            myCanvas.renderLayers();
-            drawOutline({'posX':xCor, 'posY':yCor}, dimen);
-
-            var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layers[i].getZIndex()});
-            var ulist = document.getElementsByTagName('ul');
-
-            for(var i=0; i<ulist.length; i++){
-                ulist[i].dispatchEvent(ev1);
-            }
-
-            break;
         }    
     }
-    
-    var actualPos, xCorrection, yCorrection;
-    if(index){
-        actualPos = layers[index].getPicture().getPosition();
+
+    if(indices.length>0){
+        var hZIndex = -1;
+        var hIndex = -1;
+        for (var i = indices.length - 1; i >= 0; i--) {
+            var j = indices[i];
+
+            if(layers[j].getZIndex()>hZIndex){
+                hZIndex = layers[j].getZIndex();
+                hIndex = j;
+            }
+        };    
+
+        var dimen = layers[hIndex].getPicture().getDimension();
+        var pos = layers[hIndex].getPicture().getPosition();
+        
+        var xCor = pos.posX;
+        var yCor = pos.posY;
+        myCanvas.renderLayers();
+        drawOutline({'posX':xCor, 'posY':yCor}, dimen);
+
+        
+        var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layers[hIndex].getZIndex()});
+        var ulist = document.getElementsByTagName('ul');
+
+        for(var j=0; j<ulist.length; j++){
+            ulist[j].dispatchEvent(ev1);
+        }
+
+        var actualPos, xCorrection, yCorrection;
+        actualPos = layers[hIndex].getPicture().getPosition();
     
         xCorrection = x-actualPos.posX;
         yCorrection = y-actualPos.posY;
         
-    }
-    
-    myCanvas.getCanvas().onmousemove = function(e2){
-        if(mousedown && imageSelected){
-            var x1 = e2.pageX - myCanvas.getCanvas().offsetLeft;
-            var y1 = e2.pageY - myCanvas.getCanvas().offsetTop;
-            layers[index].getPicture().setPosition(x1-xCorrection,y1-yCorrection);
-            ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
-            
-            myCanvas.renderLayers(); 
-            
-            var dimen = layers[index].getPicture().getDimension();
-            var finalX = x1-xCorrection;
-            var finalY = y1-yCorrection;
-            
-            drawOutline({'posX':finalX, 'posY':finalY},dimen);   
+        myCanvas.getCanvas().onmousemove = function(e2){
+            if(mousedown && imageSelected){
+                var x1 = e2.pageX - myCanvas.getCanvas().offsetLeft;
+                var y1 = e2.pageY - myCanvas.getCanvas().offsetTop;
+                layers[hIndex].getPicture().setPosition(x1-xCorrection,y1-yCorrection);
+                ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
+                
+                myCanvas.renderLayers(); 
+                
+                var dimen = layers[hIndex].getPicture().getDimension();
+                var finalX = x1-xCorrection;
+                var finalY = y1-yCorrection;
+                
+                drawOutline({'posX':finalX, 'posY':finalY},dimen);   
+            }
         }
     }
 }
@@ -140,17 +163,25 @@ var layerList = document.getElementById('layer-list');
 function updateLayerUI(layer){
     if(layer){
         var li = document.createElement('li');
-        li.innerHTML = layer.getZIndex();
+        // li.innerHTML = layer.getZIndex();
+        li.innerHTML = layer.getName();
         li.setAttribute('id', layer.getZIndex());
         li.setAttribute('onclick', 'layerSelection('+layer.getZIndex()+')');
 
-        console.log('zindex: ', layer.getZIndex(),', active:',myCanvas.getActiveLayerIndex());
+        // console.log('zindex: ', layer.getZIndex(),', active:',myCanvas.getActiveLayerIndex());
         layerList.appendChild(li);
     }
     
     
     var activeLayerIndex = myCanvas.getActiveLayerIndex(); 
     var children = layerList.children;
+
+    for (var i = children.length - 1; i >= 0; i--) {
+        var childrenId = parseInt(children[i].getAttribute('id'));
+            if(!myCanvas.hasZIndex(childrenId)){
+                children[i].remove();  
+            }
+    };
     
     for(var i=0; i<children.length; i++){
         if(parseInt(children[i].getAttribute('id'))== activeLayerIndex){
@@ -159,6 +190,23 @@ function updateLayerUI(layer){
             children[i].style.background = 'white';
         }
     }
+}
+
+
+function deleteLayer(){
+    var layers = myCanvas.getLayers();
+    var activeIndex = myCanvas.getActiveLayerIndex();
+    console.info('active: ', activeIndex);
+    for (var i = layers.length - 1; i >= 0; i--) {
+        if(layers[i].getZIndex()==activeIndex){
+            layers.splice(i, 1);
+            updateLayerUI();
+            updatePropertyList();
+            myCanvas.renderLayers();
+            activeIndex = undefined;
+            break;
+        }
+    };
 }
 
 
@@ -185,7 +233,7 @@ myCanvas.getCanvas().addEventListener('layerSelectInList', function(ev){
     var index = parseInt(ev.detail);
     var layers = myCanvas.getLayers();
     for(var i=0; i<layers.length; i++){
-        console.log('i:',i);
+        // console.log('i:',i);
         if(layers[i].getZIndex() == index){
             var pic = layers[i].getPicture();
             drawOutline(pic.getPosition(), pic.getDimension());
@@ -195,7 +243,7 @@ myCanvas.getCanvas().addEventListener('layerSelectInList', function(ev){
 
 
 layerList.addEventListener('layerSelectInCanvas', function(ev1){
-    console.log('hello from layer list');
+    // console.log('hello from layer list');
     var index = parseInt(ev1.detail);
     var layers = myCanvas.getLayers();
     myCanvas.setActiveLayerIndex(index);
@@ -215,7 +263,7 @@ layerList.addEventListener('layerSelectInCanvas', function(ev1){
 var propertyList = document.getElementById('property-list');
 
 propertyList.addEventListener('layerSelectInCanvas', function(ev1){
-    console.log('hello from property list');
+    // console.log('hello from property list');
     var index = parseInt(ev1.detail);
     var layers = myCanvas.getLayers();
     // var tempLayer;
@@ -239,23 +287,31 @@ propertyList.addEventListener('layerSelectInList', function(ev2){
     updatePropertyList(ev2);
 });
 
+
 function updatePropertyList(evnt){
-    var ev1 = evnt;
-    console.log('hello from property list');
-    var index = parseInt(ev1.detail);
-    var layers = myCanvas.getLayers();
-    // var tempLayer;
     var widthBox = document.getElementById('prop-width');
     var heightBox = document.getElementById('prop-height');
 
-    for(var i in layers){
-        if(layers[i].getZIndex()==index){
-            // tempLayer = layers[i];
-            var dimen = layers[i].getPicture().getDimension();
-            widthBox.value = dimen.width;
-            heightBox.value = dimen.height;
-            break;
+    if(evnt){
+        var ev1 = evnt;
+        var index = parseInt(ev1.detail);
+        // console.log('hello from property list');
+        var layers = myCanvas.getLayers();
+        // var tempLayer;
+        
+        for(var i in layers){
+            if(layers[i].getZIndex()==index){
+                // tempLayer = layers[i];
+                var dimen = layers[i].getPicture().getDimension();
+                widthBox.value = dimen.width;
+                heightBox.value = dimen.height;
+                break;
+            }
         }
+
+    }else{
+        widthBox.value = '';
+        heightBox.value = '';
     }
 }
 
@@ -304,22 +360,22 @@ function resize(event, lyr){
 }
 
 
-var zoomLevel = 1;
-myCanvas.getCanvas().onwheel = function(event){
-    var deltaYVlaue = event.deltaY;
-    console.log(deltaYVlaue)
+// var zoomLevel = 1;
+// myCanvas.getCanvas().onwheel = function(event){
+    // var deltaYVlaue = event.deltaY;
+    // console.log(deltaYVlaue)
     
-    ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
+    // ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
     
     
-    if(deltaYVlaue>0){
-        zoomLevel/=1.1;
-    }else{
-        zoomLevel*=1.1;
+    // if(deltaYVlaue>0){
+    //     zoomLevel/=1.1;
+    // }else{
+    //     zoomLevel*=1.1;
         
-    }
-    myCanvas.renderLayers(zoomLevel);
-}
+    // }
+    // myCanvas.renderLayers(zoomLevel);
+// }
 
 //
 //myCanvas.getCanvas().onkeydown = function(event){
