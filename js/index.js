@@ -9,19 +9,15 @@ myCanvas.setCanvas(cnvs);
 var ctx = myCanvas.getContext();
 
 inputFileElmnt.onchange = function(event){
-    // console.log(event);
     var file = event.target.files[0];
     var fileReader = new FileReader();
     
     fileReader.onload = function(event1){
-        // console.log(event1);
-        
         loadImage(event1.target.result);
-        
     }
-    
     fileReader.readAsDataURL(file);
 }
+
 
 getButton.onclick = function(){
     console.log('hey man');
@@ -35,8 +31,6 @@ getButton.onclick = function(){
 }
 
 function loadImage(src){
-    
-    // console.log('source:',src);
     var img = new Image();
     img.src = src;
 
@@ -49,7 +43,6 @@ function loadImage(src){
     myCanvas.addLayer(layer);
    
     picture.getImage().onload = function(){
-        // console.log('width: ',picture.getImage().width, ' height:',picture.getImage().height);
         picture.setDimension(picture.getImage().width, picture.getImage().height);
         myCanvas.renderLayers();
         updateLayerUI(layer);
@@ -69,22 +62,13 @@ myCanvas.getCanvas().onmousedown = function(e1){
     
     var layers = myCanvas.getLayers();
 
-    // layers.sort(function(a,b){
-    //     return parseInt(b.getZIndex()) - parseInt(a.getZIndex());
-    // });
-
-
     var indices = [];
     for(var i in layers){
-        // console.info('index:', layers[i].getName(), 'i:',i);
         var dimen = layers[i].getPicture().getDimension();
         var pos = layers[i].getPicture().getPosition();
         if(x>=pos.posX && x<=(pos.posX+dimen.width) && y>=pos.posY && y<=(pos.posY+dimen.height)){
-            // console.info('hello');
             imageSelected = true;
-            // index = i;
             indices.push(i);
-
         }    
     }
 
@@ -226,7 +210,6 @@ function moveLayer(start, end){
         }
     }
     
-
     updateLayerUI();
     updatePropertyList();
     myCanvas.renderLayers();
@@ -273,7 +256,6 @@ myCanvas.getCanvas().addEventListener('layerSelectInList', function(ev){
     var index = parseInt(ev.detail);
     var layers = myCanvas.getLayers();
     for(var i=0; i<layers.length; i++){
-        // console.log('i:',i);
         if(layers[i].getZIndex() == index){
             var pic = layers[i].getPicture();
             drawOutline(pic.getPosition(), pic.getDimension());
@@ -283,7 +265,6 @@ myCanvas.getCanvas().addEventListener('layerSelectInList', function(ev){
 
 
 layerList.addEventListener('layerSelectInCanvas', function(ev1){
-    // console.log('hello from layer list');
     var index = parseInt(ev1.detail);
     var layers = myCanvas.getLayers();
     myCanvas.setActiveLayerIndex(index);
@@ -303,10 +284,8 @@ layerList.addEventListener('layerSelectInCanvas', function(ev1){
 var propertyList = document.getElementById('property-list');
 
 propertyList.addEventListener('layerSelectInCanvas', function(ev1){
-    // console.log('hello from property list');
     var index = parseInt(ev1.detail);
     var layers = myCanvas.getLayers();
-    // var tempLayer;
     var widthBox = document.getElementById('prop-width');
     var heightBox = document.getElementById('prop-height');
 
@@ -335,10 +314,8 @@ function updatePropertyList(evnt){
     if(evnt){
         var ev1 = evnt;
         var index = parseInt(ev1.detail);
-        // console.log('hello from property list');
         var layers = myCanvas.getLayers();
-        // var tempLayer;
-        
+
         for(var i in layers){
             if(layers[i].getZIndex()==index){
                 // tempLayer = layers[i];
@@ -400,31 +377,11 @@ function resize(event, lyr){
 }
 
 
-// var zoomLevel = 1;
-// myCanvas.getCanvas().onwheel = function(event){
-    // var deltaYVlaue = event.deltaY;
-    // console.log(deltaYVlaue)
-    
-    // ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
-    
-    
-    // if(deltaYVlaue>0){
-    //     zoomLevel/=1.1;
-    // }else{
-    //     zoomLevel*=1.1;
-        
-    // }
-    // myCanvas.renderLayers(zoomLevel);
-// }
-
-
-
 var dragSourceElement;
 var initial;
 function handleDragStart(ev1){
 
     var list = layerList.getElementsByTagName('li');
-    // var temp;
     for (var i = list.length - 1; i >= 0; i--) {
         if(this==list[i]){
             initial = i;
@@ -445,12 +402,11 @@ function handleDragOver(ev1){
 
 
 function handleDragEnter(e) {
-  // this / e.target is the current hover target.
   this.classList.add('over');
 }
 
 function handleDragLeave(e) {
-  this.classList.remove('over');  // this / e.target is previous target element.
+  this.classList.remove('over');
 }
 
 function handleDrop(e) {
@@ -470,14 +426,6 @@ function handleDrop(e) {
   
   console.info('initial:',initial, 'final:',finalValue);
   moveLayer(initial, finalValue);
-
-  // if(dragSourceElement!=this){
-  //   console.info('final: ', finalValue);
-  //   console.info('i am here');
-  //   // dragSourceElement.innerHTML = this.innerHTML;
-  //   // this.innerHTML = e.dataTransfer.getData('text/html');
-  // }
-
 
   if(initial<finalValue){
     for(var i=initial; i<finalValue; i++){
