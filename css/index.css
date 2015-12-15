@@ -93,3 +93,9 @@ ul#layer-list, ul#property-list{
 input{
     width: 100px;
 }
+
+
+/*layer li style*/
+.layer-list .over{
+    border: 2px dash red;
+}
