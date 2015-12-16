@@ -15,15 +15,25 @@
                 <div class="load-url">
                     <label>URL:</label> <input id="url" type="url" placeholder="enter image url"> <input id="getButton" type="submit" value="get">
                 </div>
+
+                <input type="button" value="grayscale" onclick="grayscale()">
+                
+                <input type="button" value="brightness" onclick="brightness()">
+
+                <input type="button" value="threshold" onclick="threshold()">
             </div>
             
             <div class="work-area clr">
                 <div class="toolbar">toolbar here</div>
                 <div class="content-wrapper">
                     <div class="canvas-wrapper">
-                        <canvas id="playground" width="1000" height="550" tabindex="1">
-                            Unsupported Browser
-                        </canvas>
+                        <div class="start-dialogbox">
+                            canvas width: <input id='width' type="text" value="600">
+                            canvas height: <input id='height' type="text" value="400">
+                            <input type="submit" value="start" onclick="setup()">
+                        </div>
+
+                        <canvas id='playground'></canvas>
                     </div>
                     <div class="info-bar">
                         <div class="layer-bar">
@@ -52,6 +62,13 @@
             
         </div>
         
+
+        <script type="text/javascript" src='js/Filter.js'></script>
+        <script type="text/javascript" src='js/Brightness.js'></script>
+        <script type="text/javascript" src='js/Threshold.js'></script>
+        <script type="text/javascript" src='js/Grayscale.js'></script>
+        <script type="text/javascript" src="js/outline.js"></script>
+        <script type="text/javascript" src="js/filters.js"></script>
         <script type="text/javascript" src="js/Picture.js"></script>
         <script type="text/javascript" src="js/Layer.js"></script>
         <script type="text/javascript" src="js/Canvas.js"></script>

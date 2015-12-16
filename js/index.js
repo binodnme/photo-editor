@@ -8,6 +8,48 @@ var myCanvas = new Canvas();
 myCanvas.setCanvas(cnvs);
 var ctx = myCanvas.getContext();
 
+
+function setup(){
+    var  width = parseFloat(document.getElementById('width').value);
+    var  height = parseFloat(document.getElementById('height').value);
+
+    console.log('width:', width, ' height:', height);
+
+    // var cnvs = createCanvas(width, height);
+    // myCanvas.setCanvas(cnvs);
+    // ctx = myCanvas.getContext();
+    myCanvas.getCanvas().width = width;
+    myCanvas.getCanvas().height = height;
+
+    myCanvas.renderLayers();
+}
+
+function createCanvas(w, h){
+    var width = 500;
+    var height = 300;
+
+    if(w && h){
+        width = w;
+        height = h;
+    }
+
+    var canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    canvas.setAttribute('tabindex', '1');
+
+    var canvasWrapper = document.getElementsByClassName('canvas-wrapper')[0];
+
+    while (canvasWrapper.firstChild) {
+        canvasWrapper.removeChild(canvasWrapper.firstChild);
+    }
+
+    canvasWrapper.appendChild(canvas);
+
+    return canvas;
+}
+
+
 inputFileElmnt.onchange = function(event){
     var file = event.target.files[0];
     var fileReader = new FileReader();
@@ -20,7 +62,6 @@ inputFileElmnt.onchange = function(event){
 
 
 getButton.onclick = function(){
-    console.log('hey man');
     var url = document.getElementById('url');
     
     if(url.value){
@@ -29,6 +70,7 @@ getButton.onclick = function(){
         console.log('blank');
     }
 }
+
 
 function loadImage(src){
     var img = new Image();
@@ -48,6 +90,7 @@ function loadImage(src){
         updateLayerUI(layer);
     }
 }
+
 
 var mousedown = false;
 var imageSelected = false;
@@ -125,17 +168,6 @@ myCanvas.getCanvas().onmousedown = function(e1){
     }
 }
 
-function drawOutline(pos, dimen){
-    ctx.setLineDash([2,6]);
-    ctx.beginPath();
-    ctx.moveTo(pos.posX, pos.posY);
-    ctx.lineTo(pos.posX+dimen.width, pos.posY);
-    ctx.lineTo(pos.posX+dimen.width,pos.posY+dimen.height);
-    ctx.lineTo(pos.posX, pos.posY+dimen.height);
-    ctx.lineTo(pos.posX, pos.posY);
-    ctx.strokeStyle='red';
-    ctx.stroke();
-}
 
 myCanvas.getCanvas().onmouseup = function(){
     mousedown = false;
@@ -301,7 +333,6 @@ propertyList.addEventListener('layerSelectInCanvas', function(ev1){
 });
 
 
-
 propertyList.addEventListener('layerSelectInList', function(ev2){
     updatePropertyList(ev2);
 });
@@ -460,4 +491,77 @@ function handleDragEnd(e) {
   [].forEach.call(list, function (l) {
     l.classList.remove('over');
   });
+}
+
+
+function grayscale(){
+
+    var layerIndex = myCanvas.getActiveLayerIndex();
+
+    console.log('hello', layerIndex);
+
+    if(layerIndex>=0){
+        var layer = myCanvas.getLayers()[layerIndex];
+        var pic = layer.getPicture();
+        // var pixels = Filters.filterImage(Filters.grayscale, pic);
+
+        var g = new Grayscale();
+        // var pixels = g.filterImage(g.filter, pic)
+        // // var pixels = 
+        // console.log('pixels:', pixels);
+
+        // var pos = pic.getPosition();
+        // ctx.putImageData(pixels, pos.posX, pos.posY);
+        g.
+        layer.getFilters().push(g);
+        // layer.setFilter('grayscale');
+    }
+}
+
+
+function brightness(){
+    var layerIndex = myCanvas.getActiveLayerIndex();
+
+    if(layerIndex>=0){
+        var layer = myCanvas.getLayers()[layerIndex];
+        var pic = layer.getPicture();
+        
+        var b = new Brightness();
+        // var pixels = b.filterImage(b.filter, pic, 50)
+        // // var pixels = 
+        // console.log('pixels:', pixels);
+        b.setArgs(50);
+        layer.getFilters().push(b);
+        myCanvas.renderLayers();
+        // var pos = pic.getPosition();
+        // ctx.putImageData(pixels, pos.posX, pos.posY);
+
+        
+
+    }
+}
+
+function threshold(){
+    var layerIndex = myCanvas.getActiveLayerIndex();
+
+    console.log('hello', layerIndex);
+
+    if(layerIndex>=0){
+        var layer = myCanvas.getLayers()[layerIndex];
+        var pic = layer.getPicture();
+        // var pixels = Filters.filterImage(Filters.grayscale, pic);
+
+        var t = new Threshold();
+        t.setArgs(100);
+        layer.getFilters().push(t); 
+        myCanvas.renderLayers();
+        // var pixels = t.filterImage(t.filter, pic, 100)
+        // // var pixels = 
+        // console.log('pixels:', pixels);
+
+        // var pos = pic.getPosition();
+        // ctx.putImageData(pixels, pos.posX, pos.posY);
+
+
+    }
 }

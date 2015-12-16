@@ -5,6 +5,7 @@ function Layer(){
     var picture;
     var width;
     var height;
+    var filters =[];
     
     this.setId = function(i){   id = i; }
     
@@ -39,6 +40,13 @@ function Layer(){
     this.setZIndex = function(index){ zIndex = index; }
     
     this.getZIndex = function(){ return zIndex; }
+
+    // this.setFilter = function(fltr){
+    //     filter = fltr;
+    // }
     
+    this.getFilters = function(){
+        return filters;
+    }
     
 }

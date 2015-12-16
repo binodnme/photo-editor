@@ -37,7 +37,11 @@
 .canvas-wrapper {
     width: 85%;
     float: left;
-    border: 2px solid pink;
+    /*border: 2px solid pink;*/
+}
+
+canvas{
+    border: 2px solid green;
 }
 
 .info-bar{
