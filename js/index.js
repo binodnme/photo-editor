@@ -153,33 +153,49 @@ myCanvas.getCanvas().onmousedown = function(e1){
         xCorrection = x-actualPos.posX;
         yCorrection = y-actualPos.posY;
         
-        myCanvas.getCanvas().onmousemove = function(e2){
-            if(mousedown && imageSelected){
-                var x1 = e2.pageX - myCanvas.getCanvas().offsetLeft;
-                var y1 = e2.pageY - myCanvas.getCanvas().offsetTop;
-                layers[hIndex].getPicture().setPosition(x1-xCorrection,y1-yCorrection);
-                ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
+        // myCanvas.getCanvas().onmousemove = function(e2){
+        //     if(mousedown && imageSelected){
+        //         var x1 = e2.pageX - myCanvas.getCanvas().offsetLeft;
+        //         var y1 = e2.pageY - myCanvas.getCanvas().offsetTop;
+        //         layers[hIndex].getPicture().setPosition(x1-xCorrection,y1-yCorrection);
+        //         ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
                 
-                myCanvas.renderLayers(); 
+        //         myCanvas.renderLayers(); 
                 
-                var dimen = layers[hIndex].getPicture().getDimension();
-                var finalX = x1-xCorrection;
-                var finalY = y1-yCorrection;
+        //         var dimen = layers[hIndex].getPicture().getDimension();
+        //         var finalX = x1-xCorrection;
+        //         var finalY = y1-yCorrection;
                 
-                drawOutline({'posX':finalX, 'posY':finalY},dimen);   
-            }
-        }
+        //         drawOutline({'posX':finalX, 'posY':finalY},dimen);   
+        //     }
+        // }
     }
 }
 
-myCanvas.getCanvas().onmousemove = function(e2){
-    var x1 = e2.pageX - myCanvas.getCanvas().offsetLeft;
-    var y1 = e2.pageY - myCanvas.getCanvas().offsetTop;
+// myCanvas.getCanvas().onmousemove = function(e2){
+//     var x1 = e2.pageX - myCanvas.getCanvas().offsetLeft;
+//     var y1 = e2.pageY - myCanvas.getCanvas().offsetTop;
     
-    console.info('x1:',x1, ' y1:',y1);
+//     var index = myCanvas.getActiveLayerIndex();
 
-    var index = myCanvas.getActiveLayerIndex();
-}
+//     if(index>=0){
+//         var layer = myCanvas.getLayers()[index];
+
+//         var pos = layer.getPicture().getPosition();
+//         var dimen = layer.getPicture().getDimension();
+
+//         if(isOverOutline(x1,y1,pos,dimen)){
+            
+//             console.log('detected');
+//             cnvs.style.cursor = 'ew-resize';
+
+//         }else{
+//             // console.info('no');
+//             cnvs.style.cursor = 'default';
+//         }
+
+//     }
+// }
 
 
 myCanvas.getCanvas().onmouseup = function(){

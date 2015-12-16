@@ -60,27 +60,25 @@ function drawDots(pos, offset){
 }
 
 function isOverOutline(x,y,pos,dimen){
-    console.info('outline outline');
     var offset = 2;
-
-    console.info('y:',y,' posY',pos.posY);
-    console.info('x:',x,' posX',pos.posX);
 
     if(x>=pos.posX && x<=(pos.posX+dimen.width) && y<=(pos.posY+offset) && y>=(pos.posY-offset)){
         //top border detection
-        console.info('top border');
+        // console.info('top border');
         return true;
     }else if(x>=pos.posX && x<=(pos.posX+dimen.width) && y<=(pos.posY+dimen.height+offset) && y>=(pos.posY+dimen.height-offset)){
         //bottom border detection
-        console.log('bottom border')
+        // console.log('bottom border')
+        return true;
     }else if(y>=pos.posY && y<=(pos.posY+dimen.height) && x<=pos.posX+offset && x>=pos.posX-offset){
         //left border detection
-        console.info('left border');
-
+        // console.info('left border');
+        return true;
     }else if(y>=pos.posY && y<=(pos.posY+dimen.height) && x<=(pos.posX+dimen.width+offset) && x>=(pos.posX+dimen.width-offset)){
         //left border detection
-        console.info('right border');
-
+        // console.info('right border');
+        return true;
     }
 
+    return false;
 }
