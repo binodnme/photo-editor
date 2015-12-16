@@ -1,5 +1,5 @@
 function drawOutline(pos, dimen){
-    
+    console.info('called');
     ctx.save();
     ctx.setLineDash([1,2]);
     ctx.beginPath();
@@ -19,7 +19,7 @@ function drawOutline(pos, dimen){
 
 
 function drawTransformDots(pos, dimen){
-    var offset=2;
+    var offset=3;
     drawDots(pos, offset);
 
     var posRight = {'posX':pos.posX+dimen.width, 'posY':pos.posY}
@@ -60,25 +60,25 @@ function drawDots(pos, offset){
 }
 
 function isOverOutline(x,y,pos,dimen){
-    var offset = 2;
+    var offset = 10;
 
     if(x>=pos.posX && x<=(pos.posX+dimen.width) && y<=(pos.posY+offset) && y>=(pos.posY-offset)){
         //top border detection
         // console.info('top border');
-        return true;
+        return 1;
     }else if(x>=pos.posX && x<=(pos.posX+dimen.width) && y<=(pos.posY+dimen.height+offset) && y>=(pos.posY+dimen.height-offset)){
         //bottom border detection
         // console.log('bottom border')
-        return true;
+        return 2;
     }else if(y>=pos.posY && y<=(pos.posY+dimen.height) && x<=pos.posX+offset && x>=pos.posX-offset){
         //left border detection
         // console.info('left border');
-        return true;
+        return 3;
     }else if(y>=pos.posY && y<=(pos.posY+dimen.height) && x<=(pos.posX+dimen.width+offset) && x>=(pos.posX+dimen.width-offset)){
         //left border detection
         // console.info('right border');
-        return true;
+        return 4;
     }
 
-    return false;
+    return 0;
 }

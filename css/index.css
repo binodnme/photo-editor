@@ -99,6 +99,10 @@ input{
 }
 
 
+.toolbar input{
+    width: 100%;
+}
+
 /*layer li style*/
 .layer-list .over{
     border: 2px dash red;

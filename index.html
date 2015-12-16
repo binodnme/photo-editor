@@ -25,7 +25,11 @@
             </div>
             
             <div class="work-area clr">
-                <div class="toolbar">toolbar here</div>
+                <div class="toolbar">toolbar here
+
+                    <input type='button' value="s" onclick="changeTool(1)">
+                    <input type='button' value="t" onclick="changeTool(2)">
+                </div>
                 <div class="content-wrapper">
                     <div class="canvas-wrapper">
                         <div class="start-dialogbox">
@@ -34,7 +38,7 @@
                             <input type="submit" value="start" onclick="setup()">
                         </div>
 
-                        <canvas id='playground'></canvas>
+                        <canvas id='playground' width='600' height='400'></canvas>
                     </div>
                     <div class="info-bar">
                         <div class="layer-bar">
@@ -64,7 +68,7 @@
                 </div>
             </div>
             
-            
+            <div><a href='#' id='download'>Download Image</a></div>
             
         </div>
         
@@ -76,10 +80,12 @@
         <script type="text/javascript" src='js/Convolution.js'></script>
         <script type="text/javascript" src="js/outline.js"></script>
         <!-- // <script type="text/javascript" src="js/filters.js"></script> -->
+        <script type="text/javascript" src='js/layerUIPanelHandler.js'></script>
         <script type="text/javascript" src="js/Picture.js"></script>
         <script type="text/javascript" src="js/Layer.js"></script>
         <script type="text/javascript" src="js/Canvas.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src='js/canvasEventHandler.js'></script>
     </body>
 
 </html>

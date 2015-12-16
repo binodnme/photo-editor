@@ -10,8 +10,9 @@ Filter.prototype.getPixels = function(pic) {
   return ctx.getImageData(pos.posX,pos.posY,dimen.width,dimen.height);
 };
 
-Filter.prototype.filterImage = function(filter, pic, var_args) {
-	var args = [this.getPixels(pic)];
+Filter.prototype.filterImage = function(filter, pixels, var_args) {
+	// var args = [this.getPixels(pic)];
+	var args = [pixels]
 	for (var i=2; i<arguments.length; i++) {
 	args.push(arguments[i]);
 	}
