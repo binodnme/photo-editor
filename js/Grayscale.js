@@ -1,4 +1,5 @@
 function Grayscale(){
+	this.name='grayscale'
 	var testArg;
 
 	this.filter = function(pixels, args) {

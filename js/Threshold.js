@@ -1,4 +1,7 @@
 function Threshold(){
+	this.name='Threshold'
+	this.min = 10;
+	this.max = 200;
 	var args;
 
 	this.filter = function(pixels, threshold) {

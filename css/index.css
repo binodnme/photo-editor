@@ -65,7 +65,7 @@ canvas{
     
 }
 
-ul#layer-list, ul#property-list{
+ul#layer-list, ul#property-list, ul#filter-list{
     list-style: none;
     border: 1px solid blue;
 }

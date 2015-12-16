@@ -1,4 +1,7 @@
 function Brightness(){
+	this.name='brightness';
+	this.min = -100;
+	this.max = 100;
 	var testArg;
 
 	this.filter = function(pixels, adjustment) {

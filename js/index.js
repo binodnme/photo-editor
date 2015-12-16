@@ -112,6 +112,10 @@ myCanvas.getCanvas().onmousedown = function(e1){
         if(x>=pos.posX && x<=(pos.posX+dimen.width) && y>=pos.posY && y<=(pos.posY+dimen.height)){
             imageSelected = true;
             indices.push(i);
+
+            if(isOverOutline(x,y,pos,dimen)){
+                console.log('i am in');
+            }
         }    
     }
 
@@ -166,6 +170,15 @@ myCanvas.getCanvas().onmousedown = function(e1){
             }
         }
     }
+}
+
+myCanvas.getCanvas().onmousemove = function(e2){
+    var x1 = e2.pageX - myCanvas.getCanvas().offsetLeft;
+    var y1 = e2.pageY - myCanvas.getCanvas().offsetTop;
+    
+    console.info('x1:',x1, ' y1:',y1);
+
+    var index = myCanvas.getActiveLayerIndex();
 }
 
 
@@ -321,15 +334,50 @@ propertyList.addEventListener('layerSelectInCanvas', function(ev1){
     var widthBox = document.getElementById('prop-width');
     var heightBox = document.getElementById('prop-height');
 
+    var filterList = document.getElementById('filter-list');
+
+    var layerIndex;
     for(var i in layers){
         if(layers[i].getZIndex()==index){
             // tempLayer = layers[i];
             var dimen = layers[i].getPicture().getDimension();
             widthBox.value = dimen.width;
             heightBox.value = dimen.height;
+            layerIndex = i;
             break;
         }
     }
+
+    if(layerIndex){
+        var filters = layers[layerIndex].getFilters();
+        while (filterList.firstChild) {
+            filterList.removeChild(filterList.firstChild);
+        }
+    
+        for(var i in filters){
+            var list = document.createElement('li');
+            var para = document.createElement('p');
+            var input = document.createElement('input');
+            para.innerHTML = filters[i].name;
+            input.setAttribute('type', 'range');
+            input.setAttribute('min', filters[i].min);
+            input.setAttribute('max', filters[i].max);
+
+            input.addEventListener('change', function(ev2){
+                // console.log('cangeshssdjlakjfdla');
+                console.log('value',input.value);
+                filters[i].setArgs(parseInt(input.value));
+                myCanvas.renderLayers();
+
+            });
+            list.appendChild(para);
+            list.appendChild(input);
+            
+            filterList.appendChild(list);
+        }
+    }
+
+    
 });
 
 
@@ -495,73 +543,45 @@ function handleDragEnd(e) {
 
 
 function grayscale(){
-
     var layerIndex = myCanvas.getActiveLayerIndex();
-
-    console.log('hello', layerIndex);
-
     if(layerIndex>=0){
         var layer = myCanvas.getLayers()[layerIndex];
-        var pic = layer.getPicture();
-        // var pixels = Filters.filterImage(Filters.grayscale, pic);
-
         var g = new Grayscale();
-        // var pixels = g.filterImage(g.filter, pic)
-        // // var pixels = 
-        // console.log('pixels:', pixels);
-
-        // var pos = pic.getPosition();
-        // ctx.putImageData(pixels, pos.posX, pos.posY);
-        g.
         layer.getFilters().push(g);
-        // layer.setFilter('grayscale');
+        myCanvas.renderLayers();
     }
 }
 
 
 function brightness(){
     var layerIndex = myCanvas.getActiveLayerIndex();
-
     if(layerIndex>=0){
         var layer = myCanvas.getLayers()[layerIndex];
-        var pic = layer.getPicture();
-        
         var b = new Brightness();
-        // var pixels = b.filterImage(b.filter, pic, 50)
-        // // var pixels = 
-        // console.log('pixels:', pixels);
         b.setArgs(50);
         layer.getFilters().push(b);
         myCanvas.renderLayers();
-        // var pos = pic.getPosition();
-        // ctx.putImageData(pixels, pos.posX, pos.posY);
-
-        
-
     }
 }
 
 function threshold(){
     var layerIndex = myCanvas.getActiveLayerIndex();
-
-    console.log('hello', layerIndex);
-
     if(layerIndex>=0){
         var layer = myCanvas.getLayers()[layerIndex];
-        var pic = layer.getPicture();
-        // var pixels = Filters.filterImage(Filters.grayscale, pic);
-
         var t = new Threshold();
         t.setArgs(100);
         layer.getFilters().push(t); 
         myCanvas.renderLayers();
-        // var pixels = t.filterImage(t.filter, pic, 100)
-        // // var pixels = 
-        // console.log('pixels:', pixels);
-
-        // var pos = pic.getPosition();
-        // ctx.putImageData(pixels, pos.posX, pos.posY);
-
-
     }
+}
+
+function convolution(){
+    var layerIndex = myCanvas.getActiveLayerIndex();
+    if(layerIndex>=0){
+        var layer = myCanvas.getLayers()[layerIndex];
+        var t = new Convolution();
+        t.setArgs(100);
+        layer.getFilters().push(t); 
+        myCanvas.renderLayers();
+    }   
 }
