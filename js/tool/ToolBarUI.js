@@ -11,9 +11,12 @@ var ToolBarUI = (function(){
 				input.setAttribute('type', 'button');
 				input.value = tools[i].getName();
 
-				input.onclick = function(){
-					console.log('input clicked');
-				}
+				input.onclick = (function(tool){
+					return function(){
+						Photoshop.getInstance().setActiveTool(tool.getName());
+					};
+				})(tools[i]);
+
 				parentElement.appendChild(input);
 			}
 		}

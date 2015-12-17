@@ -9,6 +9,8 @@ var Photoshop = (function(){
         var activeLayerIndex;   //z-index value of active layer
         var layerCounter =0;
         var zIndexValue = 0;
+
+        var activeTool = null;
         
         
         this.addLayer = function(layer){
@@ -30,6 +32,14 @@ var Photoshop = (function(){
             layerCounter--;
         }
 
+        this.setActiveTool = function(string){
+            activeTool = string;
+            console.info('activeTool ' , activeTool);
+        }
+
+        this.getActiveTool = function(){
+            return activeTool;
+        }
         
         this.setActiveLayerIndex = function(index){
             activeLayerIndex = index;

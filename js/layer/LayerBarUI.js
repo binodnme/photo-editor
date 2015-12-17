@@ -8,7 +8,6 @@ var LayerBarUI = (function(){
 			console.log('layerbar init');
 		}
 
-
 		this.update = function(){
 			var ul = document.getElementById('layer-list');
 
@@ -24,34 +23,84 @@ var LayerBarUI = (function(){
 
 		    listElements = [];
 
-			for(var i in layers){
+		    var activeLayerZIndex = Photoshop.getInstance().getActiveLayerIndex();
 
+		    for(var i in layers){
+			
 				var list = new LayerListElement(layers[i].getZIndex());
 
 				var li = list.getListElement();
 				li.setAttribute('draggable', 'true')
-				li.innerHTML = 'layer '+i;
+				li.innerHTML = layers[i].getName();
 				li.addEventListener('dragstart', handleDragStart, false);
 		        li.addEventListener('dragenter', handleDragEnter, false);
 		        li.addEventListener('dragover', handleDragOver, false);
 		        li.addEventListener('dragleave', handleDragLeave, false);
 		        li.addEventListener('drop', handleDrop, false);
-		        li.addEventListener('click', handleClick, false);
 		        li.addEventListener('layerSelectInCanvas', handleLayerSelectInCanvas, false);
+
+		        li.onclick = (function(l){
+		        	return function(){
+		        		this.style.background = 'grey';
+
+		        		for(var i in listElements){
+		        			if(listElements[i] != l){
+		        				listElements[i].getListElement().style.background = 'white';
+		        			}
+		        		}
+
+		        		var zIndex = l.getZIndex();
+		        		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
+
+					    Photoshop.getInstance().setActiveLayerIndex(zIndex);
+					    
+					    var ulist = document.getElementsByTagName('ul');
+					    for(var i=0; i<ulist.length; i++){
+					        ulist[i].dispatchEvent(ev1);
+					    }
+
+					    var c = document.getElementsByTagName('canvas')[0];
+					    c.dispatchEvent(ev1);
+		        	};
+		        })(list);
+
+
+		        if(layers[i].getZIndex() == activeLayerZIndex){
+		        	li.style.background = 'grey';
+		        }
 
 				ul.appendChild(li);
 				listElements.push(list);
 			}	
-		}
 
+			var input = document.createElement('input');
+			input.setAttribute('type','button');
+			input.setAttribute('value', 'delete');
+
+			input.onclick = function(e){
+				var layers = Photoshop.getInstance().getLayers();
+			    var activeZIndex = Photoshop.getInstance().getActiveLayerIndex();
+			    console.info('active: ', activeZIndex);
+			    for (var i = layers.length - 1; i >= 0; i--) {
+			        if(layers[i].getZIndex()==activeZIndex){
+			            layers.splice(i, 1);
+			            // updateLayerUI();
+			            // updatePropertyList();
+			            PhotoshopUI.getInstance().renderLayers();
+			            // activeZIndex = undefined;
+			            break;
+			        }
+			    };
+			}
+			// console.info('input:', input);
+			ul.appendChild(input);
+		}
 
 		this.setParent = function(pEl){
 			parentElement = pEl;
 		}
 
-		
 		function handleLayerSelectInCanvas(e){
-			console.info('i am here boy');
 			var zIndex = parseInt(e.detail);
 			for(var i in listElements){
 				if(listElements[i].getZIndex() == zIndex){
@@ -61,23 +110,8 @@ var LayerBarUI = (function(){
 			}
 		}
 
-
-		function handleClick(e){
-			console.info('this: ', this);
-			for(var i in listElements){
-				if(this == listElements[i].getListElement()){
-					console.info('hello');
-					this.style.background = 'grey';
-				}else{
-					this.style.background = 'white';
-				}
-			}
-
-		}
-
-
 		function handleDragStart(ev1){
-			console.info('start');
+			// console.info('start');
 		    var list = parentElement.getElementsByTagName('li');
 		    for (var i = list.length - 1; i >= 0; i--) {
 		        if(this==list[i]){
@@ -87,25 +121,25 @@ var LayerBarUI = (function(){
 		    };
 		}
 
-		
 		function handleDragOver(e){
 		    if(e.preventDefault){
 		        e.preventDefault();
 		    }
 
 		    e.dataTransfer.dropEffect = 'move'; 
-		    console.info('over');
+		    // console.info('over');
 		    return false;
 		}
 
 		function handleDragEnter(e) {
 		  	this.classList.add('over');
-		  	console.info('enter');
+		  	// console.info('enter');
 		}
+
 
 		function handleDragLeave(e) {
 		  	this.classList.remove('over');
-		  	console.info('leave');
+		  	// console.info('leave');
 		}
 
 		function handleDrop(e) {
@@ -113,43 +147,44 @@ var LayerBarUI = (function(){
 				e.stopPropagation(); // stops the browser from redirecting.
 			}
 
-			console.info('drop');
+			// console.info('drop');
 			var finalValue;
 			var list = parentElement.getElementsByTagName('li');
 			for (var i = list.length - 1; i >= 0; i--) {
 				if(this==list[i]){
 					finalValue = i;
 				}
-			};
+			}
 	  
-			console.info('initial:',initial, 'final:',finalValue);
-			// moveLayer(initial, finalValue);
+			// console.info('initial:',initial, 'final:',finalValue);
+			
+			moveLayer(initial, finalValue);
+			// if(initial < finalValue){
+			// 	for(var i=initial; i<finalValue; i++){
+			// 		var tempId = list[i].id;
+			// 		var tempContent = list[i].innerHTML;
 
-			if(initial<finalValue){
-				for(var i=initial; i<finalValue; i++){
-					var tempId = list[i].id;
-					var tempContent = list[i].innerHTML;
+			// 		list[i].id=list[i+1].id;
+			// 		list[i].innerHTML = list[i+1].innerHTML;
 
-					list[i].id=list[i+1].id;
-					list[i].innerHTML = list[i+1].innerHTML;
+			// 		list[i+1].id = tempId;
+			// 		list[i+1].innerHTML = tempContent;
+			// 	}  
+			// }else if(initial>finalValue){
+			// 	for(var i=initial; i>finalValue; i--){
+			// 		var tempId = list[i].id;
+			// 		var tempContent = list[i].innerHTML;
 
-					list[i+1].id = tempId;
-					list[i+1].innerHTML = tempContent;
-				}  
-			}else if(initial>finalValue){
-				for(var i=initial; i>finalValue; i--){
-					var tempId = list[i].id;
-					var tempContent = list[i].innerHTML;
+			// 		list[i].id=list[i-1].id;
+			// 		list[i].innerHTML = list[i-1].innerHTML;
 
-					list[i].id=list[i-1].id;
-					list[i].innerHTML = list[i-1].innerHTML;
-
-					list[i-1].id = tempId;
-					list[i-1].innerHTML = tempContent;
-				}
-			}
+			// 		list[i-1].id = tempId;
+			// 		list[i-1].innerHTML = tempContent;
+			// 	}
+			// }
+			
 			return false;
-			}
+		}
 
 		function handleDragEnd(e) {
 		  [].forEach.call(list, function (l) {
@@ -157,6 +192,37 @@ var LayerBarUI = (function(){
 		  });
 		}
 
+
+		function moveLayer(start, end){
+
+		    var start = start;
+		    var end = end;
+		    var layers = Photoshop.getInstance().getLayers();
+
+		    layers.sort(function(a,b){
+		            return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
+		    });
+
+		    if(start<end){
+		        for(var i=start+1; i<=end; i++){
+		            var temp = layers[start].getZIndex();
+		            layers[start].setZIndex(layers[i].getZIndex());
+		            layers[i].setZIndex(temp);
+		        }
+		    }else if(start>end){
+		        console.info('start>end');
+		        for(var i=start-1; i>=end; i--){
+		            var temp = layers[start].getZIndex();
+		            layers[start].setZIndex(layers[i].getZIndex());
+		            layers[i].setZIndex(temp);
+		        }
+		    }
+		    
+		    // updateLayerUI();
+		    // updatePropertyList();
+		    // myCanvas.renderLayers();
+		    PhotoshopUI.getInstance().renderLayers();
+		}
 	}
 
 	var instance;
@@ -171,4 +237,35 @@ var LayerBarUI = (function(){
 			return instance;
 		}
 	}
-}());
+
+})();
+
+
+
+
+
+
+
+
+		
+
+
+		
+
+
+		
+
+		
+		
+
+		
+
+		
+		
+
+		
+
+
+		
+
+		

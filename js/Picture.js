@@ -23,6 +23,22 @@ function Picture(){
         return img.src;
     }
     
+    this.setWidth = function(w){
+        width = w;
+    }
+
+    this.getWidth = function(){
+        return width;
+    }
+
+    this.setHeight = function(h){
+        height = h;
+    }
+
+    this.getHeight = function(){
+        return height;
+    }
+
     this.setDimension = function(w, h){
         width = w;
         height = h;

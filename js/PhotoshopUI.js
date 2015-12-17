@@ -5,7 +5,7 @@ var PhotoshopUI = (function(){
         var context;
         var toolbar = ToolBarUI.getInstance();
         var layerBar = LayerBarUI.getInstance();
-        var propertyBar;
+        var propertyBar = PropertyBarUI.getInstance();
 
 
         this.init = function(){
@@ -15,11 +15,15 @@ var PhotoshopUI = (function(){
 
             var ul = document.getElementById('layer-list');
             var tb = document.getElementById('toolbar');
+            var pl = document.getElementById('property-list');
+
             layerBar.setParent(ul);
             toolbar.setParent(tb);
+            propertyBar.setParent(pl);
 
             toolbar.init();
             layerBar.init();
+            propertyBar.init();
         }
 
         
@@ -29,6 +33,15 @@ var PhotoshopUI = (function(){
         }
         
         this.getCanvas = function(){ return canvas; }
+
+
+        this.getLayerBarUI = function(){
+            return layerBar;
+        }
+
+        this.getToolBarUI = function(){
+            return toolbar;
+        }
         
 
         this.renderLayers = function(){
@@ -40,7 +53,8 @@ var PhotoshopUI = (function(){
                 return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
             });
             
-            context.clearRect(0,0,canvas.width,canvas.height);
+            var dimen = canvas.getDimension();
+            context.clearRect(0,0,dimen.width,dimen.height);
 
             for(var i in layers){
                 var layer = layers[i];

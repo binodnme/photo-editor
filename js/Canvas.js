@@ -7,6 +7,7 @@ function Canvas(){
     var xCorrection;
     var yCorrection;
     var mousedown = false;
+    var imageSelected = false;
 
 
 
@@ -22,6 +23,7 @@ function Canvas(){
         canvasElement.addEventListener('mousedown', handlerMouseDown, false);
         canvasElement.addEventListener('mouseup', handlerMouseUp, false);
         canvasElement.addEventListener('mousemove', handlerMouseMove, false);
+        canvasElement.addEventListener('layerSelectInList', handlerLayerSelectInList, false);
     }
     
     this.setCanvasElement = function(c){ 
@@ -70,12 +72,19 @@ function Canvas(){
             var dimen = layer.getPicture().getDimension();
             var pos = layer.getPicture().getPosition();
             
+            context.clearRect(0,0,width, height);
+
             PhotoshopUI.getInstance().renderLayers();
-            console.log('layer select');
+            // console.log('layer select');
             drawOutline(pos, dimen);
             
             var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layer.getZIndex()});
-            var ulist = document.getElementsByTagName('li');
+            var list = document.getElementsByTagName('li');
+            var ulist = document.getElementsByTagName('ul');
+
+            for(var j=0; j<list.length; j++){
+                list[j].dispatchEvent(ev1);
+            }
 
             for(var j=0; j<ulist.length; j++){
                 ulist[j].dispatchEvent(ev1);
@@ -104,57 +113,56 @@ function Canvas(){
         var lyr = photoshop.getLayerByZIndex(zIndex);
            
 
-        if(mousedown && imageSelected){
+        var activeTool = Photoshop.getInstance().getActiveTool();
 
-            lyr.getPicture().setPosition(x1-xCorrection,y1-yCorrection);
-            context.clearRect(0,0,width,height);
-            
-            PhotoshopUI.getInstance().renderLayers(); 
-            
-            var dimen = lyr.getPicture().getDimension();
-            var finalX = x1-xCorrection;
-            var finalY = y1-yCorrection;
-            
-            drawOutline({'posX':finalX, 'posY':finalY},dimen);   
-        } 
-        // if(selectTool){
-        //     if(mousedown && imageSelected){
+        if(activeTool=='select'){
+            if(mousedown && imageSelected){
 
-        //         lyr.getPicture().setPosition(x1-xCorrection,y1-yCorrection);
-        //         ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
+                lyr.getPicture().setPosition(x1-xCorrection,y1-yCorrection);
+                context.clearRect(0,0,width,height);
                 
-        //         myCanvas.renderLayers(); 
+                PhotoshopUI.getInstance().renderLayers(); 
                 
-        //         var dimen = lyr.getPicture().getDimension();
-        //         var finalX = x1-xCorrection;
-        //         var finalY = y1-yCorrection;
+                var dimen = lyr.getPicture().getDimension();
+                var finalX = x1-xCorrection;
+                var finalY = y1-yCorrection;
                 
-        //         drawOutline({'posX':finalX, 'posY':finalY},dimen);   
-        //     }
+                drawOutline({'posX':finalX, 'posY':finalY},dimen);   
+            } 
             
-        // }else if(transformTool){
-        //     var position = lyr.getPicture().getPosition();
-        //     var dimension = lyr.getPicture().getDimension();
+        }else if(activeTool=='transform'){
+            // var position = lyr.getPicture().getPosition();
+            // var dimension = lyr.getPicture().getDimension();
 
-        //     var side = isOverOutline(x1,y1,position,dimension);
+            // var side = isOverOutline(x1,y1,position,dimension);
 
-        //     if(side){
-        //         resizeLayer(lyr,side,x1,y1);
-        //     }else{
-        //         myCanvas.getCanvas().style.cursor = 'default';
-        //     }
-        // }
+            // if(side){
+            //     resizeLayer(lyr,side,x1,y1);
+            // }else{
+            //     myCanvas.getCanvas().style.cursor = 'default';
+            // }
+        }
 
     }
 
-    function handlerMouseUp(){
+    function handlerMouseUp(e){
         mousedown = false;
         imageSelected = false;
     }
 
+    function handlerLayerSelectInList(e){
+        var zIndex = parseInt(e.detail);
+
+        var layer = Photoshop.getInstance().getLayerByZIndex(zIndex);
+        var pic = layer.getPicture();
+
+        PhotoshopUI.getInstance().renderLayers();
+        drawOutline(pic.getPosition(), pic.getDimension());
+
+    }
+
 
     function getTopLayer(x, y){
-
         var layers = Photoshop.getInstance().getLayers();
 
         var indices = [];
