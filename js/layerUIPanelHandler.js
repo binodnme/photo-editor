@@ -4,6 +4,11 @@ function updateLayerUI(layer){
         li.innerHTML = layer.getName();
         li.setAttribute('id', layer.getZIndex());
         li.setAttribute('onclick', 'layerSelection('+layer.getZIndex()+')');
+        
+        // li.onclick = (function(layer){
+        //     layerSelection(layer.getZIndex());
+        // })(layer);
+
         li.setAttribute('draggable', 'true')
 
         li.addEventListener('dragstart', handleDragStart, false);

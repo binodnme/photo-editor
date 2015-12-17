@@ -186,15 +186,16 @@ propertyList.addEventListener('layerSelectInCanvas', function(ev1){
             input.setAttribute('min', filters[i].min);
             input.setAttribute('max', filters[i].max);
 
-            input.addEventListener('change', function(ev2){
-                console.log('value',input.value);
-                filters[i].setArgs(parseInt(input.value));
-                myCanvas.renderLayers();
 
-            });
+            input.onchange = (function(){
+                return function(){
+                    console.info('value:', this.value);
+                    filters[i].setArgs(parseInt(this.value));
+                    myCanvas.renderLayers();
+                }
+            })();
 
-            // input.addEventListener('change', adjustParameter, false);
-
+            
             list.appendChild(para);
             list.appendChild(input);
             
@@ -202,6 +203,9 @@ propertyList.addEventListener('layerSelectInCanvas', function(ev1){
         }
     }
 });
+
+
+
 
 
 // function adjustParameter(ev1){
