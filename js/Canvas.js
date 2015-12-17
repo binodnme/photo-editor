@@ -1,20 +1,35 @@
 function Canvas(){
-    var canvas;
+    var canvasElement;
     var context;
     var width;
     var height;
-    var layers = [];
-    var activeLayerIndex;   //z-index value of active layer
-    var layerCounter =0;
-    var zIndexValue = 0;
-    
-    
-    this.setCanvas = function(c){ 
-        canvas = c;
-        context = canvas.getContext('2d');
+
+    var xCorrection;
+    var yCorrection;
+    var mousedown = false;
+
+
+
+    this.init = function(){
+        canvasElement = document.getElementById('playground');
+        context = canvasElement.getContext('2d');
+        
+        canvasElement.width = 600;
+        canvasElement.height = 400;
+        width = 600;
+        height = 400;
+
+        canvasElement.addEventListener('mousedown', handlerMouseDown, false);
+        canvasElement.addEventListener('mouseup', handlerMouseUp, false);
+        canvasElement.addEventListener('mousemove', handlerMouseMove, false);
     }
     
-    this.getCanvas = function(){ return canvas; }
+    this.setCanvasElement = function(c){ 
+        canvasElement = c;
+        context = canvasElement.getContext('2d');
+    }
+    
+    this.getCanvasElement = function(){ return canvasElement; }
     
 
     this.getContext = function(){
@@ -28,100 +43,148 @@ function Canvas(){
     this.setDimension = function(w, h){
         width = w;
         height = h;
+        canvasElement.width = w;
+        canvasElement.height = h;
     }
     
 
     this.getDimension = function(){
         return {'width':width, 'height':height};
     }
-    
 
-    this.addLayer = function(layer){
-        layer.setZIndex(zIndexValue);
-        layer.setName('layer '+layerCounter);
-        layers.push(layer);
-        activeLayerIndex = zIndexValue;
-        zIndexValue++;
-        layerCounter++;
-    }
-    
-    
-    this.removeLayer = function(index){
-        layers.splice(index,1);
-        layerCounter--;
-    }
 
-    
-    this.setActiveLayerIndex = function(index){
-        activeLayerIndex = index;
-    }
-    
-    
-    this.getActiveLayerIndex = function(){
-        return activeLayerIndex;
-    }
 
-    
-    this.getLayers = function(){
-        return layers;
-    }
-    
-    this.getLayerByZIndex = function(zindex){
-        for (var i = layers.length - 1; i >= 0; i--) {
-            if(layers[i].getZIndex()==zindex){
-                return layers[i];
-            }
-        };
-    }
-    
-    this.renderLayers = function(zoomlevel){
-        // console.log('rendering');
+    function handlerMouseDown(e){
 
-        layers.sort(function(a,b){
-            return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
-        });
+        mousedown = true;
+    
+        var x = e.pageX - canvasElement.offsetLeft;
+        var y = e.pageY - canvasElement.offsetTop;
+
+        var layer = getTopLayer(x,y);
+    
+        if(layer){    
+
+            Photoshop.getInstance().setActiveLayerIndex(layer.getZIndex());
         
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        
-        if(zoomlevel){
-            for(var layer in layers){
-                layers[layer].getPicture().draw(context, zoomlevel);
+            var dimen = layer.getPicture().getDimension();
+            var pos = layer.getPicture().getPosition();
+            
+            PhotoshopUI.getInstance().renderLayers();
+            console.log('layer select');
+            drawOutline(pos, dimen);
+            
+            var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layer.getZIndex()});
+            var ulist = document.getElementsByTagName('li');
+
+            for(var j=0; j<ulist.length; j++){
+                ulist[j].dispatchEvent(ev1);
             }
-        }else{
-            for(var i in layers){
-                var layer = layers[i];
-                var pic = layer.getPicture();
-                pic.draw(context);
-                var filter = layer.getFilters();
 
-                var mainFilter = new Filter();
+            var actualPos;
+            actualPos = layer.getPicture().getPosition();
+            xCorrection = x-actualPos.posX;
+            yCorrection = y-actualPos.posY;
+        }
+    }
 
-                var pixels = mainFilter.getPixels(pic);
-                if(layer.getFilters().length){
-                    for (var i = layer.getFilters().length - 1; i >= 0; i--) {
-                        var filter = layer.getFilters()[i];
-                        // console.log('arguments: ', filter.getArgs());
-                        // var pixels = filter.filterImage(filter.filter, pic, filter.getArgs());
-                        pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
 
-                        var pos = pic.getPosition();
-                        ctx.putImageData(pixels, pos.posX, pos.posY);
-                    };
 
+    function handlerMouseUp(){
+
+    }
+
+    function handlerMouseMove(e){
+        var x1 = e.pageX - canvasElement.offsetLeft;
+        var y1 = e.pageY - canvasElement.offsetTop;
+
+        var photoshop = Photoshop.getInstance();
+
+        var zIndex = photoshop.getActiveLayerIndex();
+        var lyr = photoshop.getLayerByZIndex(zIndex);
+           
+
+        if(mousedown && imageSelected){
+
+            lyr.getPicture().setPosition(x1-xCorrection,y1-yCorrection);
+            context.clearRect(0,0,width,height);
+            
+            PhotoshopUI.getInstance().renderLayers(); 
+            
+            var dimen = lyr.getPicture().getDimension();
+            var finalX = x1-xCorrection;
+            var finalY = y1-yCorrection;
+            
+            drawOutline({'posX':finalX, 'posY':finalY},dimen);   
+        } 
+        // if(selectTool){
+        //     if(mousedown && imageSelected){
+
+        //         lyr.getPicture().setPosition(x1-xCorrection,y1-yCorrection);
+        //         ctx.clearRect(0,0,myCanvas.getCanvas().width,myCanvas.getCanvas().height);
+                
+        //         myCanvas.renderLayers(); 
+                
+        //         var dimen = lyr.getPicture().getDimension();
+        //         var finalX = x1-xCorrection;
+        //         var finalY = y1-yCorrection;
+                
+        //         drawOutline({'posX':finalX, 'posY':finalY},dimen);   
+        //     }
+            
+        // }else if(transformTool){
+        //     var position = lyr.getPicture().getPosition();
+        //     var dimension = lyr.getPicture().getDimension();
+
+        //     var side = isOverOutline(x1,y1,position,dimension);
+
+        //     if(side){
+        //         resizeLayer(lyr,side,x1,y1);
+        //     }else{
+        //         myCanvas.getCanvas().style.cursor = 'default';
+        //     }
+        // }
+
+    }
+
+    function handlerMouseUp(){
+        mousedown = false;
+        imageSelected = false;
+    }
+
+
+    function getTopLayer(x, y){
+
+        var layers = Photoshop.getInstance().getLayers();
+
+        var indices = [];
+        for(var i in layers){
+            var dimen = layers[i].getPicture().getDimension();
+            var pos = layers[i].getPicture().getPosition();
+            if(x>=pos.posX && x<=(pos.posX+dimen.width) && y>=pos.posY && y<=(pos.posY+dimen.height)){
+                imageSelected = true;
+                indices.push(i);
+            }    
+        }
+
+        if(indices.length>0){
+            var hZIndex = -1;
+            var hIndex = -1;
+            for (var i = indices.length - 1; i >= 0; i--) {
+                var j = indices[i];
+
+                if(layers[j].getZIndex()>hZIndex){
+                    hZIndex = layers[j].getZIndex();
+                    hIndex = j;
                 }
-            }
+            };   
+
+            return layers[hIndex]; 
         }
-       
-    }
+
+        return null;
+
+}
 
     
-    this.hasZIndex = function(index){
-        for (var i = layers.length - 1; i >= 0; i--) {
-            if(layers[i].getZIndex()==index){
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

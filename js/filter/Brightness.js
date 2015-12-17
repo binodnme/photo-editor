@@ -35,3 +35,5 @@ var inheritsFrom = function (child, parent) {
 };
 
 inheritsFrom(Brightness, Filter);
+
+// Photoshop.getInstance().addFilter();

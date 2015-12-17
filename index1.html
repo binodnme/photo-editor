@@ -7,7 +7,6 @@
     
     <body>
         <div class="main-container">
-            
             <div class="nav">
                 <div class="local-file">
                     <label>Load Image: </label> <input id="choose-file" type="file" value="choose file">
@@ -25,10 +24,10 @@
             </div>
             
             <div class="work-area clr">
-                <div class="toolbar">toolbar here
+                <div id='toolbar'>toolbar here
 
-                    <input type='button' value="s" onclick="changeTool(1)">
-                    <input type='button' value="t" onclick="changeTool(2)">
+                    <!-- <input type='button' value="s" onclick="changeTool(1)">
+                    <input type='button' value="t" onclick="changeTool(2)"> -->
                 </div>
                 <div class="content-wrapper">
                     <div class="canvas-wrapper">
@@ -38,7 +37,7 @@
                             <input type="submit" value="start" onclick="setup()">
                         </div>
 
-                        <canvas id='playground' width='600' height='400'></canvas>
+                        <canvas id='playground'></canvas>
                     </div>
                     <div class="info-bar">
                         <div class="layer-bar">
@@ -69,15 +68,25 @@
             </div>
             
             <div><a href='#' id='download'>Download Image</a></div>
-            
+
         </div>
         
         
-        <script type="text/javascript" src='./js/tool/Toolbar.js'></script>
-        <script type='text/javascript' src='js/Photoshop.js'></script>
+        <!-- // <script type="text/javascript" src='./js/tool/Toolbar.js'></script> -->
+        <script type='text/javascript' src='./js/Photoshop.js'></script>
+        <script type="text/javascript" src='./js/Picture.js'></script>
+        <script type="text/javascript" src='./js/Layer.js'></script>
         <script type="text/javascript" src='./js/tool/SelectTool.js'></script>
         <script type="text/javascript" src='./js/tool/TransformTool.js'></script>
+        
+        <script type="text/javascript" src='./js/layer/LayerListElement.js'></script>
+        <script type="text/javascript" src='./js/Canvas.js'></script>
+        <script type='text/javascript' src='./js/tool/ToolBarUI.js'></script>
+        <script type='text/javascript' src='./js/layer/LayerBarUI.js'></script>
+        <script type='text/javascript' src='./js/PhotoshopUI.js'></script>
 
+        <script type="text/javascript" src='./js/outline.js'></script>
+        
         
         <script type="text/javascript" src='js/index.js'></script>
     </body>
