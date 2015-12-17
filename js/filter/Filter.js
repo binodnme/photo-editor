@@ -7,7 +7,8 @@ Filter.prototype.getPixels = function(pic) {
 	var picture = pic;
 	var dimen = picture.getDimension();
 	var pos = picture.getPosition();
-  return ctx.getImageData(pos.posX,pos.posY,dimen.width,dimen.height);
+	var context = PhotoshopUI.getInstance().getCanvas().getContext();
+  return context.getImageData(pos.posX,pos.posY,dimen.width,dimen.height);
 };
 
 Filter.prototype.filterImage = function(filter, pixels, var_args) {

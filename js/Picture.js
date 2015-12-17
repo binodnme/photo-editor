@@ -24,7 +24,7 @@ function Picture(){
     }
     
     this.setWidth = function(w){
-        width = w;
+        if(w>0) width = w;
     }
 
     this.getWidth = function(){
@@ -32,7 +32,7 @@ function Picture(){
     }
 
     this.setHeight = function(h){
-        height = h;
+        if(h>0) height = h;
     }
 
     this.getHeight = function(){
@@ -40,8 +40,11 @@ function Picture(){
     }
 
     this.setDimension = function(w, h){
-        width = w;
-        height = h;
+        if(w>0 && h>0){
+            width = w;
+            height = h;    
+        }
+        
     }
     
     this.getDimension = function(){

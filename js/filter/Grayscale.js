@@ -1,6 +1,8 @@
 function Grayscale(){
 	this.name='grayscale'
 	var testArg;
+	var propertyEditer;
+	
 
 	this.filter = function(pixels, args) {
 	  var d = pixels.data;

@@ -131,16 +131,16 @@ function Canvas(){
             } 
             
         }else if(activeTool=='transform'){
-            // var position = lyr.getPicture().getPosition();
-            // var dimension = lyr.getPicture().getDimension();
+            var position = lyr.getPicture().getPosition();
+            var dimension = lyr.getPicture().getDimension();
 
-            // var side = isOverOutline(x1,y1,position,dimension);
+            var side = isOverOutline(x1,y1,position,dimension);
 
-            // if(side){
-            //     resizeLayer(lyr,side,x1,y1);
-            // }else{
-            //     myCanvas.getCanvas().style.cursor = 'default';
-            // }
+            if(side){
+                resizeLayer(lyr,side,x1,y1);
+            }else{
+                canvasElement.style.cursor = 'default';
+            }
         }
 
     }
@@ -192,7 +192,54 @@ function Canvas(){
 
         return null;
 
-}
+    }
+
+    function resizeLayer(layer, side, x1, y1){
+        var lyr = layer;
+        var pic = lyr.getPicture();
+        var dimension = pic.getDimension();
+        var position = pic.getPosition();
+
+        var pUI = PhotoshopUI.getInstance();
+
+        if(side==1){
+            //top
+            canvasElement.style.cursor = 'n-resize';    
+            if(mousedown){
+                pic.setDimension(dimension.width, dimension.height+position.posY-y1);
+                pic.setPosition(position.posX, y1);
+                pUI.renderLayers();
+                drawOutline(position, dimension);
+            }
+        }else if(side==2){
+            //bottom
+            canvasElement.style.cursor = 's-resize';
+            if(mousedown){
+                pic.setDimension(dimension.width, y1-position.posY);
+                pUI.renderLayers();
+                drawOutline(position, dimension);
+            }
+        }else if(side==3){
+            //left
+            canvasElement.style.cursor = 'w-resize';
+            if(mousedown){
+                pic.setDimension(dimension.width+position.posX-x1, dimension.height);
+                pic.setPosition(x1, position.posY);
+                pUI.renderLayers();
+                drawOutline(position, dimension);
+            }
+        }else if(side==4){
+            //right
+            canvasElement.style.cursor = 'e-resize';
+            if(mousedown){
+                pic.setDimension(x1-position.posX, dimension.height);
+                pUI.renderLayers();
+                drawOutline(position, dimension);
+            }
+        }
+        
+    }
+
 
     
 }

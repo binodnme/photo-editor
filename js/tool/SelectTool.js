@@ -1,5 +1,7 @@
 
 var SelectTool = (function(){
+    var iconSrc = '';   //source for icon file
+
     function SelectTool() {
         var name='select';
         // var 
@@ -7,6 +9,10 @@ var SelectTool = (function(){
         
         this.getName = function(){
             return name;
+        }
+
+        this.getIconSrc = function(){
+            return iconSrc;
         }
     	    
     }

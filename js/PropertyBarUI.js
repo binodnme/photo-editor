@@ -85,6 +85,41 @@ var PropertyBarUI = (function(){
 	        }
 	    }
 
+    	
+    	var filterList = document.getElementById('filter-list');
+	    if(layerIndex){
+	        var filters = layers[layerIndex].getFilters();
+	        while (filterList.firstChild) {
+	            filterList.removeChild(filterList.firstChild);
+	        }
+
+	        var value = 0;
+	        for(var i in filters){
+	            var list = document.createElement('li');
+	            var para = document.createElement('p');
+	            var input = document.createElement('input');
+	            para.innerHTML = filters[i].name;
+	            input.setAttribute('id', value++)
+	            input.setAttribute('type', 'range');
+	            input.setAttribute('min', filters[i].min);
+	            input.setAttribute('max', filters[i].max);
+
+
+	            input.onchange = (function(){
+	                return function(){
+	                    console.info('value:', this.value);
+	                    filters[i].setArgs(parseInt(this.value));
+	                    PhotoshopUI.getInstance().renderLayers();
+	                }
+	            })();
+
+	            
+	            list.appendChild(para);
+	            list.appendChild(input);
+	            
+	            filterList.appendChild(list);
+	        }
+	    }
 	}
 
 

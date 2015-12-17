@@ -10,7 +10,7 @@ var Photoshop = (function(){
         var layerCounter =0;
         var zIndexValue = 0;
 
-        var activeTool = null;
+        var activeTool = 'select';
         
         
         this.addLayer = function(layer){
