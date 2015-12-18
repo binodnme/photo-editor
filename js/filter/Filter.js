@@ -8,7 +8,7 @@ Filter.prototype.getPixels = function(pic) {
 	var dimen = picture.getDimension();
 	var pos = picture.getPosition();
 	var context = PhotoEditorUI.getInstance().getCanvas().getContext();
-  return context.getImageData(pos.posX,pos.posY,dimen.width,dimen.height);
+  	return context.getImageData(pos.posX,pos.posY,dimen.width,dimen.height);
 };
 
 Filter.prototype.filterImage = function(filter, pixels, var_args) {

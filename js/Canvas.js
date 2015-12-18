@@ -70,35 +70,44 @@ function Canvas(){
 
         var layer = getTopLayer(x,y);
     
-        if(layer){    
-
-            PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
-        
-            var dimen = layer.getPicture().getDimension();
-            var pos = layer.getPicture().getPosition();
+        if(layer){
+            var activeTool = PhotoEditor.getInstance().getActiveTool();
             
-            context.clearRect(0,0,width, height);
+            if(activeTool=='lasso'){
+                LassoTool.getInstance().addCoordinate(x,y);
+                console.info('x,y: ',x,',',y);
+            }    
 
-            PhotoEditorUI.getInstance().renderLayers();
-            // console.log('layer select');
-            drawOutline(pos, dimen);
+
+            else{
+                PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
             
-            var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layer.getZIndex()});
-            var list = document.getElementsByTagName('li');
-            var ulist = document.getElementsByTagName('ul');
+                var dimen = layer.getPicture().getDimension();
+                var pos = layer.getPicture().getPosition();
+                
+                context.clearRect(0,0,width, height);
 
-            for(var j=0; j<list.length; j++){
-                list[j].dispatchEvent(ev1);
+                PhotoEditorUI.getInstance().renderLayers();
+                drawOutline(pos, dimen);
+                
+                var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layer.getZIndex()});
+                var list = document.getElementsByTagName('li');
+                var ulist = document.getElementsByTagName('ul');
+
+                for(var j=0; j<list.length; j++){
+                    list[j].dispatchEvent(ev1);
+                }
+
+                for(var j=0; j<ulist.length; j++){
+                    ulist[j].dispatchEvent(ev1);
+                }
+
+                var actualPos;
+                actualPos = layer.getPicture().getPosition();
+                xCorrection = x-actualPos.posX;
+                yCorrection = y-actualPos.posY;    
             }
-
-            for(var j=0; j<ulist.length; j++){
-                ulist[j].dispatchEvent(ev1);
-            }
-
-            var actualPos;
-            actualPos = layer.getPicture().getPosition();
-            xCorrection = x-actualPos.posX;
-            yCorrection = y-actualPos.posY;
+            
         }
     }
 

@@ -91,6 +91,8 @@ var CropTool = (function(){
                 pic.setPosition(startX, startY);
 
                 PhotoEditorUI.getInstance().renderLayers();
+
+                startX = startY = endX = endY = null;
             }
         }
     	    
