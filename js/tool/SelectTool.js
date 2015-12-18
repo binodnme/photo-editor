@@ -32,4 +32,4 @@ var SelectTool = (function(){
 })();
 
 
-Photoshop.getInstance().addTool(SelectTool.getInstance());
+PhotoEditor.getInstance().addTool(SelectTool.getInstance());

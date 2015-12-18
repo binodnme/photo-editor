@@ -11,7 +11,7 @@ var LayerBarUI = (function(){
 		this.update = function(){
 			var ul = document.getElementById('layer-list');
 
-			var layers = Photoshop.getInstance().getLayers();
+			var layers = PhotoEditor.getInstance().getLayers();
 
 			while (ul.firstChild) {
 	            ul.removeChild(ul.firstChild);
@@ -23,7 +23,7 @@ var LayerBarUI = (function(){
 
 		    listElements = [];
 
-		    var activeLayerZIndex = Photoshop.getInstance().getActiveLayerIndex();
+		    var activeLayerZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
 
 		    for(var i in layers){
 			
@@ -52,7 +52,7 @@ var LayerBarUI = (function(){
 		        		var zIndex = l.getZIndex();
 		        		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
 
-					    Photoshop.getInstance().setActiveLayerIndex(zIndex);
+					    PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
 					    
 					    var ulist = document.getElementsByTagName('ul');
 					    for(var i=0; i<ulist.length; i++){
@@ -78,15 +78,15 @@ var LayerBarUI = (function(){
 			input.setAttribute('value', 'delete');
 
 			input.onclick = function(e){
-				var layers = Photoshop.getInstance().getLayers();
-			    var activeZIndex = Photoshop.getInstance().getActiveLayerIndex();
+				var layers = PhotoEditor.getInstance().getLayers();
+			    var activeZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
 			    console.info('active: ', activeZIndex);
 			    for (var i = layers.length - 1; i >= 0; i--) {
 			        if(layers[i].getZIndex()==activeZIndex){
 			            layers.splice(i, 1);
 			            // updateLayerUI();
 			            // updatePropertyList();
-			            PhotoshopUI.getInstance().renderLayers();
+			            PhotoEditorUI.getInstance().renderLayers();
 			            // activeZIndex = undefined;
 			            break;
 			        }
@@ -197,7 +197,7 @@ var LayerBarUI = (function(){
 
 		    var start = start;
 		    var end = end;
-		    var layers = Photoshop.getInstance().getLayers();
+		    var layers = PhotoEditor.getInstance().getLayers();
 
 		    layers.sort(function(a,b){
 		            return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
@@ -221,7 +221,7 @@ var LayerBarUI = (function(){
 		    // updateLayerUI();
 		    // updatePropertyList();
 		    // myCanvas.renderLayers();
-		    PhotoshopUI.getInstance().renderLayers();
+		    PhotoEditorUI.getInstance().renderLayers();
 		}
 	}
 

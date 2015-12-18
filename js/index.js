@@ -1,7 +1,7 @@
 console.log('start');
 
 
-var pUI = PhotoshopUI.getInstance();
+var pUI = PhotoEditorUI.getInstance();
 
 pUI.init();
 
@@ -17,9 +17,9 @@ function setup(){
 
     console.log('width:', width, ' height:', height);
 
-    PhotoshopUI.getInstance().getCanvas().setDimension(width, height);
+    PhotoEditorUI.getInstance().getCanvas().setDimension(width, height);
 
-    PhotoshopUI.getInstance().renderLayers();
+    PhotoEditorUI.getInstance().renderLayers();
 }
 
 // function createCanvas(w, h){
@@ -81,7 +81,7 @@ function loadImage(src){
     layer.setPicture(picture);
  
     // myCanvas.addLayer(layer);
-    var main = Photoshop.getInstance();
+    var main = PhotoEditor.getInstance();
     main.addLayer(layer);
    
     picture.getImage().onload = function(){
@@ -94,37 +94,38 @@ function loadImage(src){
 
 
 function grayscale(){
-    var zIndex = Photoshop.getInstance().getActiveLayerIndex();
+    var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
     if(zIndex>=0){
-        var layer = Photoshop.getInstance().getLayerByZIndex(zIndex);
+        var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
         // var layer = myCanvas.getLayers()[layerIndex];
         var g = new Grayscale();
+        g.setArgs(50);
         layer.getFilters().push(g);
-        PhotoshopUI.getInstance().renderLayers();
+        PhotoEditorUI.getInstance().renderLayers();
     }
 }
 
 function brightness(){
-    var zIndex = Photoshop.getInstance().getActiveLayerIndex();
+    var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
     if(zIndex>=0){
-        var layer = Photoshop.getInstance().getLayerByZIndex(zIndex);
+        var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
         // var layer = myCanvas.getLayers()[layerIndex];
         var b = new Brightness();
         b.setArgs(50);
         layer.getFilters().push(b);
-        PhotoshopUI.getInstance().renderLayers();
+        PhotoEditorUI.getInstance().renderLayers();
     }
 }
 
 function threshold(){
-    var zIndex = Photoshop.getInstance().getActiveLayerIndex();
+    var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
     if(zIndex>=0){
-        var layer = Photoshop.getInstance().getLayerByZIndex(zIndex);
+        var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
         // var layer = myCanvas.getLayers()[layerIndex];
         var t = new Threshold();
         t.setArgs(100);
         layer.getFilters().push(t); 
-        PhotoshopUI.getInstance().renderLayers();
+        PhotoEditorUI.getInstance().renderLayers();
     }
 }
 
@@ -145,9 +146,9 @@ function threshold(){
 var download = document.getElementById('download');
 download.addEventListener('click', function(ev1){
     console.info('downloaded');
-    var canvas = PhotoshopUI.getInstance().getCanvas();
+    var canvas = PhotoEditorUI.getInstance().getCanvas();
     canvas.getContext().clearRect(0,0,canvas.width, canvas.height);
-    PhotoshopUI.getInstance().renderLayers();
+    PhotoEditorUI.getInstance().renderLayers();
 
     downloadCanvas(this,'playground','test.png');
 }, false);

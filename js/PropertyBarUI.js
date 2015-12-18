@@ -43,13 +43,13 @@ var PropertyBarUI = (function(){
 		var value = parseFloat(this.value);
 		console.info('value:', value);
 		if(value>0){
-			var photoshop = Photoshop.getInstance();
-			var zIndex = photoshop.getActiveLayerIndex();
-			var layer = photoshop.getLayerByZIndex(zIndex);
+			var photoEditor = PhotoEditor.getInstance();
+			var zIndex = photoEditor.getActiveLayerIndex();
+			var layer = photoEditor.getLayerByZIndex(zIndex);
 			var pic = layer.getPicture();
 			pic.setWidth(value);
 
-			PhotoshopUI.getInstance().renderLayers();
+			PhotoEditorUI.getInstance().renderLayers();
 		}
 	}
 
@@ -57,20 +57,20 @@ var PropertyBarUI = (function(){
 		var value = parseFloat(this.value);
 		console.info('value:', value);
 		if(value>0){
-			var photoshop = Photoshop.getInstance();
-			var zIndex = photoshop.getActiveLayerIndex();
-			var layer = photoshop.getLayerByZIndex(zIndex);
+			var photoEditor = PhotoEditor.getInstance();
+			var zIndex = photoEditor.getActiveLayerIndex();
+			var layer = photoEditor.getLayerByZIndex(zIndex);
 			var pic = layer.getPicture();
 			pic.setHeight(value);
 
-			PhotoshopUI.getInstance().renderLayers();
+			PhotoEditorUI.getInstance().renderLayers();
 		}
 	}
 
 	function handlerLayerSelectInCanvas(e){
 	    var zIndex = parseInt(e.detail);
 
-	    var layers = Photoshop.getInstance().getLayers();
+	    var layers = PhotoEditor.getInstance().getLayers();
 	    var widthBox = document.getElementById('prop-width');
 	    var heightBox = document.getElementById('prop-height');
 
@@ -97,25 +97,51 @@ var PropertyBarUI = (function(){
 	        for(var i in filters){
 	            var list = document.createElement('li');
 	            var para = document.createElement('p');
-	            var input = document.createElement('input');
+	            
 	            para.innerHTML = filters[i].name;
-	            input.setAttribute('id', value++)
-	            input.setAttribute('type', 'range');
-	            input.setAttribute('min', filters[i].min);
-	            input.setAttribute('max', filters[i].max);
+	            list.appendChild(para);
+
+	            var input = document.createElement('input');
+	            if(filters[i].min){
+	            	
+	            	input.setAttribute('id', value++)
+	            	input.setAttribute('type', 'range');
+	            	input.setAttribute('min', filters[i].min);
+		            input.setAttribute('max', filters[i].max);
+		            input.setAttribute('value', filters[i].getArgs());
+
+		            input.onchange = (function(){
+		                return function(){
+		                    console.info('value:', this.value);
+		                    filters[i].setArgs(parseInt(this.value));
+		                    PhotoEditorUI.getInstance().renderLayers();
+		                }
+		            })();
+	            	
+	            	list.appendChild(input);
+	            }
 
 
-	            input.onchange = (function(){
-	                return function(){
-	                    console.info('value:', this.value);
-	                    filters[i].setArgs(parseInt(this.value));
-	                    PhotoshopUI.getInstance().renderLayers();
-	                }
-	            })();
+	            var checkbox = document.createElement('input');
+	            checkbox.setAttribute('type', 'checkbox');
+	            checkbox.setAttribute('name', filters[i].name);
+	            checkbox.checked = filters[i].isActive();
 
 	            
-	            list.appendChild(para);
-	            list.appendChild(input);
+	            checkbox.onchange = (function(filter){
+	            		console.info('checkbox: ', checkbox);
+	            		return function(){
+		                    if(checkbox.checked){
+		                    	filter.enable();
+		                    	console.info('chekcbox clajds:',checkbox.getAttribute('name'));
+		                    }else{
+		                    	filter.disable();
+		                    }
+		                    PhotoEditorUI.getInstance().renderLayers();
+		                }
+		        })(filters[i]);
+	            
+	            list.appendChild(checkbox);
 	            
 	            filterList.appendChild(list);
 	        }

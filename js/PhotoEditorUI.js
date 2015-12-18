@@ -1,6 +1,6 @@
-var PhotoshopUI = (function(){
-    function PhotoshopUI(){
-        var photoshop = Photoshop.getInstance();
+var PhotoEditorUI = (function(){
+    function PhotoEditorUI(){
+        var photoEditor = PhotoEditor.getInstance();
         var canvas;
         var context;
         var toolbar = ToolBarUI.getInstance();
@@ -47,7 +47,7 @@ var PhotoshopUI = (function(){
         this.renderLayers = function(){
             // toolbar.update();
             layerBar.update();
-            var layers = photoshop.getLayers();
+            var layers = photoEditor.getLayers();
 
             layers.sort(function(a,b){
                 return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
@@ -69,12 +69,22 @@ var PhotoshopUI = (function(){
                 if(layer.getFilters().length){
                     for (var i = layer.getFilters().length - 1; i >= 0; i--) {
                         var filter = layer.getFilters()[i];
+                        // console.log(filter.name, ': ', filter.isActive());
+                        // console.log(filter.name, ': ', filter.isActive());
+                        if(filter.isActive()){
+                            pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
+
+                            var pos = pic.getPosition();
+                            context.putImageData(pixels, pos.posX, pos.posY); 
+                        }
+
+                        
                         // console.log('arguments: ', filter.getArgs());
                         // var pixels = filter.filterImage(filter.filter, pic, filter.getArgs());
-                        pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
+                        // pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
 
-                        var pos = pic.getPosition();
-                        context.putImageData(pixels, pos.posX, pos.posY);
+                        // var pos = pic.getPosition();
+                        // context.putImageData(pixels, pos.posX, pos.posY);
                     };
 
                 }
@@ -88,7 +98,7 @@ var PhotoshopUI = (function(){
     return {
         getInstance: function(){
             if(instance == null){
-                instance = new PhotoshopUI();
+                instance = new PhotoEditorUI();
                 instance.constructor = null;
             }
 

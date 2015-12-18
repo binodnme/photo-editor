@@ -1,6 +1,6 @@
-var Photoshop = (function(){
+var PhotoEditor = (function(){
     
-    function Photoshop(){
+    function PhotoEditor(){
         var layers = [];
         var filters = [];
         var tools = [];
@@ -82,7 +82,7 @@ var Photoshop = (function(){
     return {
         getInstance: function(){
             if(instance==null){
-                instance = new Photoshop();
+                instance = new PhotoEditor();
                 instance.constructor = null;
             }
 

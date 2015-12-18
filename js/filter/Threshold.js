@@ -2,6 +2,7 @@ function Threshold(){
 	this.name='Threshold'
 	this.min = 10;
 	this.max = 200;
+	var active = true;
 	var args;
 
 	this.filter = function(pixels, threshold) {
@@ -19,6 +20,21 @@ function Threshold(){
 	};
 
 	console.info('threshold done');
+
+	this.enable = function(){
+		active = true;
+		// console.info('enabled');
+	}
+
+	this.disable = function(){
+		active = false;
+		// console.info('disabled');
+	}
+
+	this.isActive = function(){
+		return active;
+	}
+
 
 	this.getArgs = function(){
 		return args;

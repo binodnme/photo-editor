@@ -2,6 +2,7 @@ function Brightness(){
 	this.name='brightness';
 	this.min = -100;
 	this.max = 100;
+	var active = true;
 	var testArg;
 
 	this.filter = function(pixels, adjustment) {
@@ -17,6 +18,21 @@ function Brightness(){
 	};
 
 	console.info('brightness done');
+
+	this.enable = function(){
+		active = true;
+		// console.info('enabled');
+	}
+
+	this.disable = function(){
+		active = false;
+		// console.info('disabled');
+	}
+
+	this.isActive = function(){
+		return active;
+	}
+
 
 	this.getArgs = function(){
 		return testArg;

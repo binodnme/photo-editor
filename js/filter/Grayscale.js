@@ -1,6 +1,9 @@
 function Grayscale(){
-	this.name='grayscale'
+	this.name='grayscale';
+	var active = true;
 	var testArg;
+	// this.min = 10;
+	// this.max = 100;
 	var propertyEditer;
 	
 
@@ -13,10 +16,26 @@ function Grayscale(){
 	    // CIE luminance for the RGB
 	    // The human eye is bad at seeing red and blue, so we de-emphasize them.
 	    var v = 0.2126*r + 0.7152*g + 0.0722*b;
+	    // var v = (args*r + args*g + args*b)/100;
 	    d[i] = d[i+1] = d[i+2] = v
 	  }
 	  return pixels;
 	};
+
+
+	this.enable = function(){
+		active = true;
+		// console.info('enabled');
+	}
+
+	this.disable = function(){
+		active = false;
+		// console.info('disabled');
+	}
+
+	this.isActive = function(){
+		return active;
+	}
 
 	this.getArgs = function(){
 		return testArg;

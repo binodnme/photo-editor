@@ -28,4 +28,4 @@ var TransformTool = (function(){
 }());
 
 
-Photoshop.getInstance().addTool(TransformTool.getInstance());
+PhotoEditor.getInstance().addTool(TransformTool.getInstance());

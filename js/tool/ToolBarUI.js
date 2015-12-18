@@ -4,7 +4,7 @@ var ToolBarUI = (function(){
 
 		this.init = function(){
 			console.log('toolbar init');
-			var tools = Photoshop.getInstance().getTools();
+			var tools = PhotoEditor.getInstance().getTools();
 
 			for(var i in tools){
 				var input = document.createElement('input');
@@ -13,7 +13,13 @@ var ToolBarUI = (function(){
 
 				input.onclick = (function(tool){
 					return function(){
-						Photoshop.getInstance().setActiveTool(tool.getName());
+						PhotoEditor.getInstance().setActiveTool(tool.getName());
+						var tempCanvas = PhotoEditorUI.getInstance().getCanvas().getCanvasElement();
+						if(tool.getName()=='crop'){
+							tempCanvas.style.cursor = 'crosshair'
+						}else{
+							tempCanvas.style.cursor = 'default';
+						}
 					};
 				})(tools[i]);
 

@@ -6,6 +6,8 @@ function Canvas(){
 
     var xCorrection;
     var yCorrection;
+    var mouseDownPosX;
+    var mouseDownPosY;
     var mousedown = false;
     var imageSelected = false;
 
@@ -63,18 +65,21 @@ function Canvas(){
         var x = e.pageX - canvasElement.offsetLeft;
         var y = e.pageY - canvasElement.offsetTop;
 
+        mouseDownPosX = x;
+        mouseDownPosY = y;
+
         var layer = getTopLayer(x,y);
     
         if(layer){    
 
-            Photoshop.getInstance().setActiveLayerIndex(layer.getZIndex());
+            PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
         
             var dimen = layer.getPicture().getDimension();
             var pos = layer.getPicture().getPosition();
             
             context.clearRect(0,0,width, height);
 
-            PhotoshopUI.getInstance().renderLayers();
+            PhotoEditorUI.getInstance().renderLayers();
             // console.log('layer select');
             drawOutline(pos, dimen);
             
@@ -107,13 +112,13 @@ function Canvas(){
         var x1 = e.pageX - canvasElement.offsetLeft;
         var y1 = e.pageY - canvasElement.offsetTop;
 
-        var photoshop = Photoshop.getInstance();
+        var photoEditor = PhotoEditor.getInstance();
 
-        var zIndex = photoshop.getActiveLayerIndex();
-        var lyr = photoshop.getLayerByZIndex(zIndex);
+        var zIndex = photoEditor.getActiveLayerIndex();
+        var lyr = photoEditor.getLayerByZIndex(zIndex);
            
 
-        var activeTool = Photoshop.getInstance().getActiveTool();
+        var activeTool = photoEditor.getActiveTool();
 
         if(activeTool=='select'){
             if(mousedown && imageSelected){
@@ -121,7 +126,7 @@ function Canvas(){
                 lyr.getPicture().setPosition(x1-xCorrection,y1-yCorrection);
                 context.clearRect(0,0,width,height);
                 
-                PhotoshopUI.getInstance().renderLayers(); 
+                PhotoEditorUI.getInstance().renderLayers(); 
                 
                 var dimen = lyr.getPicture().getDimension();
                 var finalX = x1-xCorrection;
@@ -131,15 +136,22 @@ function Canvas(){
             } 
             
         }else if(activeTool=='transform'){
-            var position = lyr.getPicture().getPosition();
-            var dimension = lyr.getPicture().getDimension();
+                console.log('hello transform');
+                var position = lyr.getPicture().getPosition();
+                var dimension = lyr.getPicture().getDimension();
 
-            var side = isOverOutline(x1,y1,position,dimension);
+                var side = isOverOutline(x1,y1,position,dimension);
 
-            if(side){
-                resizeLayer(lyr,side,x1,y1);
-            }else{
-                canvasElement.style.cursor = 'default';
+                if(side){
+                    resizeLayer(lyr,side,x1,y1);
+                }else{
+                    canvasElement.style.cursor = 'default';
+                }    
+        }else if(activeTool=='crop'){
+            if(mousedown){
+                PhotoEditorUI.getInstance().renderLayers();
+                context.strokeRect(mouseDownPosX, mouseDownPosY, x1-mouseDownPosX, y1-mouseDownPosY);
+                CropTool.getInstance().setParameters(mouseDownPosX, mouseDownPosY, x1, y1);
             }
         }
 
@@ -148,22 +160,27 @@ function Canvas(){
     function handlerMouseUp(e){
         mousedown = false;
         imageSelected = false;
+        var activeTool = PhotoEditor.getInstance().getActiveTool();
+
+        if(activeTool=='crop'){
+            CropTool.getInstance().crop();
+        }
     }
 
     function handlerLayerSelectInList(e){
         var zIndex = parseInt(e.detail);
 
-        var layer = Photoshop.getInstance().getLayerByZIndex(zIndex);
+        var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
         var pic = layer.getPicture();
 
-        PhotoshopUI.getInstance().renderLayers();
+        PhotoEditorUI.getInstance().renderLayers();
         drawOutline(pic.getPosition(), pic.getDimension());
 
     }
 
 
     function getTopLayer(x, y){
-        var layers = Photoshop.getInstance().getLayers();
+        var layers = PhotoEditor.getInstance().getLayers();
 
         var indices = [];
         for(var i in layers){
@@ -200,17 +217,19 @@ function Canvas(){
         var dimension = pic.getDimension();
         var position = pic.getPosition();
 
-        var pUI = PhotoshopUI.getInstance();
+        var pUI = PhotoEditorUI.getInstance();
 
         if(side==1){
             //top
-            canvasElement.style.cursor = 'n-resize';    
+            canvasElement.style.cursor = 'n-resize'; 
             if(mousedown){
                 pic.setDimension(dimension.width, dimension.height+position.posY-y1);
                 pic.setPosition(position.posX, y1);
                 pUI.renderLayers();
-                drawOutline(position, dimension);
-            }
+                drawOutline(position, dimension);    
+            }  
+            
+        
         }else if(side==2){
             //bottom
             canvasElement.style.cursor = 's-resize';
@@ -219,6 +238,8 @@ function Canvas(){
                 pUI.renderLayers();
                 drawOutline(position, dimension);
             }
+            
+        
         }else if(side==3){
             //left
             canvasElement.style.cursor = 'w-resize';
@@ -226,16 +247,18 @@ function Canvas(){
                 pic.setDimension(dimension.width+position.posX-x1, dimension.height);
                 pic.setPosition(x1, position.posY);
                 pUI.renderLayers();
-                drawOutline(position, dimension);
+                drawOutline(position, dimension);    
             }
+            
         }else if(side==4){
             //right
             canvasElement.style.cursor = 'e-resize';
             if(mousedown){
                 pic.setDimension(x1-position.posX, dimension.height);
                 pUI.renderLayers();
-                drawOutline(position, dimension);
+                drawOutline(position, dimension);    
             }
+            
         }
         
     }

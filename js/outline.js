@@ -1,5 +1,5 @@
 function drawOutline(pos, dimen){
-    var ctx = PhotoshopUI.getInstance().getCanvas().getContext();
+    var ctx = PhotoEditorUI.getInstance().getCanvas().getContext();
     ctx.save();
     ctx.setLineDash([1,2]);
     ctx.beginPath();
@@ -46,7 +46,7 @@ function drawTransformDots(pos, dimen){
 
 
 function drawDots(pos, offset){
-    var ctx = PhotoshopUI.getInstance().getCanvas().getContext();
+    var ctx = PhotoEditorUI.getInstance().getCanvas().getContext();
     ctx.save();
     ctx.beginPath();
     ctx.moveTo(pos.posX-offset, pos.posY-offset);
