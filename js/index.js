@@ -48,6 +48,7 @@ getButton.onclick = function(){
 function loadImage(src){
     var img = new Image();
     img.src = src;
+    // img.crossOrigin = 'anonymous';
 
     var picture = new Picture();
     picture.setImage(img);

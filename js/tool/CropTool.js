@@ -92,6 +92,7 @@ var CropTool = (function(){
 
                 var img = document.createElement("img");
                 img.src = canvas.toDataURL("image/png");
+                // img.crossOrigin = "anonymous";
 
                 pic.setImageSrc(img.src);
 
