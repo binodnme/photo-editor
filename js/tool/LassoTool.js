@@ -117,6 +117,8 @@ var LassoTool = (function(){
 
                         PhotoEditorUI.getInstance().renderLayers();
 
+                        coordinateArray = [];
+
                     }
 
 
