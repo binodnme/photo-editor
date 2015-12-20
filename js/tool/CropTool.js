@@ -1,6 +1,6 @@
 
 var CropTool = (function(){
-    var iconSrc = '';   //source for icon file
+    var iconSrc = 'images/icons/crop.png';   //source for icon file
 
     function CropTool() {
         var name='crop';
@@ -74,14 +74,21 @@ var CropTool = (function(){
 
                 PhotoEditorUI.getInstance().renderLayers();
 
-                var imageData = ctx.getImageData(startX, startY, width, height);
+
+                // var imageData = ctx.getImageData(startX, startY, width, height);
 
                 var canvas = document.createElement("canvas");
                 canvas.width = width;
                 canvas.height = height;
 
                 var ctx = canvas.getContext("2d");
-                ctx.putImageData(imageData,0,0);
+                
+
+                ctx.drawImage(pic.getImage(), startX-pos.posX, startY-pos.posY, width, height, 
+                    0,0,width, height);
+                //ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+                // ctx.putImageData(imageData,0,0);
+                // ctx.draw()
 
                 var img = document.createElement("img");
                 img.src = canvas.toDataURL("image/png");

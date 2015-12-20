@@ -1,6 +1,6 @@
 
 var LassoTool = (function(){
-    var iconSrc = '';   //source for icon file
+    var iconSrc = 'images/icons/lasso.png';   //source for icon file
     var coordinateArray = [];
     var activeLayer;
 

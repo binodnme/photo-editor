@@ -9,7 +9,11 @@ var ToolBarUI = (function(){
 			for(var i in tools){
 				var input = document.createElement('input');
 				input.setAttribute('type', 'button');
-				input.value = tools[i].getName();
+				input.style.width = '35px';
+				input.style.height = '35px';
+				// input.value = tools[i].getName();
+				input.style.backgroundImage = 'url("'+tools[i].getIconSrc()+'")';
+				input.style.backgroundRepeat='no-repeat';
 
 				input.onclick = (function(tool, allTools){
 					return function(){

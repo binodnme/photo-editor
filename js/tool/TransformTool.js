@@ -1,4 +1,5 @@
 var TransformTool = (function(){
+	var iconSrc = 'images/icons/transform.png';
 	function TransformTool(){
 		// var id =2;
 		var name = 'transform';
@@ -13,6 +14,10 @@ var TransformTool = (function(){
 
 		this.reset = function(){
 			console.info('reset transform tool');
+		}
+
+		this.getIconSrc = function(){
+			return iconSrc;
 		}
 	}	
 

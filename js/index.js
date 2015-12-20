@@ -9,7 +9,7 @@ pUI.init();
 
 
 var inputFileElmnt = document.getElementById('choose-file');
-var getButton = document.getElementById('getButton');
+var getButton = document.getElementById('get-button');
 
 function setup(){
     var  width = parseFloat(document.getElementById('width').value);
@@ -21,31 +21,6 @@ function setup(){
 
     PhotoEditorUI.getInstance().renderLayers();
 }
-
-// function createCanvas(w, h){
-//     var width = 500;
-//     var height = 300;
-
-//     if(w && h){
-//         width = w;
-//         height = h;
-//     }
-
-//     var canvas = document.createElement('canvas');
-//     canvas.width = width;
-//     canvas.height = height;
-//     canvas.setAttribute('tabindex', '1');
-
-//     var canvasWrapper = document.getElementsByClassName('canvas-wrapper')[0];
-
-//     while (canvasWrapper.firstChild) {
-//         canvasWrapper.removeChild(canvasWrapper.firstChild);
-//     }
-
-//     canvasWrapper.appendChild(canvas);
-
-//     return canvas;
-// }
 
 
 inputFileElmnt.onchange = function(event){
@@ -89,6 +64,59 @@ function loadImage(src){
         pUI.renderLayers();
         // updateLayerUI(layer);
     }
+}
+
+
+function fitToImage(){
+    var layers = PhotoEditor.getInstance().getLayers();
+    var minX, minY, maxX, maxY;
+
+    for(var i in layers){
+        var layer = layers[i];
+
+        var pos = layer.getPicture().getPosition();
+        var dimen = layer.getPicture().getDimension();
+
+        if(i==0){
+            minX = pos.posX;
+            minY = pos.posY;
+            maxX = pos.posX + dimen.width;
+            maxY = pos.posY + dimen.height;
+        }else{
+            if(minX > pos.posX){
+                minX = pos.posX;
+            }
+
+            if(minY > pos.posY){
+                minY = pos.posY;
+            }
+
+            if(maxX < (pos.posX + dimen.width)){
+                maxX = pos.posX + dimen.width;
+            }
+
+            if(maxY < (pos.posY + dimen.height)){
+                maxY = pos.posY + dimen.height;
+            }
+        }
+
+
+    }
+
+    var canvas = PhotoEditorUI.getInstance().getCanvas().setDimension(maxX-minX, maxY-minY);
+    document.getElementById('width').value = maxX-minX;
+    document.getElementById('height').value = maxY-minY;
+
+
+    for(var i in layers){
+        var layer = layers[i];
+        var pos = layer.getPicture().getPosition();
+
+        layer.getPicture().setPosition(pos.posX-minX, pos.posY-minY);
+
+    }
+
+    PhotoEditorUI.getInstance().renderLayers();
 }
 
 

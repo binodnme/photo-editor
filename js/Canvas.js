@@ -69,9 +69,10 @@ function Canvas(){
         mouseDownPosY = y;
 
         var layer = getTopLayer(x,y);
-        PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
+        
 
         if(layer){
+            PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
             var activeTool = PhotoEditor.getInstance().getActiveTool();
             
             if(activeTool=='lasso'){
