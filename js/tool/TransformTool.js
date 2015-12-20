@@ -10,6 +10,10 @@ var TransformTool = (function(){
 		this.getName = function(){
 			return name;
 		}
+
+		this.reset = function(){
+			console.info('reset transform tool');
+		}
 	}	
 
 

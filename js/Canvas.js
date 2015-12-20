@@ -69,7 +69,8 @@ function Canvas(){
         mouseDownPosY = y;
 
         var layer = getTopLayer(x,y);
-    
+        PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
+
         if(layer){
             var activeTool = PhotoEditor.getInstance().getActiveTool();
             
@@ -80,7 +81,7 @@ function Canvas(){
 
 
             else{
-                PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
+                // PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
             
                 var dimen = layer.getPicture().getDimension();
                 var pos = layer.getPicture().getPosition();
@@ -145,17 +146,22 @@ function Canvas(){
             } 
             
         }else if(activeTool=='transform'){
-                console.log('hello transform');
-                var position = lyr.getPicture().getPosition();
-                var dimension = lyr.getPicture().getDimension();
+                // console.log('hello transform');
+                if(lyr){
+                    var position = lyr.getPicture().getPosition();
+                    var dimension = lyr.getPicture().getDimension();   
 
-                var side = isOverOutline(x1,y1,position,dimension);
+                    var side = isOverOutline(x1,y1,position,dimension);
 
-                if(side){
-                    resizeLayer(lyr,side,x1,y1);
-                }else{
-                    canvasElement.style.cursor = 'default';
-                }    
+                    if(side){
+                        resizeLayer(lyr,side,x1,y1);
+                    }else{
+                        canvasElement.style.cursor = 'default';
+                    }     
+                }
+                
+
+                
         }else if(activeTool=='crop'){
             if(mousedown){
                 PhotoEditorUI.getInstance().renderLayers();

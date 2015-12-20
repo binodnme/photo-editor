@@ -110,13 +110,14 @@ var PropertyBarUI = (function(){
 		            input.setAttribute('max', filters[i].max);
 		            input.setAttribute('value', filters[i].getArgs());
 
-		            input.onchange = (function(){
+		            input.onchange = (function(filter){
 		                return function(){
-		                    console.info('value:', this.value);
-		                    filters[i].setArgs(parseInt(this.value));
+		                	// console.log('this this this: ',filter.name);
+		                 //    console.info('value:', this.value);
+		                    filter.setArgs(parseInt(this.value));
 		                    PhotoEditorUI.getInstance().renderLayers();
 		                }
-		            })();
+		            })(filters[i]);
 	            	
 	            	list.appendChild(input);
 	            }
@@ -129,11 +130,10 @@ var PropertyBarUI = (function(){
 
 	            
 	            checkbox.onchange = (function(filter){
-	            		console.info('checkbox: ', checkbox);
 	            		return function(){
-		                    if(checkbox.checked){
+		                    if(this.checked){
 		                    	filter.enable();
-		                    	console.info('chekcbox clajds:',checkbox.getAttribute('name'));
+		                    	console.info('chekcbox clajds:',this.getAttribute('name'));
 		                    }else{
 		                    	filter.disable();
 		                    }

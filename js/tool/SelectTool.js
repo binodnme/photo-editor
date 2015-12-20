@@ -14,6 +14,10 @@ var SelectTool = (function(){
         this.getIconSrc = function(){
             return iconSrc;
         }
+
+        this.reset = function(){
+            console.info('reset select tool');
+        }
     	    
     }
 

@@ -11,7 +11,7 @@ var ToolBarUI = (function(){
 				input.setAttribute('type', 'button');
 				input.value = tools[i].getName();
 
-				input.onclick = (function(tool){
+				input.onclick = (function(tool, allTools){
 					return function(){
 						PhotoEditor.getInstance().setActiveTool(tool.getName());
 						var tempCanvas = PhotoEditorUI.getInstance().getCanvas().getCanvasElement();
@@ -20,8 +20,14 @@ var ToolBarUI = (function(){
 						}else{
 							tempCanvas.style.cursor = 'default';
 						}
+
+						for(var j in allTools){
+							if(tool!=allTools[j]){
+								allTools[j].reset();
+							}
+						}
 					};
-				})(tools[i]);
+				})(tools[i], tools);
 
 				parentElement.appendChild(input);
 			}
