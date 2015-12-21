@@ -3,19 +3,44 @@ var LayerBarUI = (function(){
 		var parentElement;
 		var initial;
 		var listElements = [];
+		var singleClickTimeOut;
 
 		this.init = function(){
 			console.log('layerbar init');
 		}
 
 		this.update = function(){
+			// var layerListWrapper = document.getElementsByClassName('layer-list-wrapper')[0];
+			var opBar = document.getElementById('opacity-bar');
 			var ul = document.getElementById('layer-list');
-
+			
+		    // layerListWrapper.removeChild(layerListWrapper.firstChild);
+	        
 			var layers = PhotoEditor.getInstance().getLayers();
+
+			while (opBar.firstChild) {
+	            opBar.removeChild(opBar.firstChild);
+	        }
+
 
 			while (ul.firstChild) {
 	            ul.removeChild(ul.firstChild);
 	        }
+
+	        var activeLayerZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
+	        var layer = PhotoEditor.getInstance().getLayerByZIndex(activeLayerZIndex);
+
+	        var opLabel = document.createElement('label');
+	        opLabel.innerHTML = 'opacity';
+	        var opacitySlider = document.createElement('input');
+	        opacitySlider.setAttribute('type','range');
+	        opacitySlider.setAttribute('min','0');
+	        opacitySlider.setAttribute('max','255');
+	        opacitySlider.setAttribute('value',layer.getOpacity());
+	        opBar.appendChild(opLabel);
+	        opBar.appendChild(opacitySlider);
+	        opacitySlider.addEventListener('change',opOnChange, false);
+
 
 	        layers.sort(function(a,b){
 	            return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
@@ -23,7 +48,7 @@ var LayerBarUI = (function(){
 
 		    listElements = [];
 
-		    var activeLayerZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
+		    
 
 		    for(var i in layers){
 			
@@ -38,31 +63,56 @@ var LayerBarUI = (function(){
 		        li.addEventListener('dragleave', handleDragLeave, false);
 		        li.addEventListener('drop', handleDrop, false);
 		        li.addEventListener('layerSelectInCanvas', handleLayerSelectInCanvas, false);
+		        li.addEventListener('dblclick',handleDblClick, false);
 
-		        li.onclick = (function(l){
+		        li.onclick = (function(list){
 		        	return function(){
-		        		this.style.background = 'grey';
+		        		singleClickTimeOut = setTimeout(function(){
+		        			var l = list.getListElement();
+		        			l.style.background = 'grey';
 
-		        		for(var i in listElements){
-		        			if(listElements[i] != l){
-		        				listElements[i].getListElement().style.background = 'white';
-		        			}
-		        		}
+			        		for(var i in listElements){
+			        			if(listElements[i] != list){
+			        				listElements[i].getListElement().style.background = 'white';
+			        			}
+			        		}
 
-		        		var zIndex = l.getZIndex();
-		        		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
+			        		var zIndex = list.getZIndex();
+			        		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
 
-					    PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
-					    
-					    var ulist = document.getElementsByTagName('ul');
-					    for(var i=0; i<ulist.length; i++){
-					        ulist[i].dispatchEvent(ev1);
-					    }
+						    PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
+						    
+						    var ulist = document.getElementsByTagName('ul');
+						    for(var i=0; i<ulist.length; i++){
+						        ulist[i].dispatchEvent(ev1);
+						    }
 
-					    var c = document.getElementsByTagName('canvas')[0];
-					    c.dispatchEvent(ev1);
+						    var c = document.getElementsByTagName('canvas')[0];
+						    c.dispatchEvent(ev1);
+		        		},400);
+		        		
 		        	};
 		        })(list);
+
+		        // var ipt = document.createElement('input');
+		        // ipt.setAttribute('type','button')
+		        // ipt.value = 'R';
+		        // li.appendChild(ipt);
+
+		        // ipt.onclick = (function(l){
+		        // 	return function(){
+		        // 		console.log('li:', l);
+		        // 		l.contentEditable = 'true';
+		        // 		console.log('li:', l);
+		        // 	}
+		        // })(li);
+
+		        // li.ondblclick = (function(){
+		        // 	return function(){
+		        // 		console.info('this:', this);
+		        // 		this.contentEditable = 'true';
+		        // 	}
+		        // })();
 
 
 		        if(layers[i].getZIndex() == activeLayerZIndex){
@@ -84,21 +134,50 @@ var LayerBarUI = (function(){
 			    for (var i = layers.length - 1; i >= 0; i--) {
 			        if(layers[i].getZIndex()==activeZIndex){
 			            layers.splice(i, 1);
-			            // updateLayerUI();
-			            // updatePropertyList();
 			            PhotoEditorUI.getInstance().renderLayers();
-			            // activeZIndex = undefined;
 			            break;
 			        }
 			    };
 			}
-			// console.info('input:', input);
 			ul.appendChild(input);
 		}
+
 
 		this.setParent = function(pEl){
 			parentElement = pEl;
 		}
+
+
+		function opOnChange(){
+			var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
+			var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
+			var opValue = parseInt(this.value);
+			layer.setOpacity(opValue);
+			var pic = layer.getPicture();
+
+			var mainFilter = new Filter();
+			var pixels = mainFilter.getPixels(pic);
+			
+			for (var i = pixels.data.length - 1; i >= 0; i-=4) {
+				pixels.data[i]=opValue;
+			};
+
+			
+			var cnvs = document.createElement('canvas');
+			cnvs.width = pixels.width;
+			cnvs.height = pixels.height;
+
+			var ctx = cnvs.getContext('2d');
+			ctx.putImageData(pixels, 0,0);
+
+			var img = new Image();
+			img.src = cnvs.toDataURL('image/png');
+
+			pic.setImageSrc(img.src);
+
+			PhotoEditorUI.getInstance().renderLayers();
+		}
+
 
 		function handleLayerSelectInCanvas(e){
 			var zIndex = parseInt(e.detail);
@@ -109,6 +188,15 @@ var LayerBarUI = (function(){
 				}
 			}
 		}
+
+
+		function handleDblClick(){
+			clearTimeout(singleClickTimeOut);
+			console.info('hello dbl click');
+			this.contentEditable = 'true';
+			console.info('this: ',this);
+		}
+
 
 		function handleDragStart(ev1){
 			// console.info('start');
@@ -121,6 +209,7 @@ var LayerBarUI = (function(){
 		    };
 		}
 
+
 		function handleDragOver(e){
 		    if(e.preventDefault){
 		        e.preventDefault();
@@ -130,6 +219,7 @@ var LayerBarUI = (function(){
 		    // console.info('over');
 		    return false;
 		}
+
 
 		function handleDragEnter(e) {
 		  	this.classList.add('over');
@@ -141,6 +231,7 @@ var LayerBarUI = (function(){
 		  	this.classList.remove('over');
 		  	// console.info('leave');
 		}
+
 
 		function handleDrop(e) {
 			if (e.stopPropagation) {
@@ -156,32 +247,7 @@ var LayerBarUI = (function(){
 				}
 			}
 	  
-			// console.info('initial:',initial, 'final:',finalValue);
-			
 			moveLayer(initial, finalValue);
-			// if(initial < finalValue){
-			// 	for(var i=initial; i<finalValue; i++){
-			// 		var tempId = list[i].id;
-			// 		var tempContent = list[i].innerHTML;
-
-			// 		list[i].id=list[i+1].id;
-			// 		list[i].innerHTML = list[i+1].innerHTML;
-
-			// 		list[i+1].id = tempId;
-			// 		list[i+1].innerHTML = tempContent;
-			// 	}  
-			// }else if(initial>finalValue){
-			// 	for(var i=initial; i>finalValue; i--){
-			// 		var tempId = list[i].id;
-			// 		var tempContent = list[i].innerHTML;
-
-			// 		list[i].id=list[i-1].id;
-			// 		list[i].innerHTML = list[i-1].innerHTML;
-
-			// 		list[i-1].id = tempId;
-			// 		list[i-1].innerHTML = tempContent;
-			// 	}
-			// }
 			
 			return false;
 		}
@@ -218,9 +284,6 @@ var LayerBarUI = (function(){
 		        }
 		    }
 		    
-		    // updateLayerUI();
-		    // updatePropertyList();
-		    // myCanvas.renderLayers();
 		    PhotoEditorUI.getInstance().renderLayers();
 		}
 	}

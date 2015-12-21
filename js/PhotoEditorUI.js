@@ -61,23 +61,23 @@ var PhotoEditorUI = (function(){
                 var pic = layer.getPicture();
                 pic.draw(context);
                 
-                // var filter = layer.getFilters();
+                var filter = layer.getFilters();
 
-                // var mainFilter = new Filter();
+                var mainFilter = new Filter();
 
-                // var pixels = mainFilter.getPixels(pic);
-                // if(layer.getFilters().length){
-                //     for (var i = layer.getFilters().length - 1; i >= 0; i--) {
-                //         var filter = layer.getFilters()[i];
-                //         if(filter.isActive()){
-                //             pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
+                var pixels = mainFilter.getPixels(pic);
+                if(layer.getFilters().length){
+                    for (var i = layer.getFilters().length - 1; i >= 0; i--) {
+                        var filter = layer.getFilters()[i];
+                        if(filter.isActive()){
+                            pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
 
-                //             var pos = pic.getPosition();
-                //             context.putImageData(pixels, pos.posX, pos.posY); 
-                //         }
-                //     };
+                            var pos = pic.getPosition();
+                            context.putImageData(pixels, pos.posX, pos.posY); 
+                        }
+                    };
 
-                // }
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ function Layer(){
     var width;
     var height;
     var filters =[];
+    var opacity = 255;
     
     this.setId = function(i){   id = i; }
     
@@ -47,6 +48,14 @@ function Layer(){
     
     this.getFilters = function(){
         return filters;
+    }
+
+    this.getOpacity = function(){
+        return opacity;
+    }
+
+    this.setOpacity = function(op){
+        opacity = op;
     }
     
 }
