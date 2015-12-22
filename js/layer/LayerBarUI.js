@@ -64,55 +64,101 @@ var LayerBarUI = (function(){
 		        li.addEventListener('drop', handleDrop, false);
 		        li.addEventListener('layerSelectInCanvas', handleLayerSelectInCanvas, false);
 		        li.addEventListener('dblclick',handleDblClick, false);
+		        // li.addEventListener('keyup', handleKeyUp, false);
 
 		        li.onclick = (function(list){
 		        	return function(){
-		        		singleClickTimeOut = setTimeout(function(){
-		        			var l = list.getListElement();
-		        			l.style.background = 'grey';
+		        		list.increaseTotalClicks();
 
-			        		for(var i in listElements){
-			        			if(listElements[i] != list){
-			        				listElements[i].getListElement().style.background = 'white';
+		        		if(list.getTotalClicks() == 1){
+		        			setTimeout(function(){
+		        				var l = list.getListElement();
+
+		        				if(list.getTotalClicks() == 1 && !list.isDoubleClick()){
+		        					console.info('single click');
+
+		        					
+				        			l.style.background = 'grey';
+					        		for(var i in listElements){
+					        			if(listElements[i] != list){
+					        				listElements[i].getListElement().style.background = 'white';
+					        			}
+					        		}
+
+					        		var zIndex = list.getZIndex();
+					        		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
+
+								    PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
+								    
+								    var ulist = document.getElementsByTagName('ul');
+								    for(var i=0; i<ulist.length; i++){
+								        ulist[i].dispatchEvent(ev1);
+								    }
+
+								    var c = document.getElementsByTagName('canvas')[0];
+								    c.dispatchEvent(ev1);
+
+			        			}else{
+			        				console.info('hello dbl click');
+									this.contentEditable = 'true';
+									this.focus();
+
+									
 			        			}
-			        		}
 
-			        		var zIndex = list.getZIndex();
-			        		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
+		        				list.resetTotalClicks();
+		        			},300);
+		        		}
 
-						    PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
+
+		        // 		singleClickTimeOut = setTimeout(function(){
+		        // 			var l = list.getListElement();
+		        // 			l.style.background = 'grey';
+
+			       //  		for(var i in listElements){
+			       //  			if(listElements[i] != list){
+			       //  				listElements[i].getListElement().style.background = 'white';
+			       //  			}
+			       //  		}
+
+			       //  		var zIndex = list.getZIndex();
+			       //  		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
+
+						    // PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
 						    
-						    var ulist = document.getElementsByTagName('ul');
-						    for(var i=0; i<ulist.length; i++){
-						        ulist[i].dispatchEvent(ev1);
-						    }
+						    // var ulist = document.getElementsByTagName('ul');
+						    // for(var i=0; i<ulist.length; i++){
+						    //     ulist[i].dispatchEvent(ev1);
+						    // }
 
-						    var c = document.getElementsByTagName('canvas')[0];
-						    c.dispatchEvent(ev1);
-		        		},400);
+						    // var c = document.getElementsByTagName('canvas')[0];
+						    // c.dispatchEvent(ev1);
+		        // 		},400);
 		        		
 		        	};
 		        })(list);
 
-		        // var ipt = document.createElement('input');
-		        // ipt.setAttribute('type','button')
-		        // ipt.value = 'R';
-		        // li.appendChild(ipt);
 
-		        // ipt.onclick = (function(l){
-		        // 	return function(){
-		        // 		console.log('li:', l);
-		        // 		l.contentEditable = 'true';
-		        // 		console.log('li:', l);
-		        // 	}
-		        // })(li);
+		        li.onkeydown = (function(list){
+		        	return function(){
+		        		var key = parseInt(event.keyCode);
+						// console.log(key);
+						if(key==13){
+							event.preventDefault();
+							console.log("done")
+							var newName = this.textContent || this.innerText;
+							var zIndex = list.getZIndex();
+					        PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
+					        var lyr = PhotoEditor.getInstance().getActiveLayer();
 
-		        // li.ondblclick = (function(){
-		        // 	return function(){
-		        // 		console.info('this:', this);
-		        // 		this.contentEditable = 'true';
-		        // 	}
-		        // })();
+					        lyr.setName(newName);
+							this.contentEditable = 'false';
+							list.disableDoubleClick();
+						}
+
+						console.log(this.textContent || this.innerText);
+		        	}
+		        }(list));
 
 
 		        if(layers[i].getZIndex() == activeLayerZIndex){
@@ -178,6 +224,18 @@ var LayerBarUI = (function(){
 			PhotoEditorUI.getInstance().renderLayers();
 		}
 
+
+		// function handleKeyUp(){
+		// 	var key = parseInt(e.keyCode);
+		// 	// console.log(key);
+		// 	if(key==13){
+		// 		e.preventDefault();
+		// 		console.log("done")
+		// 		this.contentEditable = 'false';
+		// 	}
+
+		// 	console.log(this.textContent || this.innerText);
+		// }
 
 		function handleLayerSelectInCanvas(e){
 			var zIndex = parseInt(e.detail);
@@ -260,7 +318,6 @@ var LayerBarUI = (function(){
 
 
 		function moveLayer(start, end){
-
 		    var start = start;
 		    var end = end;
 		    var layers = PhotoEditor.getInstance().getLayers();

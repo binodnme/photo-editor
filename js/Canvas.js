@@ -77,11 +77,16 @@ function Canvas(){
             
             if(activeTool=='lasso'){
                 LassoTool.getInstance().addCoordinate(x,y);
-                console.info('x,y: ',x,',',y);
-            }    
+                
+            }else if(activeTool == 'color'){
+                var x = e.layerX;
+                var y = e.layerY;
+                var pixeldata = context.getImageData(x, y, 1, 1);
+                var col = pixeldata.data;
+                console.info('inside color ');
+                ColorReplace.getInstance().setSourceColor(col, 'click');
 
-
-            else{
+            }else{
                 // PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
             
                 var dimen = layer.getPicture().getDimension();
@@ -127,7 +132,10 @@ function Canvas(){
 
         var zIndex = photoEditor.getActiveLayerIndex();
         var lyr = photoEditor.getLayerByZIndex(zIndex);
-           
+        
+        if(!lyr){
+            return;
+        }
 
         var activeTool = photoEditor.getActiveTool();
 
@@ -147,28 +155,30 @@ function Canvas(){
             } 
             
         }else if(activeTool=='transform'){
-                // console.log('hello transform');
-                if(lyr){
-                    var position = lyr.getPicture().getPosition();
-                    var dimension = lyr.getPicture().getDimension();   
+            if(lyr){
+                var position = lyr.getPicture().getPosition();
+                var dimension = lyr.getPicture().getDimension();   
 
-                    var side = isOverOutline(x1,y1,position,dimension);
+                var side = isOverOutline(x1,y1,position,dimension);
 
-                    if(side){
-                        resizeLayer(lyr,side,x1,y1);
-                    }else{
-                        canvasElement.style.cursor = 'default';
-                    }     
-                }
-                
-
-                
+                if(side){
+                    resizeLayer(lyr,side,x1,y1);
+                }else{
+                    canvasElement.style.cursor = 'default';
+                }     
+            }
         }else if(activeTool=='crop'){
             if(mousedown){
                 PhotoEditorUI.getInstance().renderLayers();
                 context.strokeRect(mouseDownPosX, mouseDownPosY, x1-mouseDownPosX, y1-mouseDownPosY);
                 CropTool.getInstance().setParameters(mouseDownPosX, mouseDownPosY, x1, y1);
             }
+        }else if(activeTool == 'color'){
+            var x = e.layerX;
+            var y = e.layerY;
+            var pixeldata = context.getImageData(x, y, 1, 1);
+            var col = pixeldata.data;
+            ColorReplace.getInstance().setSourceColor(col);
         }
 
     }

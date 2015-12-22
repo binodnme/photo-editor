@@ -171,7 +171,6 @@ function threshold(){
 // }
 
 
-
 var download = document.getElementById('download');
 download.addEventListener('click', function(ev1){
     console.info('downloaded');

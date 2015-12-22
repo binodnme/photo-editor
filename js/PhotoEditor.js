@@ -50,6 +50,10 @@ var PhotoEditor = (function(){
             return activeLayerIndex;
         }
 
+        this.getActiveLayer = function(){
+            return this.getLayerByZIndex(activeLayerIndex);
+        }
+
         
         this.getLayerByZIndex = function(zindex){
             for (var i = layers.length - 1; i >= 0; i--) {
