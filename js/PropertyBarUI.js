@@ -10,18 +10,20 @@ var PropertyBarUI = (function(){
 			var widthLabel = document.createElement('Label');
 			widthLabel.innerHTML = 'width';
 			var widhtInput = document.createElement('input');
-			widhtInput.setAttribute('id', 'prop-width')
+			widhtInput.setAttribute('id', 'prop-width');
+			widhtInput.setAttribute('class', 'prop-input');
 			widhtInput.addEventListener('change', handlerWidthChange, false);
 			
 
 			list1.appendChild(widthLabel);
 			list1.appendChild(widhtInput);
 
-			var list2 = document.createElement('Label');
+			var list2 = document.createElement('li');
 			var heightLabel = document.createElement('label');
 			heightLabel.innerHTML = 'height';
 			var heightInput = document.createElement('input');
-			heightInput.setAttribute('id', 'prop-height')
+			heightInput.setAttribute('id', 'prop-height');
+			heightInput.setAttribute('class', 'prop-input');
 			heightInput.addEventListener('change', handlerHeightChange, false);
 
 

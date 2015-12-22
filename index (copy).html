@@ -3,6 +3,7 @@
     <head>
         <title>Photo Editor</title>
         <link rel="stylesheet" type="text/css" href="css/index.css">
+        <link rel="stylesheet" type="text/css" href="css/layout.css">
     </head>
     
     <body>
@@ -17,51 +18,40 @@
                     <input id="get-button" class="get-button" type="submit" value="get">
 
                 </div>
-                
 
-                <input type="button" value="grayscale" onclick="grayscale()">
-                
-                <input type="button" value="brightness" onclick="brightness()">
-
-                <input type="button" value="threshold" onclick="threshold()">
+                <!-- <div><a href='#' id='download'>Download Image</a></div> -->
             </div>
             
             <div class="work-area clr">
-                <div id='toolbar' class="toolbar">
+                <div id='toolbar' class="toolbar"></div>
+               
 
-                </div>
                 <div class="content-wrapper">
                     <div class="canvas-wrapper">
-                        <div class="start-dialogbox">
-                            canvas width: <input id='width' type="text" value="600">
-                            canvas height: <input id='height' type="text" value="400">
-                            <input type="submit" value="resize" onclick="setup()">
-
-                            <input type="button" value="fit to image" onclick="fitToImage()">
+                        <div class="canvas-wrapper-main">
+                            <canvas id='playground'></canvas>
+                            <!-- <canvas id='testground' width='500' height='200'></canvas> -->
                         </div>
-
-                        <canvas id='playground'></canvas>
-                        <!-- <canvas id='testground' width='600' height='400'></canvas> -->
                     </div>
+                    
                     <div class="info-bar">
                         <div class="layer-bar">
                             <div class="layer-title">layers</div>
                             <div class="layer-list-wrapper">
-                                <div id='opacity-bar'>
+                                <div id='opacity-bar' class="opacity-bar">
                                     
                                 </div>
-                                <ul id="layer-list">
+                                <ul id="layer-list" class="layer-list">
                                 </ul>
                             </div>
-                            <!-- <div><input type="button" value="delete" onclick="deleteLayer()"></div> -->
+                            <div class="layer-action"></div>
                         </div>
                         
                         <div class="properties">
                             <div class="property-title">property</div>
                             <div class="property-list-wrapper">
-                                <ul id="property-list">
-                                    <!-- <li>width: <input id="prop-width" type="num" width="100px"></li>
-                                    <li>height: <input id="prop-height" type="text"></li> -->
+                                <ul id="property-list" class="property-list">
+
                                 </ul>
                             </div>
                             <div class="filter-wrapper">
@@ -74,7 +64,41 @@
                 </div>
             </div>
             
-            <div><a href='#' id='download'>Download Image</a></div>
+            <div class='filter-container'>
+                <div class='all-filters'>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+                    <div class="filter">
+                        <img src="./images/a.jpg">
+                    </div>
+
+                </div>
+            </div>
 
         </div>
 

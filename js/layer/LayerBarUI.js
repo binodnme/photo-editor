@@ -7,16 +7,40 @@ var LayerBarUI = (function(){
 
 		this.init = function(){
 			console.log('layerbar init');
+
+
+			var layerAction = document.getElementsByClassName('layer-action')[0];
+
+			var deleteWrapper = document.createElement('div');
+			var deleteLayer = document.createElement('input');
+			deleteLayer.setAttribute('type','button');
+			// deleteLayer.setAttribute('value', 'delete');
+			deleteLayer.setAttribute('id','layer-delete');
+			deleteLayer.setAttribute('class','layer-action-button');
+
+
+			deleteLayer.onclick = function(e){
+				var layers = PhotoEditor.getInstance().getLayers();
+			    var activeZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
+			    console.info('active: ', activeZIndex);
+			    for (var i = layers.length - 1; i >= 0; i--) {
+			        if(layers[i].getZIndex()==activeZIndex){
+			            layers.splice(i, 1);
+			            PhotoEditorUI.getInstance().renderLayers();
+			            break;
+			        }
+			    };
+			}
+
+			deleteWrapper.appendChild(deleteLayer);
+			layerAction.appendChild(deleteWrapper);
 		}
 
 		this.update = function(){
-			// var layerListWrapper = document.getElementsByClassName('layer-list-wrapper')[0];
 			var opBar = document.getElementById('opacity-bar');
 			var ul = document.getElementById('layer-list');
 			
-		    // layerListWrapper.removeChild(layerListWrapper.firstChild);
-	        
-			var layers = PhotoEditor.getInstance().getLayers();
+		    var layers = PhotoEditor.getInstance().getLayers();
 
 			while (opBar.firstChild) {
 	            opBar.removeChild(opBar.firstChild);
@@ -30,16 +54,18 @@ var LayerBarUI = (function(){
 	        var activeLayerZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
 	        var layer = PhotoEditor.getInstance().getLayerByZIndex(activeLayerZIndex);
 
-	        var opLabel = document.createElement('label');
-	        opLabel.innerHTML = 'opacity';
-	        var opacitySlider = document.createElement('input');
-	        opacitySlider.setAttribute('type','range');
-	        opacitySlider.setAttribute('min','0');
-	        opacitySlider.setAttribute('max','255');
-	        opacitySlider.setAttribute('value',layer.getOpacity());
-	        opBar.appendChild(opLabel);
-	        opBar.appendChild(opacitySlider);
-	        opacitySlider.addEventListener('change',opOnChange, false);
+	        if(layer){
+	        	var opLabel = document.createElement('label');
+		        opLabel.innerHTML = 'opacity';
+		        var opacitySlider = document.createElement('input');
+		        opacitySlider.setAttribute('type','range');
+		        opacitySlider.setAttribute('min','0');
+		        opacitySlider.setAttribute('max','255');
+		        opacitySlider.setAttribute('value',layer.getOpacity());
+		        opBar.appendChild(opLabel);
+		        opBar.appendChild(opacitySlider);
+		        opacitySlider.addEventListener('change',opOnChange, false);
+	        }
 
 
 	        layers.sort(function(a,b){
@@ -64,8 +90,7 @@ var LayerBarUI = (function(){
 		        li.addEventListener('drop', handleDrop, false);
 		        li.addEventListener('layerSelectInCanvas', handleLayerSelectInCanvas, false);
 		        li.addEventListener('dblclick',handleDblClick, false);
-		        // li.addEventListener('keyup', handleKeyUp, false);
-
+		        
 		        li.onclick = (function(list){
 		        	return function(){
 		        		list.increaseTotalClicks();
@@ -78,10 +103,10 @@ var LayerBarUI = (function(){
 		        					console.info('single click');
 
 		        					
-				        			l.style.background = 'grey';
+				        			l.style.background = '#2B2E3C';
 					        		for(var i in listElements){
 					        			if(listElements[i] != list){
-					        				listElements[i].getListElement().style.background = 'white';
+					        				listElements[i].getListElement().style.background = 'none';
 					        			}
 					        		}
 
@@ -99,7 +124,7 @@ var LayerBarUI = (function(){
 								    c.dispatchEvent(ev1);
 
 			        			}else{
-			        				console.info('hello dbl click');
+			        				// console.info('hello dbl click');
 									this.contentEditable = 'true';
 									this.focus();
 
@@ -109,32 +134,6 @@ var LayerBarUI = (function(){
 		        				list.resetTotalClicks();
 		        			},300);
 		        		}
-
-
-		        // 		singleClickTimeOut = setTimeout(function(){
-		        // 			var l = list.getListElement();
-		        // 			l.style.background = 'grey';
-
-			       //  		for(var i in listElements){
-			       //  			if(listElements[i] != list){
-			       //  				listElements[i].getListElement().style.background = 'white';
-			       //  			}
-			       //  		}
-
-			       //  		var zIndex = list.getZIndex();
-			       //  		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
-
-						    // PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
-						    
-						    // var ulist = document.getElementsByTagName('ul');
-						    // for(var i=0; i<ulist.length; i++){
-						    //     ulist[i].dispatchEvent(ev1);
-						    // }
-
-						    // var c = document.getElementsByTagName('canvas')[0];
-						    // c.dispatchEvent(ev1);
-		        // 		},400);
-		        		
 		        	};
 		        })(list);
 
@@ -161,31 +160,18 @@ var LayerBarUI = (function(){
 		        }(list));
 
 
+		        // var cb = document.createElement('input');
+		        // cb.setAttribute('type','checkbox');
+		        // li.appendChild(cb);
+
+
 		        if(layers[i].getZIndex() == activeLayerZIndex){
-		        	li.style.background = 'grey';
+		        	li.style.background = '#2B2E3C';
 		        }
 
 				ul.appendChild(li);
 				listElements.push(list);
 			}	
-
-			var input = document.createElement('input');
-			input.setAttribute('type','button');
-			input.setAttribute('value', 'delete');
-
-			input.onclick = function(e){
-				var layers = PhotoEditor.getInstance().getLayers();
-			    var activeZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
-			    console.info('active: ', activeZIndex);
-			    for (var i = layers.length - 1; i >= 0; i--) {
-			        if(layers[i].getZIndex()==activeZIndex){
-			            layers.splice(i, 1);
-			            PhotoEditorUI.getInstance().renderLayers();
-			            break;
-			        }
-			    };
-			}
-			ul.appendChild(input);
 		}
 
 
@@ -195,26 +181,42 @@ var LayerBarUI = (function(){
 
 
 		function opOnChange(){
-			var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
-			var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
+			
+			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var opValue = parseInt(this.value);
 			layer.setOpacity(opValue);
+
 			var pic = layer.getPicture();
 
 			var mainFilter = new Filter();
 			var pixels = mainFilter.getPixels(pic);
-			
+			console.info('hi pixesl');
+
+			console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
+
 			for (var i = pixels.data.length - 1; i >= 0; i-=4) {
 				pixels.data[i]=opValue;
 			};
+			// console.info('opacity', opValue);
 
+			console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
 			
-			var cnvs = document.createElement('canvas');
+			// var cnvs = document.createElement('canvas');
+			var cnvs = document.getElementById('testground');
 			cnvs.width = pixels.width;
 			cnvs.height = pixels.height;
 
+			// cnvs.width = pic.getWidth();
+			// cnvs.height = pic.getHeight();
+
+			// console.info(cnvs.width, ', ', cnvs.height);
+
 			var ctx = cnvs.getContext('2d');
 			ctx.putImageData(pixels, 0,0);
+			// ctx.globalAlpha = opValue/100;
+			// console.info(pic.getImage());
+			// ctx.drawImage(pic.getImage(),0,0);
+
 
 			var img = new Image();
 			img.src = cnvs.toDataURL('image/png');
@@ -225,24 +227,12 @@ var LayerBarUI = (function(){
 		}
 
 
-		// function handleKeyUp(){
-		// 	var key = parseInt(e.keyCode);
-		// 	// console.log(key);
-		// 	if(key==13){
-		// 		e.preventDefault();
-		// 		console.log("done")
-		// 		this.contentEditable = 'false';
-		// 	}
-
-		// 	console.log(this.textContent || this.innerText);
-		// }
-
 		function handleLayerSelectInCanvas(e){
 			var zIndex = parseInt(e.detail);
 			for(var i in listElements){
 				if(listElements[i].getZIndex() == zIndex){
 					var li = listElements[i].getListElement();
-					li.style.background = 'grey';
+					li.style.background = '#2B2E3C';
 				}
 			}
 		}

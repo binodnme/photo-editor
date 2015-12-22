@@ -1,0 +1,91 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+body{
+    background: #383D52;
+}
+
+.main-container{
+    max-width: 85.375em;
+    height: 650px;
+    /*border: 1px solid red;*/
+    margin: 0px auto;
+    font-family: arial;
+    background: #383D52;
+}
+
+.header-wrapper{
+    width: 100%;
+    height: 50px;
+    background: #2B2E3C;
+}
+
+
+.work-area{
+    padding-top: 10px;
+    border-bottom: 2px solid #2B2E3C;
+    height: 500px;
+}
+
+
+
+.toolbar {
+    width: 3%;
+    float: left;
+    padding-left: 5px;
+    padding-top: 5px;
+    background: #353950;
+    /*background: #2B2E3C;*/
+}
+
+.content-wrapper{
+    width: 95%;
+    float: right;
+}
+
+.canvas-wrapper {
+    width: 85%;
+    float: left;
+}
+
+.info-bar{
+    width: 14%;
+    float: right;
+    font-size: 12px;
+    height: 495px;
+    background: #353950;
+    /*border: 1px solid black;*/
+}
+
+
+.filter-container{
+    width: 100%;
+    height: 85px;
+    background: #2B2E3C;
+    overflow: hidden;
+}
+
+.all-filters{
+    width:10000px;
+    /*overflow: hidden;*/
+    /*width:150px;
+    height: 84px;
+    padding-right: 5px;
+    padding-left: 5px;*/
+    /*background: red;*/
+}
+
+.all-filters .filter{
+    float: left;
+    width:150px;
+    height: 84px;
+    padding-right: 5px;
+    padding-left: 5px;
+    /*background: red;*/
+}
+
+.all-filters .filter img{
+    /*width: 100%;*/
+}
