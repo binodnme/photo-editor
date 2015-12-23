@@ -1,7 +1,7 @@
 function Threshold(){
-	this.name='Threshold'
-	this.min = 10;
-	this.max = 200;
+	var name='threshold'
+	var min = 10;
+	var max = 200;
 	var active = true;
 	var args;
 
@@ -20,6 +20,19 @@ function Threshold(){
 	};
 
 	console.info('threshold done');
+
+
+	this.getName = function(){
+		return name;
+	}
+
+	this.getMin = function(){
+		return min;
+	}
+
+	this.getMax = function(){
+		return max;
+	}
 
 	this.enable = function(){
 		active = true;

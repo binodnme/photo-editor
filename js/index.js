@@ -158,17 +158,77 @@ function threshold(){
     }
 }
 
-// function convolution(){
-//     var zIndex = myCanvas.getActiveLayerIndex();
+// function blur(){
+//     var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
 //     if(zIndex>=0){
-//         var layer = myCanvas.getLayerByZIndex(zIndex);
+//         var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
 //         // var layer = myCanvas.getLayers()[layerIndex];
-//         var t = new Convolution();
+//         var t = new Threshold();
 //         t.setArgs(100);
 //         layer.getFilters().push(t); 
-//         myCanvas.renderLayers();
-//     }   
+//         PhotoEditorUI.getInstance().renderLayers();
+//     }
 // }
+
+function convolution(){
+    var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
+    if(zIndex>=0){
+        var layer = PhotoEditor.getInstance().getActiveLayer();
+        // var layer = myCanvas.getLayers()[layerIndex];
+        var t = new Convolution();
+
+        // sharpen
+        // var arg = [  0, -1,  0,
+        //             -1,  5, -1,
+        //             0, -1,  0 ];
+
+        // var arg = [  0, -3,  0,
+        //             -3,  13, -3,
+        //             0, -3,  0 ];
+
+        //blur
+        // var arg = [  1/9,1/9 ,1/9,
+        //             1/9,  1/9, 1/9,
+        //             1/9, 1/9,  1/9 ];
+
+        // var test = 0.2;
+        // var arg = [  0,test ,0,
+        //             test,  test, test,
+        //             0, test,  0 ];
+
+        // var arg = [0,test,test,0,
+        //         test,test,test,test,
+        //         test,test,test,test,
+        //         0,test,test,0
+
+        // ]
+
+//motion blur
+        var arg=[
+            1/9, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 1/9, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1/9, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 1/9, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 1/9, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 1/9, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 1/9, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 1/9, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 1/9,
+        ];
+
+
+        // var arg = [
+        //     0,  0,  0,  0,  0,
+        //      0,  0,  0,  0,  0,
+        //     -1, -1,  2,  0,  0,
+        //      0,  0,  0,  0,  0,
+        //      0,  0,  0,  0,  0,
+        // ];
+        t.setArgs(arg);
+        layer.getFilters().push(t); 
+        PhotoEditorUI.getInstance().renderLayers();
+    }   
+}
 
 
 // var download = document.getElementById('download');

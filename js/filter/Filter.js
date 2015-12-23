@@ -15,7 +15,7 @@ Filter.prototype.getPixels = function(pic) {
 
 	ctx.drawImage(picture.getImage(),0,0);
   	// return context.getImageData(pos.posX,pos.posY,dimen.width,dimen.height);
-  	console.log('width:',dimen.width, 'height:',dimen.height);
+  	// console.log('width:',dimen.width, 'height:',dimen.height);
   	return ctx.getImageData(0,0,dimen.width,dimen.height);
 };
 

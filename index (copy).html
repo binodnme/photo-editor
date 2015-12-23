@@ -4,6 +4,7 @@
         <title>Photo Editor</title>
         <link rel="stylesheet" type="text/css" href="css/index.css">
         <link rel="stylesheet" type="text/css" href="css/layout.css">
+        <link rel="stylesheet" type="text/css" href="css/tweaks.css">
     </head>
     
     <body>
@@ -11,13 +12,21 @@
             <div class="header-wrapper">
                 <div class="load-image">
                     
-                    <span class="load-label"><label>Load Image </label> </span>
-                    <input id="choose-file" class="choose-file" type="file">
-                    or
+                    <!-- <span class="load-label"><label>Load Image </label> </span> -->
+                    <input id="choose-file"  type="file">
+                    
                     <input id="url" class="url" type="url" placeholder="enter image url"> 
                     <input id="get-button" class="get-button" type="submit" value="get">
 
                 </div>
+
+                <!-- <input type="button" value="grayscale" onclick="grayscale()">
+                
+                <input type="button" value="brightness" onclick="brightness()">
+
+                <input type="button" value="threshold" onclick="threshold()">
+
+                <input type="button" value="threshold" onclick="convolution()"> -->
 
                 <!-- <div><a href='#' id='download'>Download Image</a></div> -->
             </div>
@@ -64,9 +73,9 @@
                 </div>
             </div>
             
-            <!-- <div class='filter-container'>
-                <div class='all-filters'>
-                    <div class="filter">
+            <div id='filter-container' class='filter-container'>
+                <div id='all-filters' class='all-filters'>
+                    <!-- <div class="filter">
                         <img src="./images/test.png">
                     </div>
                     <div class="filter">
@@ -89,16 +98,10 @@
                     </div>
                     <div class="filter">
                         <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-
+                    </div> -->
+                    
                 </div>
-            </div> -->
+            </div>
 
         </div>
 
@@ -111,6 +114,10 @@
         <script type="text/javascript" src='./js/filter/Grayscale.js'></script>
         <script type="text/javascript" src='./js/filter/Threshold.js'></script>
         <script type="text/javascript" src='./js/filter/Brightness.js'></script>
+        <script type="text/javascript" src='./js/filter/Convolution.js'></script>
+        <script type="text/javascript" src='./js/filter/Sharpen.js'></script>
+        <script type="text/javascript" src='./js/filter/Blur.js'></script>
+        <script type="text/javascript" src='./js/filter/MotionBlur.js'></script>
 
         <script type='text/javascript' src='./js/PhotoEditor.js'></script>
         <script type="text/javascript" src='./js/Picture.js'></script>
@@ -126,6 +133,7 @@
         <script type='text/javascript' src='./js/tool/ToolBarUI.js'></script>
         <script type='text/javascript' src='./js/layer/LayerBarUI.js'></script>
         <script type='text/javascript' src='./js/PropertyBarUI.js'></script>
+        <script type='text/javascript' src='./js/filter/FilterBarUI.js'></script>
 
         <script type='text/javascript' src='./js/PhotoEditorUI.js'></script>
 

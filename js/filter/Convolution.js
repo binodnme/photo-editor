@@ -7,6 +7,9 @@ function Convolution(){
 
   this.min = 5;
   this.max = 100;
+  var active = true;
+
+
   var testArg = [  0, -1,  0,
                    -1,  5, -1,
                    0, -1,  0 ];
@@ -62,6 +65,21 @@ function Convolution(){
 
   this.setArgs = function(val){
     testArg = val;
+  }
+
+
+  this.enable = function(){
+    active = true;
+    // console.info('enabled');
+  }
+
+  this.disable = function(){
+    active = false;
+    // console.info('disabled');
+  }
+
+  this.isActive = function(){
+    return active;
   }
 }
 

@@ -76,7 +76,8 @@ canvas{
     font-size: 14px;
     padding: 5px 0px;
     border-top: 2px solid #292B38;
-    color: #8E8C8C;
+    /*color: #8E8C8C;*/
+    color: #E4E4F5;
     /*border: 1px solid red;*/
     
 }
@@ -87,7 +88,8 @@ canvas{
     height: 18px;
     line-height: 18px;
     border-bottom:1px solid #2B2E3C;
-    color: #7D7977;
+    /*color: #7D7977;*/
+    color: #E4E4F5;
 }
 
 
@@ -127,6 +129,49 @@ ul.layer-list{
 
 .prop-input{
     width: 100px;
+}
+
+
+.all-filters ul{
+    list-style: none;
+}
+
+.all-filters ul li{
+    float: left;
+    width: 100px;
+    height: 75px;
+    padding-right: 5px;
+    padding-left: 5px;
+}
+
+
+.all-filters .filter{
+    /*float: left;*/
+    width:100px;
+    height: 75px;
+    /*padding-right: 5px;
+    padding-left: 5px;*/
+    /*background: red;*/
+}
+
+.all-filters .filter img{
+    width: 100%;
+}
+
+.filter-slider-wrapper{
+    width: 400px;
+    height: 30px;
+    border-radius: 5px;
+    /*border:2px solid red;*/
+    position: absolute;
+    top :-45px;
+    left:400px;
+    background: #2B2E3C;
+}
+
+.filter-slider-wrapper input{
+    width: 400px;
+    height: 30px;
 }
 
 

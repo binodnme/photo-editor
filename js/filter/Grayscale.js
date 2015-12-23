@@ -1,5 +1,5 @@
 function Grayscale(){
-	this.name='grayscale';
+	var name='grayscale';
 	var active = true;
 	var testArg;
 	// this.min = 10;
@@ -22,6 +22,9 @@ function Grayscale(){
 	  return pixels;
 	};
 
+	this.getName = function(){
+		return name;
+	}
 
 	this.enable = function(){
 		active = true;
@@ -35,6 +38,14 @@ function Grayscale(){
 
 	this.isActive = function(){
 		return active;
+	}
+
+	this.getMin = function(){
+		return null;
+	}
+
+	this.getMax = function(){
+		return null;
 	}
 
 	this.getArgs = function(){

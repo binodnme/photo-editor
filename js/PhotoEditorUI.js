@@ -6,6 +6,7 @@ var PhotoEditorUI = (function(){
         var toolbar = ToolBarUI.getInstance();
         var layerBar = LayerBarUI.getInstance();
         var propertyBar = PropertyBarUI.getInstance();
+        var filterBar = FitlerBarUI.getInstance();
 
 
         this.init = function(){
@@ -24,6 +25,7 @@ var PhotoEditorUI = (function(){
             toolbar.init();
             layerBar.init();
             propertyBar.init();
+            filterBar.init();
         }
 
         

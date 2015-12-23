@@ -1,30 +1,27 @@
-function Brightness(){
-	var name='brightness';
-	var min = -100;
-	var max = 100;
+function Sharpen(){
+	var name='sharpen'
+	var min = 0;
+	var max = 10;
 	var active = true;
-	var testArg;
+	var args;
 
-	this.filter = function(pixels, adjustment) {
-		// var adjustment = 50;
-	  var d = pixels.data;
-	  for (var i=0; i<d.length; i+=4) {
-	    d[i] += adjustment;
-	    d[i+1] += adjustment;
-	    d[i+2] += adjustment;
-	  }
-	  testArg = adjustment;
-	  return pixels;
+	this.filter = function(pixels, weight) {
+		var conv = new Convolution();
+		// t.setArgs(weight);
+		return conv.filter(pixels, weight);
+		
 	};
 
-	console.info('brightness done');
+	console.info('sharpen done');
+
 
 	this.getName = function(){
 		return name;
 	}
 
 	this.getMin = function(){
-		return min;
+		// return min;
+		return null;
 	}
 
 	this.getMax = function(){
@@ -47,21 +44,17 @@ function Brightness(){
 
 
 	this.getArgs = function(){
-		return testArg;
+		return args;
 	}
 
 	this.setArgs = function(val){
-		testArg = val;
+		args = val;
 	}
-
 }
-
 
 var inheritsFrom = function (child, parent) {
     child.prototype = Object.create(parent.prototype);
     console.info('inherit');
 };
 
-inheritsFrom(Brightness, Filter);
-
-// Photoshop.getInstance().addFilter();
+inheritsFrom(Sharpen, Filter);
