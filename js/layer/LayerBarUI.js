@@ -186,42 +186,33 @@ var LayerBarUI = (function(){
 			var opValue = parseInt(this.value);
 			layer.setOpacity(opValue);
 
-			var pic = layer.getPicture();
+			// var pic = layer.getPicture();
 
-			var mainFilter = new Filter();
-			var pixels = mainFilter.getPixels(pic);
-			console.info('hi pixesl');
+			// var mainFilter = new Filter();
+			// var pixels = mainFilter.getPixels(pic);
+			// console.info('hi pixels');
 
-			console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
+			// console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
 
-			for (var i = pixels.data.length - 1; i >= 0; i-=4) {
-				pixels.data[i]=opValue;
-			};
-			// console.info('opacity', opValue);
-
-			console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
+			// for (var i = pixels.data.length - 1; i >= 0; i-=4) {
+			// 	pixels.data[i]=opValue;
+			// };
+			
+			// console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
 			
 			// var cnvs = document.createElement('canvas');
-			var cnvs = document.getElementById('testground');
-			cnvs.width = pixels.width;
-			cnvs.height = pixels.height;
+			
+			// cnvs.width = pixels.width;
+			// cnvs.height = pixels.height;
 
-			// cnvs.width = pic.getWidth();
-			// cnvs.height = pic.getHeight();
+			// var ctx = cnvs.getContext('2d');
+			// ctx.clearRect(0,0,cnvs.width, cnvs.height);
+			// ctx.putImageData(pixels, 0,0);
+			
+			// var img = new Image();
+			// img.src = cnvs.toDataURL('image/png');
 
-			// console.info(cnvs.width, ', ', cnvs.height);
-
-			var ctx = cnvs.getContext('2d');
-			ctx.putImageData(pixels, 0,0);
-			// ctx.globalAlpha = opValue/100;
-			// console.info(pic.getImage());
-			// ctx.drawImage(pic.getImage(),0,0);
-
-
-			var img = new Image();
-			img.src = cnvs.toDataURL('image/png');
-
-			pic.setImageSrc(img.src);
+			// pic.setImageSrc(img.src);
 
 			PhotoEditorUI.getInstance().renderLayers();
 		}

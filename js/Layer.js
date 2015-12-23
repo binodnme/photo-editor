@@ -56,6 +56,7 @@ function Layer(){
 
     this.setOpacity = function(op){
         opacity = op;
+        picture.setOpacity(op);
     }
     
 }

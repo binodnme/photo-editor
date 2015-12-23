@@ -79,6 +79,14 @@ var PhotoEditorUI = (function(){
 
                 }
             }
+
+            var tempLayer = photoEditor.getActiveLayer();
+            if(tempLayer){
+                var dimen = tempLayer.getPicture().getDimension();
+                var position = tempLayer.getPicture().getPosition();
+
+                drawOutline(position, dimen);
+            }
         }
     }
 

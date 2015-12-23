@@ -190,6 +190,26 @@ function Canvas(){
 
         if(activeTool=='crop'){
             CropTool.getInstance().crop();
+        }else if(activeTool == 'transform'){
+            console.info('inside transform');
+            var lyr = PhotoEditor.getInstance().getActiveLayer();
+            var pic = lyr.getPicture();
+            var dimen = pic.getDimension();
+            var pos = pic.getPosition();
+
+            var canvas = document.createElement('canvas');
+            canvas.width = dimen.width;
+            canvas.height = dimen.height;
+
+            var context = canvas.getContext('2d');
+
+            context.drawImage(pic.getImage(), 0, 0, canvas.width, canvas.height);
+
+            var src  = canvas.toDataURL('image/png');
+            pic.setImageSrc(src);
+            canvas.remove();
+
+            PhotoEditorUI.getInstance().renderLayers();
         }
     }
 
