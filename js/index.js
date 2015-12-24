@@ -105,8 +105,8 @@ function fitToImage(){
     }
 
     var canvas = PhotoEditorUI.getInstance().getCanvas().setDimension(maxX-minX, maxY-minY);
-    document.getElementById('width').value = maxX-minX;
-    document.getElementById('height').value = maxY-minY;
+    // document.getElementById('width').value = maxX-minX;
+    // document.getElementById('height').value = maxY-minY;
 
 
     for(var i in layers){
@@ -231,18 +231,18 @@ function convolution(){
 }
 
 
-// var download = document.getElementById('download');
-// download.addEventListener('click', function(ev1){
-//     console.info('downloaded');
-//     var canvas = PhotoEditorUI.getInstance().getCanvas();
-//     canvas.getContext().clearRect(0,0,canvas.width, canvas.height);
-//     PhotoEditorUI.getInstance().renderLayers();
+var download = document.getElementById('download');
+download.addEventListener('click', function(ev1){
+    console.info('downloaded');
+    var canvas = PhotoEditorUI.getInstance().getCanvas();
+    canvas.getContext().clearRect(0,0,canvas.width, canvas.height);
+    PhotoEditorUI.getInstance().renderLayers();
 
-//     downloadCanvas(this,'playground','test.png');
-// }, false);
+    downloadCanvas(this,'playground','test.png');
+}, false);
 
 
-// function downloadCanvas(link, canvasId, filename) {
-//     link.href = document.getElementById(canvasId).toDataURL();
-//     link.download = filename;
-// }
+function downloadCanvas(link, canvasId, filename) {
+    link.href = document.getElementById(canvasId).toDataURL();
+    link.download = filename;
+}

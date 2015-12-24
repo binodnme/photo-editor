@@ -1,5 +1,8 @@
 var FitlerBarUI = (function(){
 	function FitlerBarUI(){
+
+		var fadeOutTimer ;
+
 		this.init = function(){
 			console.info('initializing fitler bar');
 			var allFilters = document.getElementById('all-filters');
@@ -12,7 +15,7 @@ var FitlerBarUI = (function(){
 			div.innerHTML = 'grayscale';
 			grayscale.appendChild(div);
 			grayscale.addEventListener('click', handleClickOnGrayscale, false);
-
+			addlayerSelectInCanvasHandler(grayscale, 'grayscale');
 
 			var brightness = document.createElement('li');
 			var div = document.createElement('div');
@@ -20,7 +23,7 @@ var FitlerBarUI = (function(){
 			div.innerHTML = 'brightness';
 			brightness.appendChild(div);
 			brightness.addEventListener('click', handleClickOnBrightness, false);
-
+			addlayerSelectInCanvasHandler(brightness, 'brightness');			
 
 			var threshold = document.createElement('li');
 			var div = document.createElement('div');
@@ -63,6 +66,91 @@ var FitlerBarUI = (function(){
 		}
 	}
 
+	function addlayerSelectInCanvasHandler(element, filterName){
+		element.addEventListener('layerSelectInCanvas', function(){
+			console.log('i am listening, by', filterName);
+			var zIndex = parseInt(event.detail);
+
+			var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
+			var filters = layer.getFilters();
+
+			var hasFilter = false;
+			for(var i in filters){
+				if(filters[i].getName()==filterName){
+					console.log('here is ', filterName);
+
+					var filter = element.getElementsByClassName('filter')[0];
+					filter.style.borderTop = '2px solid blue';
+
+					var div = filter.getElementsByClassName('over-filter');
+					if(div.length){
+						console.log('div', div);
+						div[0].remove();
+					}
+
+					var div = document.createElement('div');
+					div.setAttribute('class', 'over-filter')
+
+					var topDiv = document.createElement('div');
+					topDiv.setAttribute('class', 'top-div');
+
+					var edit = document.createElement('div');
+					edit.setAttribute('class', 'edit-div')
+					edit.innerHTML = 'edit';
+					topDiv.appendChild(edit);
+
+
+					var bottomDiv = document.createElement('div');
+					bottomDiv.setAttribute('class', 'bottom-div');
+					var hide = document.createElement('div');
+					hide.setAttribute('class', 'hide-div');
+					hide.innerHTML = 'hide';
+					var remove = document.createElement('div');
+					remove.setAttribute('class', 'remove-div');
+					remove.innerHTML = 'remove';
+					bottomDiv.appendChild(hide);
+					bottomDiv.appendChild(remove);
+
+					edit.onclick = function(){
+						console.log('you clicked edit in ', filterName);
+						generateSlider(layer, filters[i]);
+					}
+
+					hide.onclick = function(){
+
+					}
+
+					remove.onclick = function(){
+
+					}
+
+					div.appendChild(topDiv);
+					div.appendChild(bottomDiv);
+
+					filter.appendChild(div);
+
+					hasFilter = true;
+					break;
+				}else{
+					console.log('No. ', filterName);
+				}
+			}
+
+			if(!hasFilter){
+				var filter = element.getElementsByClassName('filter')[0];
+				filter.style.borderTop = '2px solid black';
+				var div = filter.getElementsByClassName('over-filter');
+
+				console.info('div', div);
+				if(div.length){
+					div[0].remove();
+				}
+			}
+
+			console.info('name: ', layer.getName());
+		}, false);
+	}
+
 	function handleClickOnGrayscale(){
 		console.info('grayscale');
 		var layer = PhotoEditor.getInstance().getActiveLayer();
@@ -84,6 +172,8 @@ var FitlerBarUI = (function(){
 		        layer.getFilters().push(f);
 		        PhotoEditorUI.getInstance().renderLayers();
 		        generateSlider(layer, f);
+		        var filter = this.getElementsByClassName('filter')[0];
+				filter.style.borderTop = '2px solid blue';
 			}
 
 
@@ -111,6 +201,8 @@ var FitlerBarUI = (function(){
 		        layer.getFilters().push(f);
 		        PhotoEditorUI.getInstance().renderLayers();
 		        generateSlider(layer, f);
+		        var filter = this.getElementsByClassName('filter')[0];
+				filter.style.borderTop = '2px solid blue';
 			}
 		}	
 	}
@@ -235,6 +327,7 @@ var FitlerBarUI = (function(){
 		}	
 	}
 
+
 	function generateSlider(layer, filter){
 		if(filter.getMin()!=null){
 			console.info('i have min ');
@@ -248,6 +341,11 @@ var FitlerBarUI = (function(){
 			var div = document.createElement('div');
 			div.setAttribute('class', 'filter-slider-wrapper');
 			div.setAttribute('id', 'filter-slider-wrapper');
+
+			var valueHolder = document.createElement('div');
+			valueHolder.setAttribute('class', 'filter-value-holder');
+			valueHolder.innerHTML = filter.getArgs();
+
 			var slider = document.createElement('input');
 			slider.setAttribute('id', 'filter-slider');
 			slider.setAttribute('class', 'filter-slider');
@@ -257,19 +355,47 @@ var FitlerBarUI = (function(){
 			slider.setAttribute('value', filter.getArgs());
 			slider.setAttribute('position', 'absolute');
 
-			slider.onchange = function(){
-				console.log('you have changed me honey :(');
+
+			var sliderMouseDown = false;
+			slider.onmouseover = function(){
+				clearInterval(fadeOutTimer);
+				div.style.opacity = 1;
+			}
+
+			slider.onmouseout = function(){
+				fadeOut(div);
+			}
+
+			slider.onmousedown = function(){
+				console.info('mouse down');
+				sliderMouseDown = true;
+				var value = this.value;
+				console.info('value is: ', value);
+				filter.setArgs(parseInt(this.value));
+
+				valueHolder.innerHTML = filter.getArgs();
+                PhotoEditorUI.getInstance().renderLayers();
+			}
+
+			slider.onmouseup = function(){
+				sliderMouseDown = false;
+			}
+
+			slider.onmousemove = function(){
+				if(sliderMouseDown){
 					var value = this.value;
 					console.info('value is: ', value);
 					filter.setArgs(parseInt(this.value));
-                    PhotoEditorUI.getInstance().renderLayers();
+					valueHolder.innerHTML = filter.getArgs();
+	                PhotoEditorUI.getInstance().renderLayers();
+				}
 			}
 
-
+			div.appendChild(valueHolder);
 			div.appendChild(slider);
 			filterContainer.appendChild(div);
 
-			// fadeOut(div);
+			fadeOut(div);
 
 
 		}else{
@@ -280,9 +406,9 @@ var FitlerBarUI = (function(){
 
 	function fadeOut(element){
 		var op = 1;  // initial opacity
-	    var timer = setInterval(function () {
+	    fadeOutTimer = setInterval(function () {
 	        if (op <= 0.1){
-	            clearInterval(timer);
+	            clearInterval(fadeOutTimer);
 	            element.style.display = 'none';
 	            element.remove();
 	        }

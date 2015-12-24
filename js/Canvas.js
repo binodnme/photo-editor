@@ -59,9 +59,7 @@ function Canvas(){
 
 
     function handlerMouseDown(e){
-
         mousedown = true;
-    
         var x = e.pageX - canvasElement.offsetLeft;
         var y = e.pageY - canvasElement.offsetTop;
 
@@ -69,9 +67,22 @@ function Canvas(){
         mouseDownPosY = y;
 
         var layer = getTopLayer(x,y);
-        
 
         if(layer){
+            //fire custom event
+            var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layer.getZIndex()});
+            var list = document.getElementsByTagName('li');
+            var ulist = document.getElementsByTagName('ul');
+
+            for(var j=0; j<list.length; j++){
+                list[j].dispatchEvent(ev1);
+            }
+
+            for(var j=0; j<ulist.length; j++){
+                ulist[j].dispatchEvent(ev1);
+            }
+
+
             PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
             var activeTool = PhotoEditor.getInstance().getActiveTool();
             
@@ -97,17 +108,6 @@ function Canvas(){
                 PhotoEditorUI.getInstance().renderLayers();
                 drawOutline(pos, dimen);
                 
-                var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layer.getZIndex()});
-                var list = document.getElementsByTagName('li');
-                var ulist = document.getElementsByTagName('ul');
-
-                for(var j=0; j<list.length; j++){
-                    list[j].dispatchEvent(ev1);
-                }
-
-                for(var j=0; j<ulist.length; j++){
-                    ulist[j].dispatchEvent(ev1);
-                }
 
                 var actualPos;
                 actualPos = layer.getPicture().getPosition();
@@ -118,11 +118,6 @@ function Canvas(){
         }
     }
 
-
-
-    function handlerMouseUp(){
-
-    }
 
     function handlerMouseMove(e){
         var x1 = e.pageX - canvasElement.offsetLeft;

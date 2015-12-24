@@ -26,7 +26,7 @@ body{
 .work-area{
     padding-top: 10px;
     border-bottom: 2px solid #2B2E3C;
-    height: 500px;
+    height: 510px;
 }
 
 
@@ -54,7 +54,7 @@ body{
     width: 14%;
     float: right;
     font-size: 12px;
-    height: 495px;
+    height: 505px;
     background: #353950;
     /*border: 1px solid black;*/
 }

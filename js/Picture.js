@@ -12,13 +12,8 @@ function Picture(){
 
     this.setImage = function(image){
         img = image;
-        // copyImg = img;
         width = img.width;
         height = img.height;
-        
-        // var mainFilter = new Filter();
-        // pixels = mainFilter.getPixels(this);
-        
     }
 
     this.getImage = function(){
@@ -28,13 +23,9 @@ function Picture(){
 
     this.setImageSrc = function(src){
         img.src = src;
-        // copyImg.src = src;
-        
         width = img.width;
         height = img.height;
-        
-        // var mainFilter = new Filter();
-        // pixels = mainFilter.getPixels(this);
+        console.info('width:', width, ' height:', height);
     }
 
     this.getImageSrc = function(){
@@ -84,8 +75,13 @@ function Picture(){
     this.getZIndex = function(){ return zIndex; }
 
 
+    this.getOpacity = function(){
+        return opacity;
+    }
+
     this.setOpacity = function(opValue){
         opacity = opValue;
+        console.info('opacity opacity');
 
         // console.info('picture: ', this);
 

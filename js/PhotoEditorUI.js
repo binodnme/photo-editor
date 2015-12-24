@@ -47,7 +47,6 @@ var PhotoEditorUI = (function(){
         
 
         this.renderLayers = function(){
-            // toolbar.update();
             layerBar.update();
             var layers = photoEditor.getLayers();
 
@@ -61,20 +60,48 @@ var PhotoEditorUI = (function(){
             for(var i in layers){
                 var layer = layers[i];
                 var pic = layer.getPicture();
-                pic.draw(context);
-                
+                var pos = pic.getPosition();
+                var dimen = pic.getDimension();
+
                 var filter = layer.getFilters();
-
                 var mainFilter = new Filter();
-
                 var pixels = mainFilter.getPixels(pic);
+
+
+                if(pic.getOpacity()!=null){
+                    var opValue = pic.getOpacity();
+                    // console.info('pixels before: ', pixels);
+                    for (var i = pixels.data.length - 1; i >= 0; i-=4) {
+                        pixels.data[i]=opValue;
+                    };
+
+                    var tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = dimen.width;
+                    tempCanvas.height = dimen.height;
+                    var tempCtx = tempCanvas.getContext('2d');
+
+                    tempCtx.putImageData(pixels,0,0);
+
+                    var tempImg = new Image();
+                    tempImg.src = tempCanvas.toDataURL('image/png');
+
+                    // console.info('pixels after: ', pixels);
+                    context.drawImage(tempImg, pos.posX, pos.posY, dimen.width, dimen.height);
+                    tempCanvas.remove();
+                    // context.putImageData(pixels, pos.posX, pos.posY); 
+
+                }else{
+                    // console.info('original picture');
+                    pic.draw(context);
+                }
+
+                
+                
                 if(layer.getFilters().length){
                     for (var i = layer.getFilters().length - 1; i >= 0; i--) {
                         var filter = layer.getFilters()[i];
                         if(filter.isActive()){
                             pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
-
-                            var pos = pic.getPosition();
                             context.putImageData(pixels, pos.posX, pos.posY); 
                         }
                     };
@@ -82,13 +109,13 @@ var PhotoEditorUI = (function(){
                 }
             }
 
-            var tempLayer = photoEditor.getActiveLayer();
-            if(tempLayer){
-                var dimen = tempLayer.getPicture().getDimension();
-                var position = tempLayer.getPicture().getPosition();
+            // var tempLayer = photoEditor.getActiveLayer();
+            // if(tempLayer){
+            //     var dimen = tempLayer.getPicture().getDimension();
+            //     var position = tempLayer.getPicture().getPosition();
 
-                drawOutline(position, dimen);
-            }
+            //     drawOutline(position, dimen);
+            // }
         }
     }
 

@@ -3,8 +3,6 @@
     <head>
         <title>Photo Editor</title>
         <link rel="stylesheet" type="text/css" href="css/index.css">
-        <link rel="stylesheet" type="text/css" href="css/layout.css">
-        <link rel="stylesheet" type="text/css" href="css/tweaks.css">
     </head>
     
     <body>
@@ -12,55 +10,58 @@
             <div class="header-wrapper">
                 <div class="load-image">
                     
-                    <!-- <span class="load-label"><label>Load Image </label> </span> -->
-                    <input id="choose-file"  type="file">
-                    
+                    <span class="load-label"><label>Load Image </label> </span>
+                    <input id="choose-file" class="choose-file" type="file">
+                    or
                     <input id="url" class="url" type="url" placeholder="enter image url"> 
                     <input id="get-button" class="get-button" type="submit" value="get">
 
                 </div>
+                
 
-                <!-- <input type="button" value="grayscale" onclick="grayscale()">
+                <input type="button" value="grayscale" onclick="grayscale()">
                 
                 <input type="button" value="brightness" onclick="brightness()">
 
                 <input type="button" value="threshold" onclick="threshold()">
-
-                <input type="button" value="threshold" onclick="convolution()"> -->
-
-                <!-- <div><a href='#' id='download'>Download Image</a></div> -->
             </div>
             
             <div class="work-area clr">
-                <div id='toolbar' class="toolbar"></div>
-               
+                <div id='toolbar' class="toolbar">
 
+                </div>
                 <div class="content-wrapper">
                     <div class="canvas-wrapper">
-                        <div class="canvas-wrapper-main">
-                            <canvas id='playground'></canvas>
-                            <!-- <canvas id='testground' width='500' height='200'></canvas> -->
+                        <div class="start-dialogbox">
+                            canvas width: <input id='width' type="text" value="600">
+                            canvas height: <input id='height' type="text" value="400">
+                            <input type="submit" value="resize" onclick="setup()">
+
+                            <input type="button" value="fit to image" onclick="fitToImage()">
                         </div>
+
+                        <canvas id='playground'></canvas>
+                        <!-- <canvas id='testground' width='600' height='400'></canvas> -->
                     </div>
-                    
                     <div class="info-bar">
                         <div class="layer-bar">
                             <div class="layer-title">layers</div>
                             <div class="layer-list-wrapper">
-                                <div id='opacity-bar' class="opacity-bar">
+                                <div id='opacity-bar'>
                                     
                                 </div>
-                                <ul id="layer-list" class="layer-list">
+                                <ul id="layer-list">
                                 </ul>
                             </div>
-                            <div class="layer-action"></div>
+                            <!-- <div><input type="button" value="delete" onclick="deleteLayer()"></div> -->
                         </div>
                         
                         <div class="properties">
                             <div class="property-title">property</div>
                             <div class="property-list-wrapper">
-                                <ul id="property-list" class="property-list">
-
+                                <ul id="property-list">
+                                    <!-- <li>width: <input id="prop-width" type="num" width="100px"></li>
+                                    <li>height: <input id="prop-height" type="text"></li> -->
                                 </ul>
                             </div>
                             <div class="filter-wrapper">
@@ -73,35 +74,7 @@
                 </div>
             </div>
             
-            <div id='filter-container' class='filter-container'>
-                <div id='all-filters' class='all-filters'>
-                    <!-- <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div>
-                    <div class="filter">
-                        <img src="./images/test.png">
-                    </div> -->
-                    
-                </div>
-            </div>
+            <div><a href='#' id='download'>Download Image</a></div>
 
         </div>
 
@@ -114,10 +87,6 @@
         <script type="text/javascript" src='./js/filter/Grayscale.js'></script>
         <script type="text/javascript" src='./js/filter/Threshold.js'></script>
         <script type="text/javascript" src='./js/filter/Brightness.js'></script>
-        <script type="text/javascript" src='./js/filter/Convolution.js'></script>
-        <script type="text/javascript" src='./js/filter/Sharpen.js'></script>
-        <script type="text/javascript" src='./js/filter/Blur.js'></script>
-        <script type="text/javascript" src='./js/filter/MotionBlur.js'></script>
 
         <script type='text/javascript' src='./js/PhotoEditor.js'></script>
         <script type="text/javascript" src='./js/Picture.js'></script>
@@ -133,7 +102,6 @@
         <script type='text/javascript' src='./js/tool/ToolBarUI.js'></script>
         <script type='text/javascript' src='./js/layer/LayerBarUI.js'></script>
         <script type='text/javascript' src='./js/PropertyBarUI.js'></script>
-        <script type='text/javascript' src='./js/filter/FilterBarUI.js'></script>
 
         <script type='text/javascript' src='./js/PhotoEditorUI.js'></script>
 
