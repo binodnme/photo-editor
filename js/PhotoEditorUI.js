@@ -67,34 +67,14 @@ var PhotoEditorUI = (function(){
                 var mainFilter = new Filter();
                 var pixels = mainFilter.getPixels(pic);
 
-
-                if(pic.getOpacity()!=null){
-                    var opValue = pic.getOpacity();
-                    // console.info('pixels before: ', pixels);
+                var opacity = pic.getOpacity();
+                if(opacity!=null && opacity<255){
                     for (var i = pixels.data.length - 1; i >= 0; i-=4) {
-                        pixels.data[i]=opValue;
+                        pixels.data[i]=opacity;
                     };
 
-                    var tempCanvas = document.createElement('canvas');
-                    tempCanvas.width = dimen.width;
-                    tempCanvas.height = dimen.height;
-                    var tempCtx = tempCanvas.getContext('2d');
-
-                    tempCtx.putImageData(pixels,0,0);
-
-                    var tempImg = new Image();
-                    tempImg.src = tempCanvas.toDataURL('image/png');
-
-                    // console.info('pixels after: ', pixels);
-                    context.drawImage(tempImg, pos.posX, pos.posY, dimen.width, dimen.height);
-                    tempCanvas.remove();
-                    // context.putImageData(pixels, pos.posX, pos.posY); 
-
-                }else{
-                    // console.info('original picture');
-                    pic.draw(context);
                 }
-
+                
                 
                 
                 if(layer.getFilters().length){
@@ -102,11 +82,24 @@ var PhotoEditorUI = (function(){
                         var filter = layer.getFilters()[i];
                         if(filter.isActive()){
                             pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
-                            context.putImageData(pixels, pos.posX, pos.posY); 
+                            // context.putImageData(pixels, pos.posX, pos.posY); 
                         }
                     };
 
                 }
+
+                var tempCanvas = document.createElement('canvas');
+                tempCanvas.width = dimen.width;
+                tempCanvas.height = dimen.height;
+                var tempCtx = tempCanvas.getContext('2d');
+
+                tempCtx.putImageData(pixels,0,0);
+
+                var tempImg = new Image();
+                tempImg.src = tempCanvas.toDataURL('image/png');
+
+                context.drawImage(tempImg, pos.posX, pos.posY, dimen.width, dimen.height);
+                tempCanvas.remove();
             }
 
             // var tempLayer = photoEditor.getActiveLayer();
