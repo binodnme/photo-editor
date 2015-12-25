@@ -47,7 +47,20 @@ function Layer(){
     // }
     
     this.getFilters = function(){
+        // console.log('from getter: ', filters);
         return filters;
+    }
+
+    this.removeFilter = function(fltr){
+        var filter = fltr;
+        // console.log('from layer: ', filters);
+        for(var i in filters){
+            if(filter.getName() == filters[i].getName()){
+                filters.splice(i,1);
+                break;
+            }
+        }
+        // console.log('from layer bottom: ', filters);
     }
 
     this.getOpacity = function(){

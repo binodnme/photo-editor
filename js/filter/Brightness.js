@@ -33,12 +33,10 @@ function Brightness(){
 
 	this.enable = function(){
 		active = true;
-		// console.info('enabled');
 	}
 
 	this.disable = function(){
 		active = false;
-		// console.info('disabled');
 	}
 
 	this.isActive = function(){

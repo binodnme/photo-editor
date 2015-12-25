@@ -100,6 +100,7 @@ var PhotoEditorUI = (function(){
 
                 context.drawImage(tempImg, pos.posX, pos.posY, dimen.width, dimen.height);
                 tempCanvas.remove();
+                console.info('rendering finished');
             }
 
             // var tempLayer = photoEditor.getActiveLayer();

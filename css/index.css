@@ -147,14 +147,58 @@ ul.layer-list{
 
 .all-filters ul li .filter{
     width:100px;
-    height: 75px;
-    border: 1px solid red;
+    height: 55px;
+    /*border: 1px solid red;*/
     position: relative;
 }
 
 .all-filters ul li .filter:hover{
    cursor: pointer;
 }
+
+.all-filters ul li.grayscale .filter{
+    background: url('../images/samples/grayscale.png') no-repeat;
+    background-position: 0 0;
+    /*background: 100%;*/
+    background-size: cover;
+}
+
+.all-filters ul li.brightness .filter{
+    background: url('../images/samples/brightness.png') no-repeat;
+    background-position: 0 0;
+    /*background: 100%;*/
+    background-size: cover;
+}
+
+.all-filters ul li.threshold .filter{
+    background: url('../images/samples/threshold.png') no-repeat;
+    background-position: 0 0;
+    /*background: 100%;*/
+    background-size: cover;
+}
+
+.all-filters ul li.sharpen .filter{
+    background: url('../images/samples/sharpen.png') no-repeat;
+    background-position: 0 0;
+    /*background: 100%;*/
+    background-size: cover;
+}
+
+.all-filters ul li.blur .filter{
+    background: url('../images/samples/blur.png') no-repeat;
+    background-position: 0 0;
+    /*background: 100%;*/
+    background-size: cover;
+}
+
+
+.all-filters ul li.motion-blur .filter{
+    background: url('../images/samples/motion-blur.png') no-repeat;
+    background-position: 0 0;
+    /*background: 100%;*/
+    background-size: cover;
+}
+
 
 .all-filters ul li .filter img{
     width: 100%;
@@ -163,31 +207,74 @@ ul.layer-list{
 
 .all-filters ul li .filter .over-filter{
     width:100px;
-    height: 75px;
+    height: 54px;
     position: absolute;
     top:0;
     left:0;
     
     background: black;
-    opacity: 0.5;
+    opacity: 0.3;
 }
 
-.over-filter .top-div{
+/*.over-filter .top-div{
     width: 100%;
-    height: 30px;
+    height: 27px;
     background: red;
+}*/
+
+
+/*.top-div .edit-div{
+    width: 27px;
+    border-radius: 27px;
+    height: 27px;
+    background: white;
+    margin: 0px auto;
 }
-
-
-.top-div .edit-div{
-    
-}
-
+*/
 
 .over-filter .bottom-div{
     width: 100%;
-    height: 30px;   
-    background: blue;
+    height: 35px;   
+    /*background: blue;*/
+    padding-top: 10px;
+}
+
+.bottom-div .bottom-left{
+    width: 48%;
+    float: left;
+}
+
+.bottom-div .bottom-right{
+    width: 48%;
+    float: right;
+}
+
+
+.bottom-div .bottom-left .hide-div{
+    width: 35px;
+    border-radius: 35px;
+    height: 35px;
+    background: white;
+    margin: 0px auto;
+}
+
+.bottom-div .bottom-right .remove-div{
+    width: 35px;
+    border-radius: 35px;
+    height: 35px;
+    background: white;
+    margin: 0px auto;
+}
+
+.all-filters ul li span{
+    display: block;
+    width: 100%;
+    height: 20px;
+    font-size: 12px;
+    text-align: center;
+    color: #D6CECE;
+    line-height: 20px;
+
 }
 
 
