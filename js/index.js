@@ -6,8 +6,6 @@ var pUI = PhotoEditorUI.getInstance();
 pUI.init();
 
 
-
-
 var inputFileElmnt = document.getElementById('choose-file');
 var getButton = document.getElementById('get-button');
 

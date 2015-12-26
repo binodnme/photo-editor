@@ -2,8 +2,7 @@ var FitlerBarUI = (function(){
 	function FitlerBarUI(){
 
 		var fadeOutTimer = null;
-		// var timerFlag = false;
-
+		
 		this.init = function(){
 			console.info('initializing fitler bar');
 			var allFilters = document.getElementById('all-filters');
@@ -41,6 +40,7 @@ var FitlerBarUI = (function(){
 			threshold.appendChild(div);
 			threshold.appendChild(layerName);
 			threshold.addEventListener('click', handleClickOnThreshold, false);
+			addlayerSelectInCanvasHandler(threshold, 'threshold');
 
 			var sharpen = document.createElement('li');
 			sharpen.setAttribute('class', 'sharpen');
@@ -51,6 +51,7 @@ var FitlerBarUI = (function(){
 			sharpen.appendChild(div);
 			sharpen.appendChild(layerName);
 			sharpen.addEventListener('click', handleClickOnSharpen, false);
+			addlayerSelectInCanvasHandler(sharpen, 'sharpen');
 
 			var blur = document.createElement('li');
 			blur.setAttribute('class', 'blur');
@@ -61,6 +62,7 @@ var FitlerBarUI = (function(){
 			blur.appendChild(div);
 			blur.appendChild(layerName);
 			blur.addEventListener('click', handleClickOnBlur, false);
+			addlayerSelectInCanvasHandler(blur, 'blur');
 
 
 			var motionBlur = document.createElement('li');
@@ -72,6 +74,7 @@ var FitlerBarUI = (function(){
 			motionBlur.appendChild(div);
 			motionBlur.appendChild(layerName);
 			motionBlur.addEventListener('click', handleClickOnMotionBlur, false);
+			addlayerSelectInCanvasHandler(motionBlur, 'motionblur');
 
 
 			filterList.appendChild(grayscale);
@@ -83,10 +86,11 @@ var FitlerBarUI = (function(){
 			allFilters.appendChild(filterList);
 		}
 
-
 		function addlayerSelectInCanvasHandler(element, filterName){
-			element.addEventListener('layerSelectInCanvas', function(){
-				// console.log('i am listening, by', filterName);
+			element.addEventListener('layerSelectInList', layerSelectInCanvas, false);
+			element.addEventListener('layerSelectInCanvas', layerSelectInCanvas, false);
+
+			function layerSelectInCanvas(){
 				var zIndex = parseInt(event.detail);
 
 				var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
@@ -106,17 +110,8 @@ var FitlerBarUI = (function(){
 							div[0].remove();
 						}
 
-						var div = document.createElement('div');
-						div.setAttribute('class', 'over-filter')
-
-						// var topDiv = document.createElement('div');
-						// topDiv.setAttribute('class', 'top-div');
-
-						// var edit = document.createElement('div');
-						// edit.setAttribute('class', 'edit-div')
-						// edit.innerHTML = 'edit';
-						// topDiv.appendChild(edit);
-
+						var overFilter = document.createElement('div');
+						overFilter.setAttribute('class', 'over-filter')
 
 						var bottomDiv = document.createElement('div');
 						bottomDiv.setAttribute('class', 'bottom-div');
@@ -126,9 +121,11 @@ var FitlerBarUI = (function(){
 						var hide = document.createElement('div');
 						hide.setAttribute('class', 'hide-div');
 						if(filter.isActive()){
-							hide.innerHTML = 'hide';	
+							hide.style.background = "url('./images/icons/hide_icon.png') no-repeat";
+							hide.style.backgroundSize = 'cover';
 						}else{
-							hide.innerHTML = 'show';
+							hide.style.background = "url('./images/icons/show_icon.png') no-repeat";
+							hide.style.backgroundSize = 'cover';	
 						}
 						bottomLeft.appendChild(hide);
 
@@ -138,7 +135,8 @@ var FitlerBarUI = (function(){
 						
 						var remove = document.createElement('div');
 						remove.setAttribute('class', 'remove-div');
-						remove.innerHTML = 'remove';
+						remove.style.background = "url('./images/icons/filter_delete.png') no-repeat";
+						remove.style.backgroundSize = 'cover';
 						bottomRight.appendChild(remove);
 
 
@@ -146,46 +144,44 @@ var FitlerBarUI = (function(){
 						bottomDiv.appendChild(bottomRight);
 
 
-						// edit.onclick = function(){
-						// 	console.log('you clicked edit in ', filterName);
-						// 	generateSlider(layer, filter);
-						// }
-
 						hide.onclick = function(){
+							event.cancelBubble = true;
 							if(filter.isActive()){
 								filter.disable();
-								this.innerHTML = 'show';
+								this.style.background = "url('./images/icons/show_icon.png') no-repeat";
+								this.style.backgroundSize = 'cover';
+								removeSlider();
 							}else{
 								filter.enable();
-								this.innerHTML = 'hide';
+								this.style.background = "url('./images/icons/hide_icon.png') no-repeat";
+								this.style.backgroundSize = 'cover';
+								generateSlider(layer, filter);
 							}
 							PhotoEditorUI.getInstance().renderLayers();
 						}
 
 						remove.onclick = function(){
-							console.info('filters: ', filters);
-							// filters = filters.splice(i,1);
-							// filters.splice(i,1);
-							// var fltrs = layer.getFilters();
-							// for (var i = 0; i < fltrs.length; i++) {
-							// 	if(fltrs[i].getName()==filterName){
-							// 		fltrs.splice(i,1);
-							// 		console.log('removed');
-							// 		break;
-							// 	}
-							// };
+							event.cancelBubble = true;
 							layer.removeFilter(filter);
-							console.info('filters: ', filters);
-
-							div.remove();
+							overFilter.remove();
+							removeSlider();
 							PhotoEditorUI.getInstance().renderLayers();
+						}
 
+						overFilter.onmouseover = function(){
+							if(filter.isActive()){
+								generateSlider(layer, filter);
+							}
+						}
+
+						overFilter.onmouseout = function(){
+							console.info('mouse out in over filter');
 						}
 
 						// div.appendChild(topDiv);
-						div.appendChild(bottomDiv);
+						overFilter.appendChild(bottomDiv);
 
-						filterElement.appendChild(div);
+						filterElement.appendChild(overFilter);
 
 						hasFilter = true;
 						break;
@@ -203,9 +199,7 @@ var FitlerBarUI = (function(){
 						div[0].remove();
 					}
 				}
-
-				// console.info('name: ', layer.getName());
-			}, false);
+			}
 		}
 
 		function handleClickOnGrayscale(){
@@ -306,10 +300,7 @@ var FitlerBarUI = (function(){
 
 				if(!filterFlag){
 					var f = new Sharpen();
-					f.setArgs([  0, -1,  0,
-	                     -1,  5, -1,
-	                     0, -1,  0 ]);
-
+					f.setArgs(5);
 			        layer.getFilters().push(f);
 			        PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
@@ -334,12 +325,19 @@ var FitlerBarUI = (function(){
 
 				if(!filterFlag){
 					var f = new Blur();
-					 var arg = [  1/9,1/9 ,1/9,
-	                    1/9,  1/9, 1/9,
-	                    1/9, 1/9,  1/9 ];
+					var arg = [  1/9,1/9 ,1/9,
+		                    1/9,  1/9, 1/9,
+		                    1/9, 1/9,  1/9 ];
+
+
+					// var arg = [  1/25,1/25 ,1/25,1/25 ,1/25,
+			  //                   1/25,1/25 ,1/25,1/25 ,1/25,
+			  //                   1/25,1/25 ,1/25,1/25 ,1/25,
+			  //                   1/25,1/25 ,1/25,1/25 ,1/25,
+			  //                   1/25,1/25 ,1/25,1/25 ,1/25,];
+
 
 					f.setArgs(arg);
-
 			        layer.getFilters().push(f);
 			        PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
@@ -375,6 +373,21 @@ var FitlerBarUI = (function(){
 			            0, 0, 0, 0, 0, 0, 0, 1/9, 0,
 			            0, 0, 0, 0, 0, 0, 0, 0, 1/9,
 			        ];
+
+			        // var arg=[
+			        //     1/11, 0, 0, 0, 0, 0, 0, 0, 0,0,0,
+			        //     0, 1/11, 0, 0, 0, 0, 0, 0, 0,0,0,
+			        //     0, 0, 1/11, 0, 0, 0, 0, 0, 0,0,0,
+			        //     0, 0, 0, 1/11, 0, 0, 0, 0, 0,0,0,
+			        //     0, 0, 0, 0, 1/11, 0, 0, 0, 0,0,0,
+			        //     0, 0, 0, 0, 0, 1/11, 0, 0, 0,0,0,
+			        //     0, 0, 0, 0, 0, 0, 1/11, 0, 0,0,0,
+			        //     0, 0, 0, 0, 0, 0, 0, 1/11, 0,0,0,
+			        //     0, 0, 0, 0, 0, 0, 0, 0, 1/11,0,0,
+			        //     0, 0, 0, 0, 0, 0, 0, 0,0, 1/11,0,
+			        //     0, 0, 0, 0, 0, 0, 0, 0, 0,0, 1/11,
+
+			        // ];
 					f.setArgs(arg);
 
 			        layer.getFilters().push(f);
@@ -384,8 +397,13 @@ var FitlerBarUI = (function(){
 			}	
 		}
 
-
 		function generateSlider(layer, filter){
+			console.log('from: ', filter.getName());
+			var tempSlider = document.getElementById('filter-slider-wrapper');
+			if(tempSlider){
+				tempSlider.remove();
+			}
+
 			if(filter.getMin()!=null){
 				console.info('i have min ');
 				if(fadeOutTimer!=null){
@@ -393,11 +411,6 @@ var FitlerBarUI = (function(){
 				}
 
 				var filterContainer = document.getElementById('filter-container');
-
-				var tempSlider = document.getElementById('filter-slider-wrapper');
-				if(tempSlider){
-					tempSlider.remove();
-				}
 
 				var div = document.createElement('div');
 				div.setAttribute('class', 'filter-slider-wrapper');
@@ -458,6 +471,16 @@ var FitlerBarUI = (function(){
 
 			}else{
 				console.info('sorry i donot have ');
+			}
+		}
+
+		function removeSlider(){
+			var sliderWrapper = document.getElementsByClassName('filter-slider-wrapper')[0];
+			if(sliderWrapper) sliderWrapper.remove();
+			
+			if(fadeOutTimer!=null){
+				clearInterval(fadeOutTimer);
+	            fadeOutTimer = null;
 			}
 		}
 

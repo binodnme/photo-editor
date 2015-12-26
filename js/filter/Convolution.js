@@ -57,7 +57,7 @@ function Convolution(){
     }
     return output;
   };
-  console.info('Convolution done');
+  // console.info('Convolution done');
 
   this.getArgs = function(){
     return testArg;

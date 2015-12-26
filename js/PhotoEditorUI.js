@@ -9,6 +9,11 @@ var PhotoEditorUI = (function(){
         var filterBar = FitlerBarUI.getInstance();
 
 
+        var tempCanvas = document.createElement('canvas');
+        var tempCtx = tempCanvas.getContext('2d');
+        var tempImg = new Image();
+
+
         this.init = function(){
             canvas = new Canvas();
             canvas.init();
@@ -67,11 +72,21 @@ var PhotoEditorUI = (function(){
                 var mainFilter = new Filter();
                 var pixels = mainFilter.getPixels(pic);
 
+                // console.info('pixels data before ', pixels.data);
+
+                // for (var i = pixels.data.length - 1; i >= 0; i-=4) {
+                //     pixels.data[i]=0;    
+                // };
+
                 var opacity = pic.getOpacity();
                 if(opacity!=null && opacity<255){
                     for (var i = pixels.data.length - 1; i >= 0; i-=4) {
-                        pixels.data[i]=opacity;
+                        // if(pixels.data[i]!=0){
+                            pixels.data[i]=opacity;    
+                        // }
+                        
                     };
+                    // console.info('pixels data after ', pixels.data);
 
                 }
                 
@@ -88,19 +103,25 @@ var PhotoEditorUI = (function(){
 
                 }
 
-                var tempCanvas = document.createElement('canvas');
-                tempCanvas.width = dimen.width;
-                tempCanvas.height = dimen.height;
-                var tempCtx = tempCanvas.getContext('2d');
+                // var tempCanvas = document.createElement('canvas');
+                // tempCanvas.width = dimen.width;
+                // tempCanvas.height = dimen.height;
+                // // var tempCtx = tempCanvas.getContext('2d');
 
-                tempCtx.putImageData(pixels,0,0);
+                // tempCtx.putImageData(pixels,0,0);
 
-                var tempImg = new Image();
-                tempImg.src = tempCanvas.toDataURL('image/png');
+                // // var tempImg = new Image();
+                // tempImg.src = tempCanvas.toDataURL('image/png');
+                // // tempImg.onload = function(){
+                //     context.drawImage(tempImg, pos.posX, pos.posY, dimen.width, dimen.height);
+                // }
 
-                context.drawImage(tempImg, pos.posX, pos.posY, dimen.width, dimen.height);
-                tempCanvas.remove();
-                console.info('rendering finished');
+                
+                // tempCanvas.remove();
+                // console.info('rendering finished');
+                // context.globalCompositeOperation = 'hue';
+
+                context.putImageData(pixels, pos.posX, pos.posY);
             }
 
             // var tempLayer = photoEditor.getActiveLayer();

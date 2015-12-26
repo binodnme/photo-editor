@@ -120,6 +120,11 @@ var LayerBarUI = (function(){
 								        ulist[i].dispatchEvent(ev1);
 								    }
 
+								    var l = document.getElementsByTagName('li');
+								    for(var i=0; i<l.length; i++){
+								        l[i].dispatchEvent(ev1);
+								    }
+
 								    var c = document.getElementsByTagName('canvas')[0];
 								    c.dispatchEvent(ev1);
 

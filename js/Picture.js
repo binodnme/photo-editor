@@ -1,7 +1,5 @@
 function Picture(){
     var img = new Image();
-    // var copyImg = new Image();
-    // var pixels;
     var width;
     var height;
     var posX=0;
@@ -18,7 +16,6 @@ function Picture(){
 
     this.getImage = function(){
         return img;
-        // return copyImg;
     }
 
     this.setImageSrc = function(src){
@@ -52,8 +49,6 @@ function Picture(){
         if(w>0 && h>0){
             width = w;
             height = h;
-            // var mainFilter = new Filter();
-            // pixels = mainFilter.getPixels(this);
         }
     }
 
@@ -81,28 +76,6 @@ function Picture(){
 
     this.setOpacity = function(opValue){
         opacity = opValue;
-        console.info('opacity opacity');
-
-        // console.info('picture: ', this);
-
-        // console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
-
-        // for (var i = pixels.data.length - 1; i >= 0; i-=4) {
-        //  pixels.data[i]=opValue;
-        // };
-        
-        // console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
-        
-        // var cnvs = document.createElement('canvas');
-        
-        // cnvs.width = pixels.width;
-        // cnvs.height = pixels.height;
-
-        // var ctx = cnvs.getContext('2d');
-        // // ctx.clearRect(0,0,cnvs.width, cnvs.height);
-        // ctx.putImageData(pixels, 0,0);
-        
-        // img.src = cnvs.toDataURL('image/png');
     }
 
     this.draw = function(ctx,x,y){

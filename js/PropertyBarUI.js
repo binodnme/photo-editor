@@ -113,68 +113,6 @@ var PropertyBarUI = (function(){
 	            break;
 	        }
 	    }
-
-    	
-    	var filterList = document.getElementById('filter-list');
-	    if(layerIndex){
-	        var filters = layers[layerIndex].getFilters();
-	        while (filterList.firstChild) {
-	            filterList.removeChild(filterList.firstChild);
-	        }
-
-	        var value = 0;
-	        for(var i in filters){
-	            var list = document.createElement('li');
-	            var para = document.createElement('p');
-	            
-	            para.innerHTML = filters[i].name;
-	            list.appendChild(para);
-
-	            var input = document.createElement('input');
-	            if(filters[i].min){
-	            	
-	            	input.setAttribute('id', value++)
-	            	input.setAttribute('type', 'range');
-	            	input.setAttribute('min', filters[i].min);
-		            input.setAttribute('max', filters[i].max);
-		            input.setAttribute('value', filters[i].getArgs());
-
-		            input.onchange = (function(filter){
-		                return function(){
-		                	// console.log('this this this: ',filter.name);
-		                 //    console.info('value:', this.value);
-		                    filter.setArgs(parseInt(this.value));
-		                    PhotoEditorUI.getInstance().renderLayers();
-		                }
-		            })(filters[i]);
-	            	
-	            	list.appendChild(input);
-	            }
-
-
-	            var checkbox = document.createElement('input');
-	            checkbox.setAttribute('type', 'checkbox');
-	            checkbox.setAttribute('name', filters[i].name);
-	            checkbox.checked = filters[i].isActive();
-
-	            
-	            checkbox.onchange = (function(filter){
-	            		return function(){
-		                    if(this.checked){
-		                    	filter.enable();
-		                    	console.info('chekcbox clajds:',this.getAttribute('name'));
-		                    }else{
-		                    	filter.disable();
-		                    }
-		                    PhotoEditorUI.getInstance().renderLayers();
-		                }
-		        })(filters[i]);
-	            
-	            list.appendChild(checkbox);
-	            
-	            filterList.appendChild(list);
-	        }
-	    }
 	}
 
 

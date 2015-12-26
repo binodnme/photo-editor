@@ -53,14 +53,17 @@ function Layer(){
 
     this.removeFilter = function(fltr){
         var filter = fltr;
-        // console.log('from layer: ', filters);
+        var suspectIndex=null;
         for(var i in filters){
             if(filter.getName() == filters[i].getName()){
-                filters.splice(i,1);
+                suspectIndex = i;
                 break;
             }
         }
-        // console.log('from layer bottom: ', filters);
+
+        if(suspectIndex){
+            filters.splice(suspectIndex,1);
+        }
     }
 
     this.getOpacity = function(){

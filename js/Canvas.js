@@ -17,10 +17,10 @@ function Canvas(){
         canvasElement = document.getElementById('playground');
         context = canvasElement.getContext('2d');
         
-        canvasElement.width = 600;
-        canvasElement.height = 400;
-        width = 600;
-        height = 400;
+        canvasElement.width = 900;
+        canvasElement.height = 500;
+        width = 900;
+        height = 500;
 
         canvasElement.addEventListener('mousedown', handlerMouseDown, false);
         canvasElement.addEventListener('mouseup', handlerMouseUp, false);
