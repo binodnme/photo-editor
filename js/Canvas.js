@@ -97,6 +97,15 @@ function Canvas(){
                 console.info('inside color ');
                 ColorReplace.getInstance().setSourceColor(col, 'click');
 
+            }else if(activeTool == 'transform'){
+                var position = layer.getPicture().getPosition();
+                var dimension = layer.getPicture().getDimension();   
+
+                var side = isOverOutline(x,y,position,dimension);
+                TransformTool.getInstance().enableMouseDown();
+                TransformTool.getInstance().setSide(side);
+                drawOutline(position, dimension);
+
             }else{
                 // PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
             
@@ -108,7 +117,6 @@ function Canvas(){
                 PhotoEditorUI.getInstance().renderLayers();
                 drawOutline(pos, dimen);
                 
-
                 var actualPos;
                 actualPos = layer.getPicture().getPosition();
                 xCorrection = x-actualPos.posX;
@@ -154,14 +162,51 @@ function Canvas(){
                 var position = lyr.getPicture().getPosition();
                 var dimension = lyr.getPicture().getDimension();   
 
-                var side = isOverOutline(x1,y1,position,dimension);
+                if(!TransformTool.getInstance().isMouseDown()){
+                    var side = isOverOutline(x1,y1,position,dimension);
+                    
+                    if(side==1){
+                        //top
+                        this.style.cursor = 'n-resize'; 
+                    }else if(side==2){
+                        //bottom
+                        this.style.cursor = 's-resize';
+                    }else if(side==3){
+                        //left
+                        this.style.cursor = 'w-resize';
+                    }else if(side==4){
+                        //right
+                        this.style.cursor = 'e-resize';
+                    }else{
+                        this.style.cursor = 'default';
+                    }
 
-                if(side){
-                    resizeLayer(lyr,side,x1,y1);
-                }else{
-                    canvasElement.style.cursor = 'default';
-                }     
+                }
+
+                var tempSide = TransformTool.getInstance().getSide();
+                if(TransformTool.getInstance().isMouseDown() && tempSide){
+                    resizeLayer(lyr,tempSide,x1,y1);
+
+                    // var canvas = document.createElement('canvas');
+                    var dimen = lyr.getPicture().getDimension();
+                    var pos = lyr.getPicture().getPosition();
+                    // canvas.width = dimen.width;
+                    // canvas.height = dimen.height;
+
+                    // var ctx = canvas.getContext('2d');
+                    // var pic = lyr.getPicture();
+                    // ctx.drawImage(pic.getImage(), 0, 0, canvas.width, canvas.height);
+
+                    // var src  = canvas.toDataURL('image/png');
+                    // pic.setImageSrc(src);
+                    // canvas.remove();
+
+                    PhotoEditorUI.getInstance().renderLayers();
+                    drawOutline(pos,dimen);
+                } 
+                
             }
+
         }else if(activeTool=='crop'){
             if(mousedown){
                 PhotoEditorUI.getInstance().renderLayers();
@@ -186,25 +231,8 @@ function Canvas(){
         if(activeTool=='crop'){
             CropTool.getInstance().crop();
         }else if(activeTool == 'transform'){
-            console.info('inside transform');
-            var lyr = PhotoEditor.getInstance().getActiveLayer();
-            var pic = lyr.getPicture();
-            var dimen = pic.getDimension();
-            var pos = pic.getPosition();
-
-            var canvas = document.createElement('canvas');
-            canvas.width = dimen.width;
-            canvas.height = dimen.height;
-
-            var context = canvas.getContext('2d');
-
-            context.drawImage(pic.getImage(), 0, 0, canvas.width, canvas.height);
-
-            var src  = canvas.toDataURL('image/png');
-            pic.setImageSrc(src);
-            canvas.remove();
-
-            PhotoEditorUI.getInstance().renderLayers();
+            TransformTool.getInstance().disableMouseDown();
+            canvasElement.style.cursor = 'default';
         }
     }
 

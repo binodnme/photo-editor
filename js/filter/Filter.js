@@ -5,7 +5,12 @@ function Filter(){
 
 Filter.prototype.getPixels = function(pic) {
 	var picture = pic;
-	var dimen = picture.getDimension();
+	var image = picture.getImage();
+
+	var dimenX = image.width;
+	var dimenY = image.height;
+	var dimen = {width:dimenX, height:dimenY};
+	// var dimen = picture.getDimension();
 	var pos = picture.getPosition();
 	var context = PhotoEditorUI.getInstance().getCanvas().getContext();
 	var tempCanvas = document.createElement('canvas');

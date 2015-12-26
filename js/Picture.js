@@ -22,7 +22,6 @@ function Picture(){
         img.src = src;
         width = img.width;
         height = img.height;
-        console.info('width:', width, ' height:', height);
     }
 
     this.getImageSrc = function(){

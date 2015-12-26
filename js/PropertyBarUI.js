@@ -45,27 +45,10 @@ var PropertyBarUI = (function(){
 		var value = parseFloat(this.value);
 		console.info('value:', value);
 		if(value>0){
-			// var photoEditor = PhotoEditor.getInstance();
-			// var zIndex = photoEditor.getActiveLayerIndex();
-			// var layer = photoEditor.getLayerByZIndex(zIndex);
 			var layer = PhotoEditor.getInstance().getActiveLayer();
-			console.info('layer: ', layer);
 			var pic = layer.getPicture();
 			var dimen = pic.getDimension();
-            var pos = pic.getPosition();
-
-            var canvas = document.createElement('canvas');
-            canvas.width = value;
-            canvas.height = dimen.height;
-
-            var context = canvas.getContext('2d');
-
-            context.drawImage(pic.getImage(), 0, 0, canvas.width, canvas.height);
-
-            var src  = canvas.toDataURL('image/png');
-            pic.setImageSrc(src);
-            canvas.remove();
-
+            pic.setDimension(value, dimen.height);
 			PhotoEditorUI.getInstance().renderLayers();
 		}
 	}
@@ -78,20 +61,7 @@ var PropertyBarUI = (function(){
 			console.info('layer: ', layer);
 			var pic = layer.getPicture();
 			var dimen = pic.getDimension();
-            var pos = pic.getPosition();
-
-            var canvas = document.createElement('canvas');
-            canvas.width = dimen.width;
-            canvas.height = value;
-
-            var context = canvas.getContext('2d');
-
-            context.drawImage(pic.getImage(), 0, 0, canvas.width, canvas.height);
-
-            var src  = canvas.toDataURL('image/png');
-            pic.setImageSrc(src);
-            canvas.remove();
-
+            pic.setDimension(dimen.width, value);
 			PhotoEditorUI.getInstance().renderLayers();
 		}
 	}

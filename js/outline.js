@@ -15,6 +15,7 @@ function drawOutline(pos, dimen){
     ctx.restore();
 
     drawTransformDots(pos, dimen);
+    // console.log('drawing outline');
 }
 
 
@@ -65,19 +66,15 @@ function isOverOutline(x,y,pos,dimen){
 
     if(x>=pos.posX && x<=(pos.posX+dimen.width) && y<=(pos.posY+offset) && y>=(pos.posY-offset)){
         //top border detection
-        // console.info('top border');
         return 1;
     }else if(x>=pos.posX && x<=(pos.posX+dimen.width) && y<=(pos.posY+dimen.height+offset) && y>=(pos.posY+dimen.height-offset)){
         //bottom border detection
-        // console.log('bottom border')
         return 2;
     }else if(y>=pos.posY && y<=(pos.posY+dimen.height) && x<=pos.posX+offset && x>=pos.posX-offset){
         //left border detection
-        // console.info('left border');
         return 3;
     }else if(y>=pos.posY && y<=(pos.posY+dimen.height) && x<=(pos.posX+dimen.width+offset) && x>=(pos.posX+dimen.width-offset)){
         //left border detection
-        // console.info('right border');
         return 4;
     }
 

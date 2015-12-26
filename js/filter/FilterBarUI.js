@@ -95,7 +95,6 @@ var FitlerBarUI = (function(){
 
 				var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
 				var filters = layer.getFilters();
-				console.log('filters from top : ', filters);
 
 				var hasFilter = false;
 				for(var i in filters){
@@ -174,11 +173,7 @@ var FitlerBarUI = (function(){
 							}
 						}
 
-						overFilter.onmouseout = function(){
-							console.info('mouse out in over filter');
-						}
-
-						// div.appendChild(topDiv);
+						
 						overFilter.appendChild(bottomDiv);
 
 						filterElement.appendChild(overFilter);
@@ -203,7 +198,7 @@ var FitlerBarUI = (function(){
 		}
 
 		function handleClickOnGrayscale(){
-			console.info('grayscale');
+			// console.info('grayscale');
 			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var filterFlag = false;
 
@@ -232,7 +227,7 @@ var FitlerBarUI = (function(){
 		}
 
 		function handleClickOnBrightness(){
-			console.info('brightness');
+			// console.info('brightness');
 			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var filterFlag = false;
 
@@ -259,7 +254,7 @@ var FitlerBarUI = (function(){
 		}
 
 		function handleClickOnThreshold(){
-			console.info('threshold');
+			// console.info('threshold');
 			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var filterFlag = false;
 
@@ -284,7 +279,7 @@ var FitlerBarUI = (function(){
 		}
 
 		function handleClickOnSharpen(){
-			console.info('sharpen');
+			// console.info('sharpen');
 			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var filterFlag = false;
 
@@ -309,7 +304,7 @@ var FitlerBarUI = (function(){
 		}
 
 		function handleClickOnBlur(){
-			console.info('blur');
+			// console.info('blur');
 			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var filterFlag = false;
 
@@ -346,7 +341,7 @@ var FitlerBarUI = (function(){
 		}
 
 		function handleClickOnMotionBlur(){
-			console.info('motion blur');
+			// console.info('motion blur');
 			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var filterFlag = false;
 
@@ -398,7 +393,7 @@ var FitlerBarUI = (function(){
 		}
 
 		function generateSlider(layer, filter){
-			console.log('from: ', filter.getName());
+			// console.log('from: ', filter.getName());
 			var tempSlider = document.getElementById('filter-slider-wrapper');
 			if(tempSlider){
 				tempSlider.remove();
@@ -469,8 +464,6 @@ var FitlerBarUI = (function(){
 				fadeOut(div);
 
 
-			}else{
-				console.info('sorry i donot have ');
 			}
 		}
 
