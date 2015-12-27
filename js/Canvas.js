@@ -104,6 +104,8 @@ function Canvas(){
                 var side = isOverOutline(x,y,position,dimension);
                 TransformTool.getInstance().enableMouseDown();
                 TransformTool.getInstance().setSide(side);
+                
+                PhotoEditorUI.getInstance().renderLayers();
                 drawOutline(position, dimension);
 
             }else{

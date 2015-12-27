@@ -24,6 +24,11 @@ function Layer(){
         width = dimen.width;
         height = dimen.height;
     }
+
+    this.setPictureSrc = function(src){
+        picture.setImageSrc(src);
+        updateTempImage();
+    }
     
 //    this.addPicture = function(picture){ pictures.push(picture); }
 //    
@@ -46,12 +51,87 @@ function Layer(){
     //     filter = fltr;
     // }
     
+
+    this.addFilter = function(fltr){
+        filters.push(fltr);
+        updateTempImage();
+
+    }
+
+
     this.getFilters = function(){
         // console.log('from getter: ', filters);
         return filters;
     }
 
+    this.setFilterArgs = function(fltr, value){
+        fltr.setArgs(value);
+        updateTempImage();
+    }
+
+
     this.removeFilter = function(fltr){
+        var filterIndex = getFilterIndex(fltr);
+        if(filterIndex){
+            filters.splice(filterIndex,1);
+        }
+
+        updateTempImage();
+    }
+
+    this.getOpacity = function(){
+        return opacity;
+    }
+
+    this.setOpacity = function(op){
+        opacity = op;
+        // picture.setOpacity(op);
+        updateTempImage();
+    }
+
+    this.disableFilter= function(fltr){
+        fltr.disable();
+        updateTempImage();
+    }
+
+    this.enableFilter = function(fltr){
+        fltr.enable();
+        updateTempImage();
+    }
+
+    function updateTempImage(){
+        var mainFilter = new Filter();
+        var pixels = mainFilter.getPixels(picture);
+
+        console.log("opacity here: ", opacity)
+        if(opacity!=null && opacity<255){
+            console.log("opacity here: too ", opacity)
+            for (var i = pixels.data.length - 1; i >= 0; i-=4) {
+                pixels.data[i]=opacity;      
+            };
+        }
+
+        console.info('pixels lajdlfas  :', pixels);
+
+        for(var i in filters){
+            var filter = filters[i];
+            if(filter.isActive()){
+                pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
+            }
+        }
+
+        var tempCanvas = document.createElement('canvas');
+        var tempCtx = tempCanvas.getContext('2d');
+        var tempImg = picture.getTempImage();
+
+        tempCanvas.width = pixels.width;
+        tempCanvas.height = pixels.height;
+        tempCtx.putImageData(pixels,0,0);
+        tempImg.src = tempCanvas.toDataURL('image/png');
+        // console.log('data', pixels.data);
+    }
+
+    function getFilterIndex(fltr){
         var filter = fltr;
         var suspectIndex=null;
         for(var i in filters){
@@ -61,18 +141,7 @@ function Layer(){
             }
         }
 
-        if(suspectIndex){
-            filters.splice(suspectIndex,1);
-        }
-    }
-
-    this.getOpacity = function(){
-        return opacity;
-    }
-
-    this.setOpacity = function(op){
-        opacity = op;
-        picture.setOpacity(op);
+        return suspectIndex;
     }
     
 }

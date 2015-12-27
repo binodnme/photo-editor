@@ -23,6 +23,23 @@
     /*border: 1px solid blue;*/
 }
 
+.download-main{
+    width: 130px;
+    height: 30px;
+    margin: 0px auto;
+    background: #1F212B;
+    border-radius: 10px;
+}
+
+.download-main a{
+    text-decoration: none;
+    color: white;
+    font-size: 14px;
+    display: block;
+    line-height: 30px;
+    text-align: center;
+}
+
 
 .canvas-wrapper-main{
     margin: 0px auto;

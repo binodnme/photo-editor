@@ -225,9 +225,6 @@ var ColorReplace = (function(){
                 div.style.top = (y-yCorr) +'px';            
             }
         }
-
-
-
     	    
     }
 
@@ -246,4 +243,6 @@ var ColorReplace = (function(){
 })();
 
 
-PhotoEditor.getInstance().addTool(ColorReplace.getInstance());
+
+
+// PhotoEditor.getInstance().addTool(ColorReplace.getInstance());

@@ -22,6 +22,18 @@ body{
     background: #2B2E3C;
 }
 
+.load-image {
+    width: 70%;
+    float: left;
+}
+
+.download-wrapper{
+    width: 25%;
+    float: right;
+    padding-top: 10px;
+}
+
+
 
 .work-area{
     padding-top: 10px;

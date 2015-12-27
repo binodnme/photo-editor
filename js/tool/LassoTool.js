@@ -102,14 +102,26 @@ var LassoTool = (function(){
                         context.stroke();
 
                         var pos = pic.getPosition();
-                        context.drawImage(pic.getImage(), minX-pos.posX, minY-pos.posY, maxX-minX, maxY-minY,
+                        var image = pic.getImage();
+                        var dimen = pic.getDimension();
+                        var actualWidth = (maxX - minX)*(image.width/dimen.width);
+                        var actualheight = (maxY - minY)*(image.height/dimen.height);
+
+                        var actualStartX = (minX-pos.posX)*(image.width/dimen.width);
+                        var actualStartY = (minY-pos.posY)*(image.height/dimen.height);
+
+
+                        // context.drawImage(pic.getImage(), minX-pos.posX, minY-pos.posY, maxX-minX, maxY-minY,
+                        //     0,0,maxX-minX, maxY-minY);
+                        context.drawImage(pic.getImage(), actualStartX, actualStartY, actualWidth, actualheight,
                             0,0,maxX-minX, maxY-minY);
                         //ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
 
                         var img = document.createElement('img');
                         img.src = canvasTest.toDataURL("image/png");
 
-                        activeLayer.getPicture().setImageSrc(img.src);
+                        // activeLayer.getPicture().setImageSrc(img.src);
+                        activeLayer.setPictureSrc(img.src);
                         activeLayer.getPicture().setPosition(minX, minY);
 
                         PhotoEditorUI.getInstance().renderLayers();

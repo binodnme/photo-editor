@@ -90,7 +90,7 @@ var FitlerBarUI = (function(){
 			element.addEventListener('layerSelectInList', layerSelectInCanvas, false);
 			element.addEventListener('layerSelectInCanvas', layerSelectInCanvas, false);
 
-			function layerSelectInCanvas(){
+			function layerSelectInCanvas(event){
 				var zIndex = parseInt(event.detail);
 
 				var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
@@ -100,84 +100,7 @@ var FitlerBarUI = (function(){
 				for(var i in filters){
 					var filter = filters[i];
 					if(filter.getName()==filterName){
-						
-						var filterElement = element.getElementsByClassName('filter')[0];
-						filterElement.style.borderTop = '2px solid blue';
-
-						var div = filterElement.getElementsByClassName('over-filter');
-						if(div.length){
-							div[0].remove();
-						}
-
-						var overFilter = document.createElement('div');
-						overFilter.setAttribute('class', 'over-filter')
-
-						var bottomDiv = document.createElement('div');
-						bottomDiv.setAttribute('class', 'bottom-div');
-						var bottomLeft = document.createElement('div');
-						bottomLeft.setAttribute('class', 'bottom-left')
-						
-						var hide = document.createElement('div');
-						hide.setAttribute('class', 'hide-div');
-						if(filter.isActive()){
-							hide.style.background = "url('./images/icons/hide_icon.png') no-repeat";
-							hide.style.backgroundSize = 'cover';
-						}else{
-							hide.style.background = "url('./images/icons/show_icon.png') no-repeat";
-							hide.style.backgroundSize = 'cover';	
-						}
-						bottomLeft.appendChild(hide);
-
-
-						var bottomRight = document.createElement('div');
-						bottomRight.setAttribute('class', 'bottom-right')
-						
-						var remove = document.createElement('div');
-						remove.setAttribute('class', 'remove-div');
-						remove.style.background = "url('./images/icons/filter_delete.png') no-repeat";
-						remove.style.backgroundSize = 'cover';
-						bottomRight.appendChild(remove);
-
-
-						bottomDiv.appendChild(bottomLeft);
-						bottomDiv.appendChild(bottomRight);
-
-
-						hide.onclick = function(){
-							event.cancelBubble = true;
-							if(filter.isActive()){
-								filter.disable();
-								this.style.background = "url('./images/icons/show_icon.png') no-repeat";
-								this.style.backgroundSize = 'cover';
-								removeSlider();
-							}else{
-								filter.enable();
-								this.style.background = "url('./images/icons/hide_icon.png') no-repeat";
-								this.style.backgroundSize = 'cover';
-								generateSlider(layer, filter);
-							}
-							PhotoEditorUI.getInstance().renderLayers();
-						}
-
-						remove.onclick = function(){
-							event.cancelBubble = true;
-							layer.removeFilter(filter);
-							overFilter.remove();
-							removeSlider();
-							PhotoEditorUI.getInstance().renderLayers();
-						}
-
-						overFilter.onmouseover = function(){
-							if(filter.isActive()){
-								generateSlider(layer, filter);
-							}
-						}
-
-						
-						overFilter.appendChild(bottomDiv);
-
-						filterElement.appendChild(overFilter);
-
+						generateOverlay(element, filter, layer);
 						hasFilter = true;
 						break;
 					}else{
@@ -187,7 +110,7 @@ var FitlerBarUI = (function(){
 
 				if(!hasFilter){
 					var filterElement = element.getElementsByClassName('filter')[0];
-					filterElement.style.borderTop = '2px solid black';
+					filterElement.style.borderTop = '2px solid transparent';
 					var div = filterElement.getElementsByClassName('over-filter');
 
 					if(div.length){
@@ -195,6 +118,89 @@ var FitlerBarUI = (function(){
 					}
 				}
 			}
+		}
+
+		function generateOverlay(element, filter, layer){
+			console.log('generating overlayer')
+			var filterElement = element.getElementsByClassName('filter')[0];
+			filterElement.style.borderTop = '2px solid #D81010';
+
+			var div = filterElement.getElementsByClassName('over-filter');
+			if(div.length){
+				div[0].remove();
+			}
+
+			var overFilter = document.createElement('div');
+			overFilter.setAttribute('class', 'over-filter')
+
+			var bottomDiv = document.createElement('div');
+			bottomDiv.setAttribute('class', 'bottom-div');
+			var bottomLeft = document.createElement('div');
+			bottomLeft.setAttribute('class', 'bottom-left')
+			
+			var hide = document.createElement('div');
+			hide.setAttribute('class', 'hide-div');
+			if(filter.isActive()){
+				hide.style.background = "url('./images/icons/hide_icon.png') no-repeat";
+				hide.style.backgroundSize = 'cover';
+			}else{
+				hide.style.background = "url('./images/icons/show_icon.png') no-repeat";
+				hide.style.backgroundSize = 'cover';	
+			}
+			bottomLeft.appendChild(hide);
+
+
+			var bottomRight = document.createElement('div');
+			bottomRight.setAttribute('class', 'bottom-right')
+			
+			var remove = document.createElement('div');
+			remove.setAttribute('class', 'remove-div');
+			remove.style.background = "url('./images/icons/filter_delete.png') no-repeat";
+			remove.style.backgroundSize = 'cover';
+			bottomRight.appendChild(remove);
+
+
+			bottomDiv.appendChild(bottomLeft);
+			bottomDiv.appendChild(bottomRight);
+
+
+			hide.onclick = function(event){
+				event.cancelBubble = true;
+				if(filter.isActive()){
+					// filter.disable();
+					layer.disableFilter(filter);
+					this.style.background = "url('./images/icons/show_icon.png') no-repeat";
+					this.style.backgroundSize = 'cover';
+					removeSlider();
+				}else{
+					// filter.enable();
+					layer.enableFilter(filter);
+					this.style.background = "url('./images/icons/hide_icon.png') no-repeat";
+					this.style.backgroundSize = 'cover';
+					generateSlider(layer, filter);
+				}
+				PhotoEditorUI.getInstance().renderLayers();
+			}
+
+			remove.onclick = function(event){
+				event.cancelBubble = true;
+				layer.removeFilter(filter);
+				overFilter.remove();
+				removeSlider();
+				PhotoEditorUI.getInstance().renderLayers();
+			}
+
+			overFilter.onmouseover = function(){
+				if(filter.isActive()){
+					generateSlider(layer, filter);
+				}
+			}
+
+			
+			overFilter.appendChild(bottomDiv);
+
+			filterElement.appendChild(overFilter);
+
 		}
 
 		function handleClickOnGrayscale(){
@@ -215,11 +221,11 @@ var FitlerBarUI = (function(){
 				if(!filterFlag){
 					var f = new Grayscale();
 					f.setArgs(50);
-			        layer.getFilters().push(f);
+					layer.addFilter(f);
+			        // layer.getFilters().push(f);
 			        PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
-			        var filter = this.getElementsByClassName('filter')[0];
-					filter.style.borderTop = '2px solid blue';
+			        generateOverlay(this, f, layer);
 				}
 
 
@@ -244,11 +250,11 @@ var FitlerBarUI = (function(){
 				if(!filterFlag){
 					var f = new Brightness();
 					f.setArgs(50);
-			        layer.getFilters().push(f);
+					layer.addFilter(f);
+			        // layer.getFilters().push(f);
 			        PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
-			        var filter = this.getElementsByClassName('filter')[0];
-					filter.style.borderTop = '2px solid blue';
+			        generateOverlay(this, f, layer);
 				}
 			}	
 		}
@@ -271,9 +277,11 @@ var FitlerBarUI = (function(){
 				if(!filterFlag){
 					var f = new Threshold();
 					f.setArgs(50);
-			        layer.getFilters().push(f);
+					layer.addFilter(f);
+			        // layer.getFilters().push(f);
 			        PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
+			        generateOverlay(this, f, layer);
 				}
 			}	
 		}
@@ -296,9 +304,11 @@ var FitlerBarUI = (function(){
 				if(!filterFlag){
 					var f = new Sharpen();
 					f.setArgs(5);
-			        layer.getFilters().push(f);
+					layer.addFilter(f);
+			        // layer.getFilters().push(f);
 			        PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
+			        generateOverlay(this, f, layer);
 				}
 			}	
 		}
@@ -324,18 +334,12 @@ var FitlerBarUI = (function(){
 		                    1/9,  1/9, 1/9,
 		                    1/9, 1/9,  1/9 ];
 
-
-					// var arg = [  1/25,1/25 ,1/25,1/25 ,1/25,
-			  //                   1/25,1/25 ,1/25,1/25 ,1/25,
-			  //                   1/25,1/25 ,1/25,1/25 ,1/25,
-			  //                   1/25,1/25 ,1/25,1/25 ,1/25,
-			  //                   1/25,1/25 ,1/25,1/25 ,1/25,];
-
-
 					f.setArgs(arg);
-			        layer.getFilters().push(f);
+					layer.addFilter(f);
+			        // layer.getFilters().push(f);
 			        PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
+			        generateOverlay(this, f, layer);
 				}
 			}	
 		}
@@ -369,25 +373,12 @@ var FitlerBarUI = (function(){
 			            0, 0, 0, 0, 0, 0, 0, 0, 1/9,
 			        ];
 
-			        // var arg=[
-			        //     1/11, 0, 0, 0, 0, 0, 0, 0, 0,0,0,
-			        //     0, 1/11, 0, 0, 0, 0, 0, 0, 0,0,0,
-			        //     0, 0, 1/11, 0, 0, 0, 0, 0, 0,0,0,
-			        //     0, 0, 0, 1/11, 0, 0, 0, 0, 0,0,0,
-			        //     0, 0, 0, 0, 1/11, 0, 0, 0, 0,0,0,
-			        //     0, 0, 0, 0, 0, 1/11, 0, 0, 0,0,0,
-			        //     0, 0, 0, 0, 0, 0, 1/11, 0, 0,0,0,
-			        //     0, 0, 0, 0, 0, 0, 0, 1/11, 0,0,0,
-			        //     0, 0, 0, 0, 0, 0, 0, 0, 1/11,0,0,
-			        //     0, 0, 0, 0, 0, 0, 0, 0,0, 1/11,0,
-			        //     0, 0, 0, 0, 0, 0, 0, 0, 0,0, 1/11,
-
-			        // ];
 					f.setArgs(arg);
-
-			        layer.getFilters().push(f);
+			        layer.addFilter(f);
+			        // layer.getFilters().push(f);
 			        PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
+			        generateOverlay(this, f, layer);
 				}
 			}	
 		}
@@ -439,7 +430,8 @@ var FitlerBarUI = (function(){
 				slider.onmousedown = function(){
 					sliderMouseDown = true;
 					var value = this.value;
-					filter.setArgs(parseInt(this.value));
+					layer.setFilterArgs(filter, parseInt(this.value));
+					// filter.setArgs(parseInt(this.value));
 					valueHolder.innerHTML = filter.getArgs();
 	                PhotoEditorUI.getInstance().renderLayers();
 				}
@@ -451,7 +443,8 @@ var FitlerBarUI = (function(){
 				slider.onmousemove = function(){
 					if(sliderMouseDown){
 						var value = this.value;
-						filter.setArgs(parseInt(this.value));
+						layer.setFilterArgs(filter, parseInt(this.value));
+						// filter.setArgs(parseInt(this.value));
 						valueHolder.innerHTML = filter.getArgs();
 		                PhotoEditorUI.getInstance().renderLayers();
 					}
