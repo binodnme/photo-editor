@@ -5,6 +5,13 @@ function Threshold(){
 	var active = true;
 	var args;
 
+
+	/*
+		*apply threshold filter in given pixels using the threshold value
+		@params {Array} pixels
+		@params {Number} threshold
+		@return {Array}
+	*/
 	this.filter = function(pixels, threshold) {
 		
 		var d = pixels.data;
@@ -15,34 +22,35 @@ function Threshold(){
 			var v = (0.2126*r + 0.7152*g + 0.0722*b >= threshold) ? 255 : 0;
 			d[i] = d[i+1] = d[i+2] = v
 		}
-		testArg = threshold;
+		args = threshold;
 		return pixels;
 	};
-
-	console.info('threshold done');
 
 
 	this.getName = function(){
 		return name;
 	}
 
+
 	this.getMin = function(){
 		return min;
 	}
+
 
 	this.getMax = function(){
 		return max;
 	}
 
+
 	this.enable = function(){
 		active = true;
-		// console.info('enabled');
 	}
+
 
 	this.disable = function(){
 		active = false;
-		// console.info('disabled');
 	}
+
 
 	this.isActive = function(){
 		return active;
@@ -52,6 +60,7 @@ function Threshold(){
 	this.getArgs = function(){
 		return args;
 	}
+
 
 	this.setArgs = function(val){
 		args = val;
@@ -63,4 +72,5 @@ var inheritsFrom = function (child, parent) {
     console.info('inherit');
 };
 
+//inherit Threshold from Filter class
 inheritsFrom(Threshold, Filter);

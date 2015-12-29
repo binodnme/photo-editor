@@ -11,23 +11,12 @@
         <div class="main-container">
             <div class="header-wrapper">
                 <div class="load-image">
-                    
-                    <!-- <span class="load-label"><label>Load Image </label> </span> -->
                     <input id="choose-file"  type="file">
-                    
                     <input id="url" class="url" type="url" placeholder="enter image url"> 
                     <input id="get-button" class="get-button" type="submit" value="get">
                     <input type="button" value="fit to image" onclick="fitToImage()">
-
                 </div>
 
-                <!-- <input type="button" value="grayscale" onclick="grayscale()">
-                
-                <input type="button" value="brightness" onclick="brightness()">
-
-                <input type="button" value="threshold" onclick="threshold()">
-
-                <input type="button" value="threshold" onclick="convolution()"> -->
 
                 <div class="download-wrapper">
                     <div class="download-main">
@@ -89,7 +78,7 @@
 
         
         
-        
+        <!-- js for filters -->
         <script type="text/javascript" src='./js/filter/Filter.js'></script>
         <script type="text/javascript" src='./js/filter/Grayscale.js'></script>
         <script type="text/javascript" src='./js/filter/Threshold.js'></script>
@@ -99,27 +88,30 @@
         <script type="text/javascript" src='./js/filter/Blur.js'></script>
         <script type="text/javascript" src='./js/filter/MotionBlur.js'></script>
 
+
+        <!-- js that handles backend -->
         <script type='text/javascript' src='./js/PhotoEditor.js'></script>
         <script type="text/javascript" src='./js/Picture.js'></script>
         <script type="text/javascript" src='./js/Layer.js'></script>
+        
+        <!-- js for tools -->
         <script type="text/javascript" src='./js/tool/SelectTool.js'></script>
         <script type="text/javascript" src='./js/tool/TransformTool.js'></script>
         <script type="text/javascript" src='./js/tool/CropTool.js'></script>
         <script type="text/javascript" src='./js/tool/LassoTool.js'></script>
         <script type="text/javascript" src='./js/tool/ColorReplace.js'></script>
         
+        <!-- js that handles UI -->
         <script type="text/javascript" src='./js/layer/LayerListElement.js'></script>
         <script type="text/javascript" src='./js/Canvas.js'></script>
         <script type='text/javascript' src='./js/tool/ToolBarUI.js'></script>
         <script type='text/javascript' src='./js/layer/LayerBarUI.js'></script>
         <script type='text/javascript' src='./js/PropertyBarUI.js'></script>
         <script type='text/javascript' src='./js/filter/FilterBarUI.js'></script>
-
         <script type='text/javascript' src='./js/PhotoEditorUI.js'></script>
-
         <script type="text/javascript" src='./js/outline.js'></script>
-        
-        
+
+        <!-- starting js -->
         <script type="text/javascript" src='js/index.js'></script>
     </body>
 

@@ -5,19 +5,30 @@ function Sharpen(){
 	var active = true;
 	var args;
 
+
+	/*
+		*apply Sharpen filter in given pixels using the weight
+		@params {Array} pixels
+		@params {Number} weight
+		@return {Array}
+	*/
 	this.filter = function(pixels, weight) {
 
 		if((parseInt(weight) - weight) == 0){
 			var matrix = createMatrix(weight);
-			// console.info('matrix: ', matrix);
 			var conv = new Convolution();
-			// t.setArgs(weight);
 			return conv.filter(pixels, matrix);
 		}
 		
 		
 	};
 
+
+	/*
+		*Creates Array/Matrix according to the input weight
+		@params {Number} weight
+		@return {Array}
+	*/
 	function createMatrix(weight){
 		//assuming 3*3 matrix
 		var centerValue = weight;
@@ -28,31 +39,31 @@ function Sharpen(){
 				sv,sv,sv];
 	}
 
-	console.info('sharpen done');
-
 
 	this.getName = function(){
 		return name;
 	}
 
+
 	this.getMin = function(){
 		return min;
-		// return null;
 	}
+
 
 	this.getMax = function(){
 		return max;
 	}
 
+
 	this.enable = function(){
 		active = true;
-		// console.info('enabled');
 	}
+
 
 	this.disable = function(){
 		active = false;
-		// console.info('disabled');
 	}
+
 
 	this.isActive = function(){
 		return active;
@@ -63,14 +74,16 @@ function Sharpen(){
 		return args;
 	}
 
+
 	this.setArgs = function(val){
 		args = val;
 	}
 }
 
+
 var inheritsFrom = function (child, parent) {
     child.prototype = Object.create(parent.prototype);
-    console.info('inherit');
 };
 
+//inherit Sharpen from Filter class
 inheritsFrom(Sharpen, Filter);

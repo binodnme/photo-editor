@@ -1,13 +1,13 @@
 var CropTool = (function(){
-    var iconSrc = 'images/icons/crop.png';   //source for icon file
-
+    
     function CropTool() {
         var name='crop';
+        var iconSrc = 'images/icons/crop.png';   //source for icon file
         var startX;
         var startY;
         var endX;
         var endY;
-        
+            
         this.getName = function(){
             return name;
         }
@@ -23,13 +23,12 @@ var CropTool = (function(){
             endY = y1;
         }
 
+
         this.crop = function(){
             var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
             var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
             var ctx = PhotoEditorUI.getInstance().getCanvas().getContext();
             var pic = layer.getPicture();
-
-            // console.log('startX', startX, ' startY', startY);
 
             if(startX){
                 console.info('wait while cropping :D');
@@ -76,6 +75,8 @@ var CropTool = (function(){
                 PhotoEditorUI.getInstance().renderLayers();
 
 
+                //----------IMPORTANT----------------
+                //The selected region in canvas is mapped to the region over image Object to retain the quality of image 
                 var image = pic.getImage();
                 var actualWidth = width*(image.width/dimen.width);
                 var actualheight = height*(image.height/dimen.height);
@@ -84,30 +85,22 @@ var CropTool = (function(){
                 var actualStartY = (startY-pos.posY)*(image.height/dimen.height);
 
 
-                // var imageData = ctx.getImageData(startX, startY, width, height);
-
+                // a temp canvas is created to get the cropped part of image data
                 var canvas = document.createElement("canvas");
-                // var canvas = document.getElementById('testground');
                 canvas.width = width;
                 canvas.height = height;
-
                 var ctx = canvas.getContext("2d");
                 
-
-                // ctx.drawImage(pic.getImage(), startX-pos.posX, startY-pos.posY, width, height, 
-                //     0,0,width, height);
-                 ctx.drawImage(pic.getImage(), actualStartX, actualStartY, actualWidth, actualheight, 
+                ctx.drawImage(pic.getImage(), actualStartX, actualStartY, actualWidth, actualheight, 
                     0,0,width, height);
                 //ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-                // ctx.putImageData(imageData,0,0);
+                
                 
                 var img = document.createElement("img");
                 img.src = canvas.toDataURL("image/png");
-                // img.crossOrigin = "anonymous";
-
-                // pic.setImageSrc(img.src);
+                
+                //update the image source of picture
                 layer.setPictureSrc(img.src);
-
                 pic.setPosition(startX, startY);
 
                 PhotoEditorUI.getInstance().renderLayers();
@@ -135,5 +128,5 @@ var CropTool = (function(){
    };
 })();
 
-
+//register tool in PhotoEditor tools
 PhotoEditor.getInstance().addTool(CropTool.getInstance());

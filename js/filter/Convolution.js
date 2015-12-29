@@ -1,20 +1,16 @@
 Filters = {};
 
 function Convolution(){
-  this.name='convolution';
-  // var weights = 10;
-  // var opaque = 50;
-
-  this.min = 5;
-  this.max = 100;
-  var active = true;
-
-
-  var testArg = [  0, -1,  0,
-                   -1,  5, -1,
-                   0, -1,  0 ];
-
+  
+  /*
+    *computes the pixels value w.r.t input weights(Array/Matrix)
+    @params {Array} pixels
+    @params {Array} weights
+    @params {Number} opaque
+    @return {Array}
+  */
   this.filter = function(pixels, weights, opaque) {
+    console.info('i am here man :D');
     var side = Math.round(Math.sqrt(weights.length));
     var halfSide = Math.floor(side/2);
     var src = pixels.data;
@@ -57,39 +53,8 @@ function Convolution(){
     }
     return output;
   };
-  // console.info('Convolution done');
-
-  this.getArgs = function(){
-    return testArg;
-  }
-
-  this.setArgs = function(val){
-    testArg = val;
-  }
-
-
-  this.enable = function(){
-    active = true;
-    // console.info('enabled');
-  }
-
-  this.disable = function(){
-    active = false;
-    // console.info('disabled');
-  }
-
-  this.isActive = function(){
-    return active;
-  }
+  
 }
-
-
-var inheritsFrom = function (child, parent) {
-    child.prototype = Object.create(parent.prototype);
-    console.info('inherit');
-};
-
-inheritsFrom(Convolution, Filter);
 
 
 

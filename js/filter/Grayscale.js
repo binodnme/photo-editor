@@ -2,11 +2,12 @@ function Grayscale(){
 	var name='grayscale';
 	var active = true;
 	var testArg;
-	// this.min = 10;
-	// this.max = 100;
-	var propertyEditer;
 	
-
+	/*
+		*apply Grayscale filter in given pixels 
+		@params {Array} pixels
+		@return {Array}
+	*/
 	this.filter = function(pixels, args) {
 	  var d = pixels.data;
 	  for (var i=0; i<d.length; i+=4) {
@@ -22,48 +23,51 @@ function Grayscale(){
 	  return pixels;
 	};
 
+
 	this.getName = function(){
 		return name;
 	}
 
+
 	this.enable = function(){
 		active = true;
-		// console.info('enabled');
 	}
+
 
 	this.disable = function(){
 		active = false;
-		// console.info('disabled');
 	}
+
 
 	this.isActive = function(){
 		return active;
 	}
 
+
 	this.getMin = function(){
 		return null;
 	}
+
 
 	this.getMax = function(){
 		return null;
 	}
 
+
 	this.getArgs = function(){
 		return testArg;
 	}
 
+
 	this.setArgs = function(val){
 		testArg = val;
 	}
-
-	console.info('grayscale done');
-
 }
 
 
 var inheritsFrom = function (child, parent) {
     child.prototype = Object.create(parent.prototype);
-    console.info('inherit');
 };
 
+//inherit Grayscale from Filter class
 inheritsFrom(Grayscale, Filter);

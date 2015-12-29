@@ -1,14 +1,12 @@
 
 var LassoTool = (function(){
-    var iconSrc = 'images/icons/lasso.png';   //source for icon file
-    var coordinateArray = [];
-    var activeLayer;
-
+    
     function LassoTool() {
         var name='lasso';
-        // var 
-
-        
+        var iconSrc = 'images/icons/lasso.png';   //source for icon file
+        var coordinateArray = [];
+        var activeLayer;
+    
         this.getName = function(){
             return name;
         }
@@ -185,5 +183,5 @@ var LassoTool = (function(){
    };
 })();
 
-
+//register tool in PhotoEditor tools
 PhotoEditor.getInstance().addTool(LassoTool.getInstance());

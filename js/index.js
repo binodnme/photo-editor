@@ -1,26 +1,25 @@
 console.log('start');
 
-
 var pUI = PhotoEditorUI.getInstance();
-
 pUI.init();
-
 
 var inputFileElmnt = document.getElementById('choose-file');
 var getButton = document.getElementById('get-button');
 
-function setup(){
-    var  width = parseFloat(document.getElementById('width').value);
-    var  height = parseFloat(document.getElementById('height').value);
-
-    console.log('width:', width, ' height:', height);
-
-    PhotoEditorUI.getInstance().getCanvas().setDimension(width, height);
-
-    PhotoEditorUI.getInstance().renderLayers();
-}
 
 
+// function setup(){
+//     var  width = parseFloat(document.getElementById('width').value);
+//     var  height = parseFloat(document.getElementById('height').value);
+
+//     console.log('width:', width, ' height:', height);
+//     PhotoEditorUI.getInstance().getCanvas().setDimension(width, height);
+//     PhotoEditorUI.getInstance().renderLayers();
+// }
+
+/* 
+    listener for file input button
+*/
 inputFileElmnt.onchange = function(event){
     var file = event.target.files[0];
     var fileReader = new FileReader();
@@ -32,6 +31,9 @@ inputFileElmnt.onchange = function(event){
 }
 
 
+/*
+    listener for url input
+*/
 getButton.onclick = function(){
     var url = document.getElementById('url');
     
@@ -42,11 +44,13 @@ getButton.onclick = function(){
     }
 }
 
-
+/*
+    * loads image to the canvas
+    * @param {String} src
+*/
 function loadImage(src){
     var img = new Image();
     img.src = src;
-    // img.crossOrigin = 'anonymous';
 
     var picture = new Picture();
     picture.setImage(img);
@@ -54,18 +58,20 @@ function loadImage(src){
     var layer = new Layer();
     layer.setPicture(picture);
  
-    // myCanvas.addLayer(layer);
     var main = PhotoEditor.getInstance();
     main.addLayer(layer);
    
     picture.getImage().onload = function(){
         picture.setDimension(picture.getImage().width, picture.getImage().height);
         pUI.renderLayers();
-        // updateLayerUI(layer);
     }
 }
 
 
+
+/*
+    fits the canvas size accroding to the image content
+*/
 function fitToImage(){
     var layers = PhotoEditor.getInstance().getLayers();
     var minX, minY, maxX, maxY;
@@ -123,6 +129,9 @@ function fitToImage(){
 }
 
 
+/*
+    listener for download
+*/
 var download = document.getElementById('download');
 download.addEventListener('click', function(ev1){
     var layers = PhotoEditor.getInstance().getLayers();

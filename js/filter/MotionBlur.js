@@ -5,37 +5,43 @@ function MotionBlur(){
 	var active = true;
 	var args;
 
+
+	/*
+		*apply Motion Blur filter in given pixels using the weight(Array/matrix)
+		@params {Array} pixels
+		@params {Array} weight
+		@return {Array}
+	*/
 	this.filter = function(pixels, weight) {
 		var conv = new Convolution();
-		// t.setArgs(weight);
 		return conv.filter(pixels, weight);
-		
 	};
-
-	console.info('motion blur done');
 
 
 	this.getName = function(){
 		return name;
 	}
 
+
 	this.getMin = function(){
 		return null;
 	}
+
 
 	this.getMax = function(){
 		return max;
 	}
 
+
 	this.enable = function(){
 		active = true;
-		// console.info('enabled');
 	}
+
 
 	this.disable = function(){
 		active = false;
-		// console.info('disabled');
 	}
+
 
 	this.isActive = function(){
 		return active;
@@ -46,14 +52,16 @@ function MotionBlur(){
 		return args;
 	}
 
+
 	this.setArgs = function(val){
 		args = val;
 	}
 }
 
+
 var inheritsFrom = function (child, parent) {
     child.prototype = Object.create(parent.prototype);
-    console.info('inherit');
 };
 
+//inherit MotionBlur from Filter class
 inheritsFrom(MotionBlur, Filter);

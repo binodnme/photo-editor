@@ -9,11 +9,9 @@ var PhotoEditorUI = (function(){
         var filterBar = FitlerBarUI.getInstance();
 
 
-        var tempCanvas = document.createElement('canvas');
-        var tempCtx = tempCanvas.getContext('2d');
-        var tempImg = new Image();
-
-
+        /*
+            Initializes all the UI components
+        */
         this.init = function(){
             canvas = new Canvas();
             canvas.init();
@@ -51,10 +49,14 @@ var PhotoEditorUI = (function(){
         }
         
 
+        /*
+            renders all layers sequentially w.r.t z-index
+        */
         this.renderLayers = function(){
             layerBar.update();
             var layers = photoEditor.getLayers();
 
+            //sort layers w.r.t z-index
             layers.sort(function(a,b){
                 return parseInt(a.getZIndex()) - parseInt(b.getZIndex());
             });
@@ -67,24 +69,21 @@ var PhotoEditorUI = (function(){
                 var pic = layer.getPicture();
                 var pos = pic.getPosition();
                 var dimen = pic.getDimension();
-                // var image = pic.getImage();
-
                 var filters = layer.getFilters();
 
-
                 if(filters.length>0 || (layer.getOpacity()!=null && layer.getOpacity()<255)){
-                    // console.log('has filter')
+                    //draw temp image if opacity or fitlers are present
                     context.drawImage(pic.getTempImage(), pos.posX, pos.posY, dimen.width, dimen.height);
                 }else{
-                    // console.log('don\'t have filter')
+                    //else draw original image
                     context.drawImage(pic.getImage(), pos.posX, pos.posY, dimen.width, dimen.height);
                 }
-
             }
         }
     }
 
 
+    //this approach is used to make Class Singleton
     var instance; 
     return {
         getInstance: function(){

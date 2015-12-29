@@ -3,26 +3,24 @@ var LayerBarUI = (function(){
 		var parentElement;
 		var initial;
 		var listElements = [];
-		var singleClickTimeOut;
+		
 
+		/*
+			*Initializes the Layer bar UI
+		*/
 		this.init = function(){
 			console.log('layerbar init');
 
-
 			var layerAction = document.getElementsByClassName('layer-action')[0];
-
 			var deleteWrapper = document.createElement('div');
 			var deleteLayer = document.createElement('input');
 			deleteLayer.setAttribute('type','button');
-			// deleteLayer.setAttribute('value', 'delete');
 			deleteLayer.setAttribute('id','layer-delete');
 			deleteLayer.setAttribute('class','layer-action-button');
-
 
 			deleteLayer.onclick = function(e){
 				var layers = PhotoEditor.getInstance().getLayers();
 			    var activeZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
-			    console.info('active: ', activeZIndex);
 			    for (var i = layers.length - 1; i >= 0; i--) {
 			        if(layers[i].getZIndex()==activeZIndex){
 			            layers.splice(i, 1);
@@ -36,23 +34,26 @@ var LayerBarUI = (function(){
 			layerAction.appendChild(deleteWrapper);
 		}
 
+
+		/*this method is called when there is any activity in canvas*/
 		this.update = function(){
 			var opBar = document.getElementById('opacity-bar');
 			var ul = document.getElementById('layer-list');
 			
 		    var layers = PhotoEditor.getInstance().getLayers();
 
+		    //clear opacity bar
 			while (opBar.firstChild) {
 	            opBar.removeChild(opBar.firstChild);
 	        }
 
-
+	        //clear layer list
 			while (ul.firstChild) {
 	            ul.removeChild(ul.firstChild);
 	        }
 
 	        var activeLayerZIndex = PhotoEditor.getInstance().getActiveLayerIndex();
-	        var layer = PhotoEditor.getInstance().getLayerByZIndex(activeLayerZIndex);
+	        var layer = PhotoEditor.getInstance().getActiveLayer(activeLayerZIndex);
 
 	        if(layer){
 	        	var opLabel = document.createElement('label');
@@ -74,12 +75,8 @@ var LayerBarUI = (function(){
 
 		    listElements = [];
 
-		    
-
 		    for(var i in layers){
-			
 				var list = new LayerListElement(layers[i].getZIndex());
-
 				var li = list.getListElement();
 				li.setAttribute('draggable', 'true')
 				li.innerHTML = layers[i].getName();
@@ -91,6 +88,7 @@ var LayerBarUI = (function(){
 		        li.addEventListener('layerSelectInCanvas', handleLayerSelectInCanvas, false);
 		        li.addEventListener('dblclick',handleDblClick, false);
 		        
+
 		        li.onclick = (function(list){
 		        	return function(){
 		        		list.increaseTotalClicks();
@@ -98,12 +96,9 @@ var LayerBarUI = (function(){
 		        		if(list.getTotalClicks() == 1){
 		        			setTimeout(function(){
 		        				var l = list.getListElement();
-
+		        				
 		        				if(list.getTotalClicks() == 1 && !list.isDoubleClick()){
-		        					console.info('single click');
-
-		        					
-				        			l.style.background = '#2B2E3C';
+		        					l.style.background = '#2B2E3C';
 					        		for(var i in listElements){
 					        			if(listElements[i] != list){
 					        				listElements[i].getListElement().style.background = 'none';
@@ -111,6 +106,8 @@ var LayerBarUI = (function(){
 					        		}
 
 					        		var zIndex = list.getZIndex();
+
+					        		//firing custom event and attaching z-index value of selected layer
 					        		var ev1 = new CustomEvent('layerSelectInList',{'detail':zIndex});
 
 								    PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
@@ -129,11 +126,7 @@ var LayerBarUI = (function(){
 								    c.dispatchEvent(ev1);
 
 			        			}else{
-			        				// console.info('hello dbl click');
-									this.contentEditable = 'true';
-									this.focus();
-
-									
+			      
 			        			}
 
 		        				list.resetTotalClicks();
@@ -146,10 +139,9 @@ var LayerBarUI = (function(){
 		        li.onkeydown = (function(list){
 		        	return function(){
 		        		var key = parseInt(event.keyCode);
-						// console.log(key);
+		        		//rename layer
 						if(key==13){
 							event.preventDefault();
-							console.log("done")
 							var newName = this.textContent || this.innerText;
 							var zIndex = list.getZIndex();
 					        PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
@@ -159,15 +151,8 @@ var LayerBarUI = (function(){
 							this.contentEditable = 'false';
 							list.disableDoubleClick();
 						}
-
-						console.log(this.textContent || this.innerText);
 		        	}
 		        }(list));
-
-
-		        // var cb = document.createElement('input');
-		        // cb.setAttribute('type','checkbox');
-		        // li.appendChild(cb);
 
 
 		        if(layers[i].getZIndex() == activeLayerZIndex){
@@ -180,49 +165,25 @@ var LayerBarUI = (function(){
 		}
 
 
+		/*
+			*sets parent element for LayerBarUI
+			@params {Element} pEl
+		*/
 		this.setParent = function(pEl){
 			parentElement = pEl;
 		}
 
 
+		//handles the changed opacity value
 		function opOnChange(){
-			
 			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var opValue = parseInt(this.value);
 			layer.setOpacity(opValue);
-
-			// var pic = layer.getPicture();
-
-			// var mainFilter = new Filter();
-			// var pixels = mainFilter.getPixels(pic);
-			// console.info('hi pixels');
-
-			// console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
-
-			// for (var i = pixels.data.length - 1; i >= 0; i-=4) {
-			// 	pixels.data[i]=opValue;
-			// };
-			
-			// console.info('r:',pixels.data[0],'g:',pixels.data[1],'b:',pixels.data[2],'a:',pixels.data[3]);
-			
-			// var cnvs = document.createElement('canvas');
-			
-			// cnvs.width = pixels.width;
-			// cnvs.height = pixels.height;
-
-			// var ctx = cnvs.getContext('2d');
-			// ctx.clearRect(0,0,cnvs.width, cnvs.height);
-			// ctx.putImageData(pixels, 0,0);
-			
-			// var img = new Image();
-			// img.src = cnvs.toDataURL('image/png');
-
-			// pic.setImageSrc(img.src);
-
 			PhotoEditorUI.getInstance().renderLayers();
 		}
 
 
+		//handle the event when a layer is selected in canvas
 		function handleLayerSelectInCanvas(e){
 			var zIndex = parseInt(e.detail);
 			for(var i in listElements){
@@ -234,17 +195,18 @@ var LayerBarUI = (function(){
 		}
 
 
+		//handle double click event
 		function handleDblClick(){
-			clearTimeout(singleClickTimeOut);
-			console.info('hello dbl click');
 			this.contentEditable = 'true';
-			console.info('this: ',this);
+			// console.log('hello dbl click');
 		}
 
 
+
+		//handles drag start event
 		function handleDragStart(ev1){
-			// console.info('start');
-		    var list = parentElement.getElementsByTagName('li');
+			var list = parentElement.getElementsByTagName('li');
+			//identify which list is clicked and set the initial value
 		    for (var i = list.length - 1; i >= 0; i--) {
 		        if(this==list[i]){
 		            initial = i;
@@ -254,47 +216,48 @@ var LayerBarUI = (function(){
 		}
 
 
+		//handles the event when a list element is over another list element while dragging
 		function handleDragOver(e){
 		    if(e.preventDefault){
 		        e.preventDefault();
 		    }
 
 		    e.dataTransfer.dropEffect = 'move'; 
-		    // console.info('over');
 		    return false;
 		}
 
 
+		//handles the event when a list element enters another list element while dragging
 		function handleDragEnter(e) {
 		  	this.classList.add('over');
-		  	// console.info('enter');
 		}
 
 
+		//handles the event when a list element leaves another list element while dragging
 		function handleDragLeave(e) {
 		  	this.classList.remove('over');
-		  	// console.info('leave');
 		}
 
 
+		//handles the event when a list element is dropped
 		function handleDrop(e) {
 			if (e.stopPropagation) {
 				e.stopPropagation(); // stops the browser from redirecting.
 			}
 
-			// console.info('drop');
 			var finalValue;
 			var list = parentElement.getElementsByTagName('li');
+			//identify the index of list element when it is dropped
 			for (var i = list.length - 1; i >= 0; i--) {
 				if(this==list[i]){
 					finalValue = i;
 				}
 			}
-	  
-			moveLayer(initial, finalValue);
-			
+
+	  		moveLayer(initial, finalValue);
 			return false;
 		}
+
 
 		function handleDragEnd(e) {
 		  [].forEach.call(list, function (l) {
@@ -303,6 +266,7 @@ var LayerBarUI = (function(){
 		}
 
 
+		/*adjust the zindex of Layer Objects when the drag event is finished*/
 		function moveLayer(start, end){
 		    var start = start;
 		    var end = end;
@@ -319,7 +283,6 @@ var LayerBarUI = (function(){
 		            layers[i].setZIndex(temp);
 		        }
 		    }else if(start>end){
-		        console.info('start>end');
 		        for(var i=start-1; i>=end; i--){
 		            var temp = layers[start].getZIndex();
 		            layers[start].setZIndex(layers[i].getZIndex());
@@ -331,15 +294,14 @@ var LayerBarUI = (function(){
 		}
 	}
 
-	var instance;
 
+	var instance;
 	return {
 		getInstance: function(){
 			if(instance==null){
 				instance = new LayerBarUI();
 				instance.constructor = null;
 			}
-
 			return instance;
 		}
 	}
