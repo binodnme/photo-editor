@@ -1,4 +1,3 @@
-
 var CropTool = (function(){
     var iconSrc = 'images/icons/crop.png';   //source for icon file
 
@@ -101,8 +100,7 @@ var CropTool = (function(){
                     0,0,width, height);
                 //ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
                 // ctx.putImageData(imageData,0,0);
-                // ctx.draw()
-
+                
                 var img = document.createElement("img");
                 img.src = canvas.toDataURL("image/png");
                 // img.crossOrigin = "anonymous";

@@ -103,15 +103,12 @@ function Layer(){
         var mainFilter = new Filter();
         var pixels = mainFilter.getPixels(picture);
 
-        console.log("opacity here: ", opacity)
         if(opacity!=null && opacity<255){
-            console.log("opacity here: too ", opacity)
             for (var i = pixels.data.length - 1; i >= 0; i-=4) {
                 pixels.data[i]=opacity;      
             };
         }
 
-        console.info('pixels lajdlfas  :', pixels);
 
         for(var i in filters){
             var filter = filters[i];
@@ -128,6 +125,9 @@ function Layer(){
         tempCanvas.height = pixels.height;
         tempCtx.putImageData(pixels,0,0);
         tempImg.src = tempCanvas.toDataURL('image/png');
+        tempImg.onload = function(){
+            PhotoEditorUI.getInstance().renderLayers();
+        }
         // console.log('data', pixels.data);
     }
 

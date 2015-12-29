@@ -223,7 +223,7 @@ var FitlerBarUI = (function(){
 					f.setArgs(50);
 					layer.addFilter(f);
 			        // layer.getFilters().push(f);
-			        PhotoEditorUI.getInstance().renderLayers();
+			        // PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
 			        generateOverlay(this, f, layer);
 				}
@@ -252,7 +252,7 @@ var FitlerBarUI = (function(){
 					f.setArgs(50);
 					layer.addFilter(f);
 			        // layer.getFilters().push(f);
-			        PhotoEditorUI.getInstance().renderLayers();
+			        // PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
 			        generateOverlay(this, f, layer);
 				}
@@ -279,7 +279,7 @@ var FitlerBarUI = (function(){
 					f.setArgs(50);
 					layer.addFilter(f);
 			        // layer.getFilters().push(f);
-			        PhotoEditorUI.getInstance().renderLayers();
+			        // PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
 			        generateOverlay(this, f, layer);
 				}
@@ -306,7 +306,7 @@ var FitlerBarUI = (function(){
 					f.setArgs(5);
 					layer.addFilter(f);
 			        // layer.getFilters().push(f);
-			        PhotoEditorUI.getInstance().renderLayers();
+			        // PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
 			        generateOverlay(this, f, layer);
 				}
@@ -337,7 +337,7 @@ var FitlerBarUI = (function(){
 					f.setArgs(arg);
 					layer.addFilter(f);
 			        // layer.getFilters().push(f);
-			        PhotoEditorUI.getInstance().renderLayers();
+			        // PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
 			        generateOverlay(this, f, layer);
 				}
@@ -376,7 +376,7 @@ var FitlerBarUI = (function(){
 					f.setArgs(arg);
 			        layer.addFilter(f);
 			        // layer.getFilters().push(f);
-			        PhotoEditorUI.getInstance().renderLayers();
+			        // PhotoEditorUI.getInstance().renderLayers();
 			        generateSlider(layer, f);
 			        generateOverlay(this, f, layer);
 				}

@@ -80,40 +80,6 @@ var PhotoEditorUI = (function(){
                     context.drawImage(pic.getImage(), pos.posX, pos.posY, dimen.width, dimen.height);
                 }
 
-
-
-
-                // var mainFilter = new Filter();
-                // var pixels = mainFilter.getPixels(pic);
-
-                // var opacity = layer.getOpacity();
-                // // var opacity = pic.getOpacity();
-                // if(opacity!=null && opacity<255){
-                //     for (var i = pixels.data.length - 1; i >= 0; i-=4) {
-                //         pixels.data[i]=opacity;      
-                //     };
-                // }
-                
-                
-                // if(layer.getFilters().length){
-                //     for (var i = layer.getFilters().length - 1; i >= 0; i--) {
-                //         var filter = layer.getFilters()[i];
-                //         if(filter.isActive()){
-                //             pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
-                //         }
-                //     };
-                // }
-
-                // tempCanvas.width = pixels.width;
-                // tempCanvas.height = pixels.height;
-                // tempCtx.putImageData(pixels,0,0);
-                // tempImg.src = tempCanvas.toDataURL('image/png');
-                // context.drawImage(tempImg, pos.posX, pos.posY, dimen.width, dimen.height);
-
-
-
-
-
             }
         }
     }
