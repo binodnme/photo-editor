@@ -1,3 +1,4 @@
+/*this class is used to hold the li element and map it with the z-index*/
 function LayerListElement(zi){
 	var zIndex =zi;
 	var listElement = document.createElement('li');

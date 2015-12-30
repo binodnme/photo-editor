@@ -6,50 +6,54 @@ var TransformTool = (function(){
 
 
 	function TransformTool(){
-		// var id =2;
 		var name = 'transform';
 
-		// this.getId = function(){
-		// 	return id;
-		// }
 
 		this.getName = function(){
 			return name;
 		}
 
+
 		this.reset = function(){
 			console.info('reset transform tool');
 		}
 
+
 		this.getIconSrc = function(){
 			return iconSrc;
 		}
+
 
 		this.enableMouseDown = function(){
 			mouseDown = true;
 			console.log('mouse down enabled');
 		}
 
+
 		this.disableMouseDown = function(){
 			mouseDown = false;
 			console.log('mouse down disabled');
 		}
 
+
 		this.isMouseDown = function(){
 			return mouseDown;
 		}
+
 
 		this.setSide = function(s){
 			side = s;
 		}
 
+
 		this.getSide = function(){
 			return side;
 		}
 
-		this.transform = function(){
 
-		}
+		// this.transform = function(){
+			
+		// }
 	}	
 
 

@@ -28,10 +28,12 @@ function Canvas(){
         canvasElement.addEventListener('layerSelectInList', handlerLayerSelectInList, false);
     }
     
+
     this.setCanvasElement = function(c){ 
         canvasElement = c;
         context = canvasElement.getContext('2d');
     }
+
     
     this.getCanvasElement = function(){ return canvasElement; }
     
@@ -225,6 +227,7 @@ function Canvas(){
 
     }
 
+
     function handlerMouseUp(e){
         mousedown = false;
         imageSelected = false;
@@ -237,6 +240,7 @@ function Canvas(){
             canvasElement.style.cursor = 'default';
         }
     }
+
 
     function handlerLayerSelectInList(e){
         var zIndex = parseInt(e.detail);

@@ -44,6 +44,7 @@ getButton.onclick = function(){
     }
 }
 
+
 /*
     * loads image to the canvas
     * @param {String} src

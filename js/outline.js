@@ -1,3 +1,9 @@
+
+/*
+    *draws outline in active layer
+    @params {JsonObject} pos
+    @params {JsonObject} dimen
+*/
 function drawOutline(pos, dimen){
     var ctx = PhotoEditorUI.getInstance().getCanvas().getContext();
     ctx.save();
@@ -15,10 +21,14 @@ function drawOutline(pos, dimen){
     ctx.restore();
 
     drawTransformDots(pos, dimen);
-    // console.log('drawing outline');
 }
 
 
+/*
+    *draw rectangular dots at the edge of active layer
+    @params {JsonObject} pos
+    @params {JsonObject} dimen
+*/
 function drawTransformDots(pos, dimen){
     var offset=3;
     drawDots(pos, offset);
@@ -46,6 +56,11 @@ function drawTransformDots(pos, dimen){
 }
 
 
+/*
+    *draws small dot
+    @param {JsonObject} pos
+    @param {Number} offset
+*/
 function drawDots(pos, offset){
     var ctx = PhotoEditorUI.getInstance().getCanvas().getContext();
     ctx.save();
@@ -61,6 +76,16 @@ function drawDots(pos, offset){
     ctx.restore();
 }
 
+
+/*
+    *checks if the given coordinate lies within the given position and dimension
+    @params {Number} x
+    @params {Number} y
+    @params {JsonObject} pos
+    @params {JsonObject} dimen
+    @return {Number}
+
+*/
 function isOverOutline(x,y,pos,dimen){
     var offset = 10;
 

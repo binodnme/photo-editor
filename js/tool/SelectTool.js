@@ -19,7 +19,7 @@ var SelectTool = (function(){
     	    
     }
 
-
+    //this approach is used to make class singleton
     var instance;
     return {
         getInstance: function(){
@@ -33,5 +33,5 @@ var SelectTool = (function(){
    };
 })();
 
-
+//register tool in PhotoEditor tools
 PhotoEditor.getInstance().addTool(SelectTool.getInstance());

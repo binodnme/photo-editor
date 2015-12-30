@@ -24,6 +24,7 @@ var CropTool = (function(){
         }
 
 
+        /*crop the selected region of the layer*/
         this.crop = function(){
             var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
             var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
@@ -115,6 +116,7 @@ var CropTool = (function(){
     }
 
 
+    //this approach is used to make Class Singleton
     var instance;
     return {
         getInstance: function(){

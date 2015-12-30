@@ -1,4 +1,3 @@
-
 var LassoTool = (function(){
     
     function LassoTool() {
@@ -20,6 +19,8 @@ var LassoTool = (function(){
             return coordinateArray;
         }
 
+
+        /*adds coordinate to the coordinateArray and crops the closed region*/
         this.addCoordinate = function(x,y){
             var canvasObj = PhotoEditorUI.getInstance().getCanvas();
             var canvas = canvasObj.getCanvasElement();
@@ -28,6 +29,7 @@ var LassoTool = (function(){
             ctx.save();
             
             if(coordinateArray.length==0){
+                //initiate the path at the first click
                 ctx.beginPath();
                 ctx.strokeStyle = 'red';
                 ctx.moveTo(x, y);
@@ -39,7 +41,7 @@ var LassoTool = (function(){
                 var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
                 activeLayer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
 
-            }else if(coordinateArray.length>=3){
+            }else if(coordinateArray.length>=3){    //this is the condition to form valid close path
                 var zIndex = PhotoEditor.getInstance().getActiveLayerIndex();
                 var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
 
@@ -50,10 +52,13 @@ var LassoTool = (function(){
                 var initX = coordinateArray[0][0];
                 var initY = coordinateArray[0][1];
 
+
+                //difference of atmost 5 pixels is considered to form a close path
                 if(Math.abs(initX-x)<5 && Math.abs(initY-y)<5){
                     ctx.closePath();
 
                     var minX, minY, maxX,maxY;
+                    //this block find outs the max and min values of x & y coordinate from the all coordinates in coordinateArray
                     for (var i = coordinateArray.length - 1; i >= 0; i--) {
                         if(i==coordinateArray.length-1){
                             minX=maxX = coordinateArray[i][0];
@@ -81,6 +86,8 @@ var LassoTool = (function(){
 
                         var pic = activeLayer.getPicture();
 
+
+                        //temp canvas with the dimension equal to the selected region is created
                         var canvasTest = document.createElement('canvas');
                         // var canvasTest = document.getElementById('testground');
                         canvasTest.width = maxX - minX;
@@ -88,20 +95,26 @@ var LassoTool = (function(){
 
                         var context = canvasTest.getContext('2d');
 
-                        console.info('minX, minY: ',minX, ',',minY, ' maxX, maxY: ',maxX,',',maxY);
                         context.beginPath();
                         context.moveTo(coordinateArray[0][0]-minX, coordinateArray[0][1]-minY);
 
+                        //user provided path is traced in temp canvas
                         for(var i=1; i<coordinateArray.length; i++){
                             context.lineTo(coordinateArray[i][0]-minX, coordinateArray[i][1]-minY);
                             console.log('x,y: ',coordinateArray[i][0]-minX,',',coordinateArray[i][1]-minY);
                         }
+
+                        //----------------IMPORTANT----------------------
+                        //context.clip() allows rendering only in the closed path 
+                        //i.e it acts as a mask to hide unwanted parts of image
                         context.clip();
                         context.stroke();
 
                         var pos = pic.getPosition();
                         var image = pic.getImage();
                         var dimen = pic.getDimension();
+
+                        //actual image dimension is used to preserve the image quality
                         var actualWidth = (maxX - minX)*(image.width/dimen.width);
                         var actualheight = (maxY - minY)*(image.height/dimen.height);
 
@@ -109,8 +122,6 @@ var LassoTool = (function(){
                         var actualStartY = (minY-pos.posY)*(image.height/dimen.height);
 
 
-                        // context.drawImage(pic.getImage(), minX-pos.posX, minY-pos.posY, maxX-minX, maxY-minY,
-                        //     0,0,maxX-minX, maxY-minY);
                         context.drawImage(pic.getImage(), actualStartX, actualStartY, actualWidth, actualheight,
                             0,0,maxX-minX, maxY-minY);
                         //ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
@@ -118,7 +129,7 @@ var LassoTool = (function(){
                         var img = document.createElement('img');
                         img.src = canvasTest.toDataURL("image/png");
 
-                        // activeLayer.getPicture().setImageSrc(img.src);
+                        //update the image source of picture
                         activeLayer.setPictureSrc(img.src);
                         activeLayer.getPicture().setPosition(minX, minY);
 
@@ -161,6 +172,13 @@ var LassoTool = (function(){
             console.info('reset lasso tool');
         }
 
+
+        /*
+            *draws small rectangular dots at the edge of path
+            @params {CanvasRenderingContext2D} ctx
+            @params {Number} x
+            @params {Number} y
+        */
         function drawMiniDots(ctx,x,y){
             var offset = 2;
             ctx.strokeStyle = 'white';
@@ -170,6 +188,7 @@ var LassoTool = (function(){
     }
 
 
+    //this approach is used to make Class Singleton
     var instance;
     return {
         getInstance: function(){

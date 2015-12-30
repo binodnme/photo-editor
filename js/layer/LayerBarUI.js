@@ -112,16 +112,20 @@ var LayerBarUI = (function(){
 
 								    PhotoEditor.getInstance().setActiveLayerIndex(zIndex);
 								    
+
+								    //layerSelectInList event is dispatched to ul Elements
 								    var ulist = document.getElementsByTagName('ul');
 								    for(var i=0; i<ulist.length; i++){
 								        ulist[i].dispatchEvent(ev1);
 								    }
 
+								    //layerSelectInList event is dispatched to li Elements
 								    var l = document.getElementsByTagName('li');
 								    for(var i=0; i<l.length; i++){
 								        l[i].dispatchEvent(ev1);
 								    }
 
+								    //layerSelectInList event is dispatched to canvas Element
 								    var c = document.getElementsByTagName('canvas')[0];
 								    c.dispatchEvent(ev1);
 
@@ -129,6 +133,7 @@ var LayerBarUI = (function(){
 			      
 			        			}
 
+			        			//reset the click count when the click event is handled
 		        				list.resetTotalClicks();
 		        			},300);
 		        		}
@@ -295,6 +300,7 @@ var LayerBarUI = (function(){
 	}
 
 
+	//this approach is used to make Class Singleton
 	var instance;
 	return {
 		getInstance: function(){
