@@ -108,7 +108,7 @@ var LassoTool = (function(){
                         //context.clip() allows rendering only in the closed path 
                         //i.e it acts as a mask to hide unwanted parts of image
                         context.clip();
-                        context.stroke();
+                        // context.stroke();
 
                         var pos = pic.getPosition();
                         var image = pic.getImage();

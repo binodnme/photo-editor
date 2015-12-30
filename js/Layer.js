@@ -125,7 +125,10 @@ function Layer(){
         if(opacity!=null && opacity<255){
             //apply opacity
             for (var i = pixels.data.length - 1; i >= 0; i-=4) {
-                pixels.data[i]=opacity;      
+                if(pixels.data[i]!=0){
+                    pixels.data[i]=opacity;    
+                }
+                
             };
         }
 

@@ -38,7 +38,8 @@ getButton.onclick = function(){
     var url = document.getElementById('url');
     
     if(url.value){
-        loadImage('image.php?url=' + url.value);
+        // loadImage('image.php?url=' + url.value);
+        loadImage(url.value);
     }else{
         console.log('blank');
     }
