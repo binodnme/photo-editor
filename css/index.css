@@ -23,15 +23,15 @@
     /*border: 1px solid blue;*/
 }
 
-.download-main{
+
+.download-wrapper div{
     width: 130px;
     height: 30px;
-    margin: 0px auto;
     background: #1F212B;
     border-radius: 10px;
 }
 
-.download-main a{
+.download-wrapper div a{
     text-decoration: none;
     color: white;
     font-size: 14px;
@@ -40,10 +40,18 @@
     text-align: center;
 }
 
+.fit-image{
+    float: left;
+}
+
+
+
+.download-main{
+    float: right;
+}
 
 .canvas-wrapper-main{
     margin: 0px auto;
-    /*background: white;*/
 }
 
 canvas{
