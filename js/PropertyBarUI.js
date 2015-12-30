@@ -2,6 +2,10 @@ var PropertyBarUI = (function(){
 	function PropertyBarUI(){
 		var parentElement;
 
+
+		/*
+			*Initializes Property Bar
+		*/
 		this.init = function(){
 			console.log('property bar init');
 			
@@ -34,6 +38,11 @@ var PropertyBarUI = (function(){
 			parentElement.appendChild(list2);
 		}
 
+
+		/*
+			*set parent element for property bar
+			@params {Element} pEl
+		*/
 		this.setParent = function(pEl){
 			parentElement = pEl;
 			parentElement.addEventListener('layerSelectInCanvas', handlerLayerSelectInCanvas, false);
@@ -41,9 +50,9 @@ var PropertyBarUI = (function(){
 		}
 	}
 
+
 	function handlerWidthChange(e){
 		var value = parseFloat(this.value);
-		console.info('value:', value);
 		if(value>0){
 			var layer = PhotoEditor.getInstance().getActiveLayer();
 			var pic = layer.getPicture();
@@ -53,12 +62,11 @@ var PropertyBarUI = (function(){
 		}
 	}
 
+	
 	function handlerHeightChange(e){
 		var value = parseFloat(this.value);
-		console.info('value:', value);
 		if(value>0){
 			var layer = PhotoEditor.getInstance().getActiveLayer();
-			console.info('layer: ', layer);
 			var pic = layer.getPicture();
 			var dimen = pic.getDimension();
             pic.setDimension(dimen.width, value);
@@ -86,6 +94,7 @@ var PropertyBarUI = (function(){
 	}
 
 
+	//this approach is used to make the class Singleton
 	var instance;
 	return {
 		getInstance: function(){

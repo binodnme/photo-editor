@@ -20,7 +20,7 @@ var LassoTool = (function(){
         }
 
 
-        /*adds coordinate to the coordinateArray and crops the closed region*/
+        /*adds coordinate to the coordinateArray and crops the closed path*/
         this.addCoordinate = function(x,y){
             var canvasObj = PhotoEditorUI.getInstance().getCanvas();
             var canvas = canvasObj.getCanvasElement();
@@ -29,7 +29,7 @@ var LassoTool = (function(){
             ctx.save();
             
             if(coordinateArray.length==0){
-                //initiate the path at the first click
+                //initiate the path on the first click
                 ctx.beginPath();
                 ctx.strokeStyle = 'red';
                 ctx.moveTo(x, y);

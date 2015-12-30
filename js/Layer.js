@@ -1,18 +1,11 @@
 function Layer(){
-    var id;
     var name;
-    var zIndex;
+    var zIndex;         //z-index value of layer, which determines the rendering priority
     var picture;
     var width;
     var height;
     var filters =[];
     var opacity = 255;
-    
-
-    this.setId = function(i){   id = i; }
-    
-    
-    this.getId = function(){ return id; }
     
     
     this.setName= function(n){ name =n; }
@@ -58,22 +51,29 @@ function Layer(){
     this.addFilter = function(fltr){
         filters.push(fltr);
         updateTempImage();
-
     }
 
 
     this.getFilters = function(){
-        // console.log('from getter: ', filters);
         return filters;
     }
 
     
+    /*
+        *sets argument for filter 
+        @params {Filter} fltr
+        @params {Number} value
+    */
     this.setFilterArgs = function(fltr, value){
         fltr.setArgs(value);
         updateTempImage();
     }
 
 
+    /*
+        *removes filter from filters array
+        @params {Filter} fltr
+    */
     this.removeFilter = function(fltr){
         var filterIndex = getFilterIndex(fltr);
         if(filterIndex){
@@ -91,28 +91,39 @@ function Layer(){
     
     this.setOpacity = function(op){
         opacity = op;
-        // picture.setOpacity(op);
         updateTempImage();
     }
 
     
+    /*
+        *disables filter in layer
+        @params {Filter} fltr
+    */
     this.disableFilter= function(fltr){
         fltr.disable();
         updateTempImage();
     }
 
     
+    /*
+        *enables filter in layer
+        @params {Filter} fltr
+    */
     this.enableFilter = function(fltr){
         fltr.enable();
         updateTempImage();
     }
 
     
+    /*
+        *updates the temporary image everytime when there is some change in original image
+    */
     function updateTempImage(){
         var mainFilter = new Filter();
         var pixels = mainFilter.getPixels(picture);
 
         if(opacity!=null && opacity<255){
+            //apply opacity
             for (var i = pixels.data.length - 1; i >= 0; i-=4) {
                 pixels.data[i]=opacity;      
             };
@@ -120,12 +131,15 @@ function Layer(){
 
 
         for(var i in filters){
+            //apply filters from filters array
             var filter = filters[i];
             if(filter.isActive()){
                 pixels = filter.filterImage(filter.filter, pixels, filter.getArgs());
             }
         }
 
+
+        //create temp canvas with the dimension equal to that of original image
         var tempCanvas = document.createElement('canvas');
         var tempCtx = tempCanvas.getContext('2d');
         var tempImg = picture.getTempImage();
@@ -133,14 +147,19 @@ function Layer(){
         tempCanvas.width = pixels.width;
         tempCanvas.height = pixels.height;
         tempCtx.putImageData(pixels,0,0);
+        //update tempImg source
         tempImg.src = tempCanvas.toDataURL('image/png');
         tempImg.onload = function(){
             PhotoEditorUI.getInstance().renderLayers();
         }
-        // console.log('data', pixels.data);
     }
 
 
+    /*
+        *return fitler index in filters array
+        @params {Filter} fltr
+        @return {Number} suspectIndex
+    */
     function getFilterIndex(fltr){
         var filter = fltr;
         var suspectIndex=null;

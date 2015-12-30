@@ -12,7 +12,9 @@ function Canvas(){
     var imageSelected = false;
 
 
-
+    /*
+        *Initializes canvas element and adds event listener
+    */
     this.init = function(){
         canvasElement = document.getElementById('playground');
         context = canvasElement.getContext('2d');
@@ -59,7 +61,10 @@ function Canvas(){
     }
 
 
-
+    /*
+        *handles mousedown event in canvas
+        @params {MouseEvent} e
+    */
     function handlerMouseDown(e){
         mousedown = true;
         var x = e.pageX - canvasElement.offsetLeft;
@@ -71,7 +76,7 @@ function Canvas(){
         var layer = getTopLayer(x,y);
 
         if(layer){
-            //fire custom event
+            //fire custom event and attach layer's z-index value
             var ev1  = new CustomEvent('layerSelectInCanvas',{'detail':layer.getZIndex()});
             var list = document.getElementsByTagName('li');
             var ulist = document.getElementsByTagName('ul');
@@ -88,6 +93,7 @@ function Canvas(){
             PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
             var activeTool = PhotoEditor.getInstance().getActiveTool();
             
+            
             if(activeTool=='lasso'){
                 LassoTool.getInstance().addCoordinate(x,y);
                 
@@ -96,7 +102,6 @@ function Canvas(){
                 var y = e.layerY;
                 var pixeldata = context.getImageData(x, y, 1, 1);
                 var col = pixeldata.data;
-                console.info('inside color ');
                 ColorReplace.getInstance().setSourceColor(col, 'click');
 
             }else if(activeTool == 'transform'){
@@ -111,8 +116,6 @@ function Canvas(){
                 drawOutline(position, dimension);
 
             }else{
-                // PhotoEditor.getInstance().setActiveLayerIndex(layer.getZIndex());
-            
                 var dimen = layer.getPicture().getDimension();
                 var pos = layer.getPicture().getPosition();
                 
@@ -131,6 +134,10 @@ function Canvas(){
     }
 
 
+    /*
+        *handles mousemove event in canvas
+        @params {MouseEvent} e
+    */
     function handlerMouseMove(e){
         var x1 = e.pageX - canvasElement.offsetLeft;
         var y1 = e.pageY - canvasElement.offsetTop;
@@ -148,10 +155,9 @@ function Canvas(){
 
         if(activeTool=='select'){
             if(mousedown && imageSelected){
-
                 lyr.getPicture().setPosition(x1-xCorrection,y1-yCorrection);
+
                 context.clearRect(0,0,width,height);
-                
                 PhotoEditorUI.getInstance().renderLayers(); 
                 
                 var dimen = lyr.getPicture().getDimension();
@@ -190,21 +196,10 @@ function Canvas(){
                 var tempSide = TransformTool.getInstance().getSide();
                 if(TransformTool.getInstance().isMouseDown() && tempSide){
                     resizeLayer(lyr,tempSide,x1,y1);
-
-                    // var canvas = document.createElement('canvas');
+                    
                     var dimen = lyr.getPicture().getDimension();
                     var pos = lyr.getPicture().getPosition();
-                    // canvas.width = dimen.width;
-                    // canvas.height = dimen.height;
-
-                    // var ctx = canvas.getContext('2d');
-                    // var pic = lyr.getPicture();
-                    // ctx.drawImage(pic.getImage(), 0, 0, canvas.width, canvas.height);
-
-                    // var src  = canvas.toDataURL('image/png');
-                    // pic.setImageSrc(src);
-                    // canvas.remove();
-
+                    
                     PhotoEditorUI.getInstance().renderLayers();
                     drawOutline(pos,dimen);
                 } 
@@ -228,6 +223,10 @@ function Canvas(){
     }
 
 
+    /*
+        *handles mouseup event in canvas
+        @params {MouseEvent} e
+    */
     function handlerMouseUp(e){
         mousedown = false;
         imageSelected = false;
@@ -242,22 +241,30 @@ function Canvas(){
     }
 
 
+    /*
+        *handles layerSelectInList event in canvas
+        @params {CustomEvent} e
+    */
     function handlerLayerSelectInList(e){
-        var zIndex = parseInt(e.detail);
-
-        var layer = PhotoEditor.getInstance().getLayerByZIndex(zIndex);
+        var layer = PhotoEditor.getInstance().getActiveLayer();
         var pic = layer.getPicture();
-
         PhotoEditorUI.getInstance().renderLayers();
         drawOutline(pic.getPosition(), pic.getDimension());
 
     }
 
 
+    /*
+        *returns the topmost layer when the mouse is clicked/moved in canvas
+        @params {Number} x
+        @params {Number} y
+        @return {Layer} 
+    */
     function getTopLayer(x, y){
         var layers = PhotoEditor.getInstance().getLayers();
 
         var indices = [];
+        //record the index of all layers under the mouse cursor
         for(var i in layers){
             var dimen = layers[i].getPicture().getDimension();
             var pos = layers[i].getPicture().getPosition();
@@ -267,6 +274,7 @@ function Canvas(){
             }    
         }
 
+        //find outs the topmost layer
         if(indices.length>0){
             var hZIndex = -1;
             var hIndex = -1;
@@ -286,6 +294,14 @@ function Canvas(){
 
     }
 
+   
+    /*
+        *resize the picture/layer
+        @params {Layer} layer
+        @params {Number} side
+        @params {Number} x1
+        @params {Number} y1
+    */
     function resizeLayer(layer, side, x1, y1){
         var lyr = layer;
         var pic = lyr.getPicture();
