@@ -2,7 +2,7 @@ var CropTool = (function(){
     
     function CropTool() {
         var name='crop';
-        var iconSrc = 'images/icons/crop.png';   //source for icon file
+        var iconSrc = 'images/icons/crop-test.png';   //source for icon file
         var startX;
         var startY;
         var endX;

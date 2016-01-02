@@ -5,6 +5,7 @@
   content: 'Import Image';
   display: inline-block;
   background: -webkit-linear-gradient(top, #f9f9f9, #e3e3e3);
+
   border: 1px solid #999;
   border-radius: 3px;
   padding: 5px 8px;
@@ -25,4 +26,8 @@
 
 .custom-file-input{
   width: 102px;
+}
+
+input:focus {
+    outline-width: 0;
 }

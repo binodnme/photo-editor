@@ -2,7 +2,7 @@ var LassoTool = (function(){
     
     function LassoTool() {
         var name='lasso';
-        var iconSrc = 'images/icons/lasso.png';   //source for icon file
+        var iconSrc = 'images/icons/lasso1.png';   //source for icon file
         var coordinateArray = [];
         var activeLayer;
     

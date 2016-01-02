@@ -11,14 +11,19 @@ var ToolBarUI = (function(){
 			var tools = PhotoEditor.getInstance().getTools();
 
 			for(var i in tools){
+				var toolWrapper = document.createElement('div');
+				toolWrapper.setAttribute('class','tool-wrapper');
 				var input = document.createElement('input');
 				input.setAttribute('type', 'button');
-				input.style.width = '35px';
-				input.style.height = '35px';
+				input.style.width = '25px';
+				input.style.height = '25px';
 				console.log(tools[i].getName());
 				if(tools[i].getIconSrc()){
 					input.style.backgroundImage = 'url("'+tools[i].getIconSrc()+'")';
 					input.style.backgroundRepeat='no-repeat';
+					input.style.backgroundPosition = '50% 50%';
+					input.style.backgroundSize = 'cover';
+					// input.style.backgroundSize = '100%';
 				}
 				
 
@@ -43,7 +48,8 @@ var ToolBarUI = (function(){
 					};
 				})(tools[i], tools);
 
-				parentElement.appendChild(input);
+				toolWrapper.appendChild(input);
+				parentElement.appendChild(toolWrapper);
 			}
 		}
 

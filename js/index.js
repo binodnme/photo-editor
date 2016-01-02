@@ -38,8 +38,33 @@ getButton.onclick = function(){
     var url = document.getElementById('url');
     
     if(url.value){
-        // loadImage('image.php?url=' + url.value);
-        loadImage(url.value);
+        loadImage('image.php?url=' + url.value);
+        // var img = new Image();
+        // // img.setAttribute('crossOrigin', 'anonymous');
+        // img.src = url.value;
+
+
+
+
+        // img.onload = function(){
+        //     console.info('hello lajsdlfa');
+        //     // var cnvs = document.createElement('canvas');
+        //     var cnvs = document.getElementById('testground');
+        //     var ctx = cnvs.getContext('2d');
+        //     cnvs.width = img.width;
+        //     cnvs.height = img.height;
+        //     ctx.drawImage(img, 0, 0);
+
+        //     var newImage = new Image();
+        //     newImage.src = cnvs.toDataURL('image/png');
+
+        //     newImage.onload = function(){
+        //         loadImage(newImage.src);
+        //     }
+
+
+        // }
+        
     }else{
         console.log('blank');
     }

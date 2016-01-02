@@ -3,7 +3,7 @@ var SelectTool = (function(){
 
     function SelectTool() {
         var name='select';
-        var iconSrc = 'images/icons/select.png';    //source for icon file
+        var iconSrc = 'images/icons/move.png';    //source for icon file
         
         this.getName = function(){
             return name;

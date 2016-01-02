@@ -11,16 +11,19 @@
         <div class="main-container">
             <div class="header-wrapper">
                 <div class="load-image">
-                    <input id="choose-file"  type="file">
-                    <input id="url" class="url" type="url" placeholder="enter image url"> 
-                    <input id="get-button" class="get-button" type="submit" value="get">
+                    <div class="choose-file">
+                        <input id="choose-file" class="custom-file-input"  type="file">
+                    </div>
                     
+                    <div class="url-wrapper">
+                        <div class="url-input"><input id="url" type="url" placeholder="enter image url"></div>
+                        <div class="get"><input id="get-button" type="submit" value="get"></div>
+                        
+                    </div>
                 </div>
-
 
                 <div class="download-wrapper">
                     <div class="fit-image">
-                        <!-- <input type="button" value="fit to image" onclick="fitToImage()"> -->
                         <a href='#' onclick="fitToImage()">Fit Image</a>
                     </div>
                     <div class="download-main">
@@ -29,6 +32,7 @@
                 </div>
             </div>
             
+
             <div class="work-area clr">
                 <div id='toolbar' class="toolbar"></div>
                
@@ -54,6 +58,7 @@
                             <div class="layer-action"></div>
                         </div>
                         
+                        <div class="blank"></div>
                         <div class="properties">
                             <div class="property-title">property</div>
                             <div class="property-list-wrapper">
